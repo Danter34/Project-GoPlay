@@ -145,3 +145,4 @@ D:\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\ref\Goplay-API.dll
 D:\Goplay\Goplay-API\Goplay-API\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\Goplay\Goplay-API\Goplay-API\bin\Debug\net8.0\BCrypt.Net-Next.dll
 D:\Goplay\Goplay-API\Goplay-API\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\Goplay-API.sourcelink.json

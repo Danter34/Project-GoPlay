@@ -8,7 +8,11 @@ namespace Goplay_API.Repositories.Interface
         Task<IEnumerable<Booking>> GetByUserAsync(int userId);
         Task<IEnumerable<Booking>> GetByFieldAndDateAsync(int fieldId, DateTime date);
         Task<Booking?> GetByIdAsync(int id);
-        Task<Booking> CreateAsync(BookingCreateDTO dto);
-        Task<bool> CancelAsync(int bookingId);
+        Task<Booking> CreateAsync (int userId, BookingCreateDTO dto);
+        Task<bool> CancelAsync(int userId, int bookingId);
+
+        Task<IEnumerable<Booking>> GetByOwnerAsync(int ownerUserId);
+
+        Task<bool> OwnerUpdateStatusAsync(int ownerUserId, int bookingId, string status);
     }
 }

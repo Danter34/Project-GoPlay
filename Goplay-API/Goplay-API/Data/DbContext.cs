@@ -19,6 +19,7 @@ namespace Goplay_API.Data
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<OwnerProfile> OwnerProfiles { get; set; }
         public DbSet<BookingTimeSlot> BookingTimeSlots { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -71,7 +72,17 @@ namespace Goplay_API.Data
                 .WithMany(ts => ts.BookingTimeSlots)
                 .HasForeignKey(bts => bts.SlotId);
 
+            modelBuilder.Entity<Review>()
+            .HasOne(r => r.Field)
+            .WithMany(f => f.Reviews)
+            .HasForeignKey(r => r.FieldId)
+            .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany()
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             base.OnModelCreating(modelBuilder);

@@ -17,7 +17,9 @@ namespace Goplay_API.Model.Domain
 
         public int OwnerProfileId { get; set; }
         public OwnerProfile OwnerProfile { get; set; }
+        public double AverageRating { get; set; } = 0;
 
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<Image> Images { get; set; }
         public ICollection<Booking> Bookings { get; set; }
     }

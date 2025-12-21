@@ -13,9 +13,9 @@ namespace Goplay_API.Model.Domain
 
     public enum PaymentStatus
     {
-        Pending,
-        Paid,
-        Failed
+        ChờThanhToán,
+        ĐãThanhToán,
+        ThấtBại
     }
 
     public class Payment
@@ -30,7 +30,7 @@ namespace Goplay_API.Model.Domain
         public decimal Amount { get; set; }
 
         public PaymentMethod Method { get; set; }
-        public PaymentStatus Status { get; set; } = PaymentStatus.Pending;
+        public PaymentStatus Status { get; set; } = PaymentStatus.ChờThanhToán;
 
         public string? ExternalOrderId { get; set; }
         public string? MomoOrderId { get; set; } 

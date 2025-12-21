@@ -17,6 +17,9 @@ namespace Goplay_API.Model.DTO
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
 
+        public double AverageRating { get; set; }
+        public int TotalReviews { get; set; }
+
         // Tất cả ảnh
         public List<string> Images { get; set; } = new List<string>();
 
@@ -42,6 +45,9 @@ namespace Goplay_API.Model.DTO
             Images = f.Images?.Select(i => i.ImageUrl).ToList() ?? new List<string>();
 
             BusinessName = f.OwnerProfile?.BusinessName ?? "";
+
+            AverageRating = f.AverageRating;
+            TotalReviews = f.Reviews?.Count ?? 0;
         }
     }
 }

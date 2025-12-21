@@ -13,5 +13,6 @@ namespace Goplay_API.Repositories.Interface
         Task<bool> UpdateAsync(int userId, int profileId, OwnerProfileRegisterDTO dto);
         Task<bool> ApproveAsync(int profileId);
         Task<bool> RejectAsync(int profileId);
+
     }
 }

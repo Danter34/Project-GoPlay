@@ -44,7 +44,7 @@ namespace Goplay_API.Controllers
             };
             return Ok(dto);
         }
-
+        [Authorize(Roles ="Admin")]
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] TimeSlotDTO dto)
         {
@@ -58,14 +58,14 @@ namespace Goplay_API.Controllers
                     IsActive = slot.IsActive
                 });
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("update-by-id/{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] TimeSlotDTO dto)
         {
             var result = await _service.UpdateAsync(id, dto);
             return result ? NoContent() : NotFound();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("delete-by-id/{id}")]
         public async Task<IActionResult> Delete(int id)
         {

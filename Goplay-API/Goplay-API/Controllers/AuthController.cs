@@ -3,14 +3,13 @@ using Goplay_API.Helpers;
 using Goplay_API.Model.Domain;
 using Goplay_API.Model.DTO;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Goplay_API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -22,6 +21,7 @@ namespace Goplay_API.Controllers
             _jwt = jwt;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
@@ -32,7 +32,8 @@ namespace Goplay_API.Controllers
             {
                 FullName = dto.FullName,
                 Email = dto.Email,
-                Password = BCrypt.Net.BCrypt.HashPassword(dto.Password)
+                Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                Role = "User"
             };
 
             _context.Users.Add(user);
@@ -41,6 +42,7 @@ namespace Goplay_API.Controllers
             return Ok("Register success");
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public IActionResult Login(LoginDto dto)
         {
@@ -50,55 +52,51 @@ namespace Goplay_API.Controllers
                 return Unauthorized("Invalid credentials");
 
             var token = _jwt.GenerateToken(user);
-
             return Ok(new { token });
         }
+
         [Authorize]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
         {
-            // 1. Lấy userId từ JWT
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!
+            );
 
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
                 return Unauthorized();
 
-            // 2. Kiểm tra mật khẩu cũ
             if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.Password))
                 return BadRequest("Current password is incorrect");
 
-            // 3. Check confirm password
             if (dto.NewPassword != dto.ConfirmNewPassword)
                 return BadRequest("Password confirmation does not match");
 
-            // 4. Hash & lưu mật khẩu mới
             user.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
             await _context.SaveChangesAsync();
 
             return Ok("Password changed successfully");
         }
 
-
         [Authorize(Roles = "Admin")]
-        [HttpGet("get-all-users")]
-        public async Task<IActionResult> GetAllUsers()
+        [HttpGet("users")]
+        public IActionResult GetAllUsers()
         {
-            var users = _context.Users
-                .Select(u => new
-                {
-                    u.UserId,
-                    u.FullName,
-                    u.Email,
-                    u.Role
-                })
-                .ToList();
+            var users = _context.Users.Select(u => new
+            {
+                u.UserId,
+                u.FullName,
+                u.Email,
+                u.Role
+            });
+
             return Ok(users);
         }
 
         [Authorize(Roles = "Admin")]
-        [HttpPut("set-role/{userId}")]
-        public async Task<IActionResult> SetRole(int userId, [FromBody] SetRoleDto dto)
+        [HttpPut("users/{userId}/role")]
+        public async Task<IActionResult> SetRole(int userId, SetRoleDto dto)
         {
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
@@ -107,7 +105,13 @@ namespace Goplay_API.Controllers
             user.Role = dto.Role;
             await _context.SaveChangesAsync();
 
-            return Ok(new { user.UserId, user.FullName, user.Email, user.Role });
+            return Ok(new
+            {
+                user.UserId,
+                user.FullName,
+                user.Email,
+                user.Role
+            });
         }
     }
 }

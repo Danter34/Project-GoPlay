@@ -1,11 +1,7 @@
-﻿using Goplay_API.Data;
-using Goplay_API.Model.Domain;
-using Goplay_API.Model.DTO;
+﻿using Goplay_API.Model.DTO;
 using Goplay_API.Repositories.Interface;
-using Goplay_API.Repositories.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Goplay_API.Controllers
@@ -21,13 +17,15 @@ namespace Goplay_API.Controllers
             _service = service;
         }
 
-        [HttpGet("Get-all")]
+        [AllowAnonymous]
+        [HttpGet("get-all")]
         public async Task<IActionResult> GetAll()
         {
             var fields = await _service.GetAllAsync();
             return Ok(fields.Select(f => new FieldResponseDTO(f)));
         }
 
+        [AllowAnonymous]
         [HttpGet("get-by-id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -36,14 +34,18 @@ namespace Goplay_API.Controllers
             return Ok(new FieldResponseDTO(field));
         }
 
+        [AllowAnonymous]
         [HttpGet("filter")]
-        public async Task<IActionResult> Filter([FromQuery] string? city, [FromQuery] string? district, [FromQuery] int? sportTypeId)
+        public async Task<IActionResult> Filter(
+            [FromQuery] string? city,
+            [FromQuery] string? district,
+            [FromQuery] int? sportTypeId)
         {
             var fields = await _service.FilterAsync(city, district, sportTypeId);
             return Ok(fields.Select(f => new FieldResponseDTO(f)));
         }
 
-        [Authorize]
+        [Authorize(Roles = "OwnerField")]
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromForm] FieldCreateDTO dto)
         {
@@ -52,7 +54,7 @@ namespace Goplay_API.Controllers
             return Ok(new { fieldId });
         }
 
-        [Authorize]
+        [Authorize(Roles = "OwnerField")]
         [HttpPut("update/{id}")]
         public async Task<IActionResult> Update(int id, [FromForm] FieldUpdateDTO dto)
         {
@@ -61,8 +63,8 @@ namespace Goplay_API.Controllers
             return result ? NoContent() : Forbid();
         }
 
-        [Authorize]
-        [HttpDelete("delete-by-id/{id}")]
+        [Authorize(Roles = "OwnerField")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
@@ -70,5 +72,4 @@ namespace Goplay_API.Controllers
             return result ? NoContent() : Forbid();
         }
     }
-
 }

@@ -22,7 +22,7 @@ namespace Goplay_API.Repositories.Services
             _config = config;
         }
 
-        // --- MOMO LOGIC ---
+        //MOMO LOGIC
         public async Task<PaymentResponse> CreatePaymentAsync(PaymentRequest dto)
         {
             var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == dto.BookingId);
@@ -30,7 +30,7 @@ namespace Goplay_API.Repositories.Services
 
             // Check Enum Status
             var existingPayment = await _context.Payments
-                .FirstOrDefaultAsync(p => p.BookingId == dto.BookingId && p.Status == PaymentStatus.Paid);
+                .FirstOrDefaultAsync(p => p.BookingId == dto.BookingId && p.Status == PaymentStatus.ĐãThanhToán);
             if (existingPayment != null) throw new Exception("Booking already paid");
 
             // Config MoMo
@@ -85,8 +85,8 @@ namespace Goplay_API.Repositories.Services
                 ExternalOrderId = momoOrderId,
                 Amount = booking.TotalPrice,
                 
-                Method = PaymentMethod.Momo,      // <--- Dùng Enum
-                Status = PaymentStatus.Pending,   // <--- Dùng Enum
+                Method = PaymentMethod.Momo,      
+                Status = PaymentStatus.ChờThanhToán,   
                 
                 PayUrl = momoResponse.payUrl
             };
@@ -99,7 +99,7 @@ namespace Goplay_API.Repositories.Services
                 PaymentId = payment.PaymentId,
                 Amount = payment.Amount,
                 PayUrl = payment.PayUrl,
-                Status = payment.Status.ToString() // Convert Enum to string trả về
+                Status = payment.Status.ToString() 
             };
         }
 
@@ -111,19 +111,19 @@ namespace Goplay_API.Repositories.Services
 
             if (payment == null) return false;
 
-            if (resultCode == "0") // Thành công
+            if (resultCode == "0") 
             {
-                payment.Status = PaymentStatus.Paid; // <--- Dùng Enum
+                payment.Status = PaymentStatus.ĐãThanhToán; 
                 if (payment.Booking != null)
                 {
-                    payment.Booking.Status = "Confirmed";
+                    payment.Booking.Status = "Đã xác nhận";
                 }
                 await _context.SaveChangesAsync();
                 return true;
             }
             else
             {
-                payment.Status = PaymentStatus.Failed; // <--- Dùng Enum
+                payment.Status = PaymentStatus.ThấtBại; 
                 await _context.SaveChangesAsync();
                 return false;
             }
@@ -140,8 +140,6 @@ namespace Goplay_API.Repositories.Services
             byte[] hashValue = hmac.ComputeHash(Encoding.UTF8.GetBytes(rawData));
             return BitConverter.ToString(hashValue).Replace("-", "").ToLower();
         }
-
-        // --- VNPAY LOGIC ---
         public async Task<PaymentResponse> CreateVnPayPaymentAsync(PaymentRequest dto)
         {
             var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.BookingId == dto.BookingId);
@@ -188,8 +186,8 @@ namespace Goplay_API.Repositories.Services
                 ExternalOrderId = vnpParams["vnp_TxnRef"],
                 Amount = booking.TotalPrice,
                 
-                Method = PaymentMethod.VnPay,     // <--- Dùng Enum
-                Status = PaymentStatus.Pending,   // <--- Dùng Enum
+                Method = PaymentMethod.VnPay,     
+                Status = PaymentStatus.ChờThanhToán,   
                 
                 PayUrl = paymentUrl
             };
@@ -220,23 +218,23 @@ namespace Goplay_API.Repositories.Services
 
             if (responseCode == "00")
             {
-                payment.Status = PaymentStatus.Paid; // <--- Dùng Enum
+                payment.Status = PaymentStatus.ChờThanhToán;
                 if (payment.Booking != null)
                 {
-                    payment.Booking.Status = "Confirmed";
+                    payment.Booking.Status = "Đã xác nhận";
                 }
                 await _context.SaveChangesAsync();
                 return true;
             }
             else
             {
-                payment.Status = PaymentStatus.Failed; // <--- Dùng Enum
+                payment.Status = PaymentStatus.ThấtBại;
                 await _context.SaveChangesAsync();
                 return false;
             }
         }
 
-        // --- CASH LOGIC ---
+        // CASH LOGIC
         public async Task<bool> ConfirmCashPaymentAsync(int bookingId)
         {
             var booking = await _context.Bookings.Include(b => b.Payment).FirstOrDefaultAsync(b => b.BookingId == bookingId);
@@ -249,8 +247,8 @@ namespace Goplay_API.Repositories.Services
                     BookingId = booking.BookingId,
                     Amount = booking.TotalPrice,
                     
-                    Method = PaymentMethod.Cash,    // <--- Dùng Enum
-                    Status = PaymentStatus.Paid,    // <--- Dùng Enum
+                    Method = PaymentMethod.Cash,    
+                    Status = PaymentStatus.ĐãThanhToán,   
                     
                     CreatedAt = DateTime.Now
                 };
@@ -258,7 +256,7 @@ namespace Goplay_API.Repositories.Services
             }
             else
             {
-                booking.Payment.Status = PaymentStatus.Paid;
+                booking.Payment.Status = PaymentStatus.ĐãThanhToán;
             }
 
             booking.Status = "Confirmed";

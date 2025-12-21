@@ -15,8 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
-var momoAccessKey = builder.Configuration["MomoSettings:AccessKey"];
-var momoSecretKey = builder.Configuration["MomoSettings:SecretKey"];
 var vnPayHashSecret = builder.Configuration["VnPaySettings:HashSecret"];
 // Add services to the container.
 

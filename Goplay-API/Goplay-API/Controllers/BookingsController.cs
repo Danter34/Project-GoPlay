@@ -1,7 +1,9 @@
-﻿using Goplay_API.Model.Domain;
-using Goplay_API.Model.DTO;
+﻿using Goplay_API.Model.DTO;
 using Goplay_API.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Security.Claims;
 
 namespace Goplay_API.Controllers
 {
@@ -10,14 +12,20 @@ namespace Goplay_API.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IBookingRepository _bookingRepository;
-        public BookingController(IBookingRepository bookingRepository) => _bookingRepository = bookingRepository;
 
-        [HttpGet("get-by-user/{userId}")]
-        public async Task<IActionResult> GetByUser(int userId)
+        public BookingController(IBookingRepository bookingRepository)
         {
+            _bookingRepository = bookingRepository;
+        }
+
+        [Authorize]
+        [HttpGet("my-bookings")]
+        public async Task<IActionResult> GetMyBookings()
+        {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
             var bookings = await _bookingRepository.GetByUserAsync(userId);
 
-            // Chuyển đổi sang DTO để cắt đứt vòng lặp
             var response = bookings.Select(b => new BookingResponseDTO
             {
                 BookingId = b.BookingId,
@@ -25,27 +33,74 @@ namespace Goplay_API.Controllers
                 Status = b.Status,
                 TotalPrice = b.TotalPrice,
                 FieldId = b.FieldId,
-                // Chỉ lấy danh sách ID của Slot, không lấy nguyên object Slot
                 SlotIds = b.BookingTimeSlots.Select(bts => bts.SlotId).ToList()
             });
 
             return Ok(response);
         }
 
-        [HttpGet("get-by-field/{fieldId}/date/{date}")]
+        [Authorize(Roles="OwnerField")]
+        [HttpGet("owner-bookings")]
+        public async Task<IActionResult> GetOwnerBookings()
+        {
+            int ownerUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var bookings = await _bookingRepository.GetByOwnerAsync(ownerUserId);
+
+            var response = bookings.Select(b => new BookingResponseDTO
+            {
+                BookingId = b.BookingId,
+                BookingDate = b.BookingDate,
+                Status = b.Status,
+                TotalPrice = b.TotalPrice,
+                FieldId = b.FieldId,
+                SlotIds = b.BookingTimeSlots.Select(s => s.SlotId).ToList()
+            });
+
+            return Ok(response);
+        }
+
+        [Authorize(Roles = "OwnerField")]
+        [HttpPut("owner/{id}/status")]
+        public async Task<IActionResult> OwnerUpdateStatus(
+           int id,
+           [FromBody] UpdateBookingStatusDTO dto)
+        {
+            int ownerUserId = int.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)!
+            );
+
+            try
+            {
+                var result = await _bookingRepository
+                    .OwnerUpdateStatusAsync(ownerUserId, id, dto.Status);
+
+                return result ? NoContent() : NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("by-field/{fieldId}/date/{date}")]
         public async Task<IActionResult> GetByFieldAndDate(int fieldId, DateTime date)
         {
             var bookings = await _bookingRepository.GetByFieldAndDateAsync(fieldId, date);
             return Ok(bookings);
         }
 
+        [Authorize]
         [HttpGet("get-by-id/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var booking = await _bookingRepository.GetByIdAsync(id);
-            if (booking == null) return NotFound(new { message = "Booking not found" });
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            // Chuyển đổi sang DTO
+            var booking = await _bookingRepository.GetByIdAsync(id);
+            if (booking == null || booking.UserId != userId)
+                return NotFound();
+
             var response = new BookingResponseDTO
             {
                 BookingId = booking.BookingId,
@@ -59,17 +114,22 @@ namespace Goplay_API.Controllers
             return Ok(response);
         }
 
+        [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] BookingCreateDTO dto)
         {
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
             try
             {
-                var booking = await _bookingRepository.CreateAsync(dto);
+                var booking = await _bookingRepository.CreateAsync(userId, dto);
+
                 return Ok(new BookingResponseDTO
                 {
                     BookingId = booking.BookingId,
                     BookingDate = booking.BookingDate,
                     Status = booking.Status,
+                    TotalPrice = booking.TotalPrice,
                     FieldId = booking.FieldId,
                     SlotIds = booking.BookingTimeSlots.Select(b => b.SlotId).ToList()
                 });
@@ -80,11 +140,14 @@ namespace Goplay_API.Controllers
             }
         }
 
+        [Authorize]
         [HttpPut("cancel/{id}")]
         public async Task<IActionResult> Cancel(int id)
         {
-            var success = await _bookingRepository.CancelAsync(id);
-            return success ? Ok(new { message = "Booking cancelled" }) : NotFound(new { message = "Booking not found" });
+            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var success = await _bookingRepository.CancelAsync(userId, id);
+            return success ? Ok(new { message = "Booking cancelled" }) : NotFound();
         }
     }
 }

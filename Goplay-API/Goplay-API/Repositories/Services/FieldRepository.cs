@@ -23,6 +23,7 @@ namespace Goplay_API.Repositories.Services
                 .Include(f => f.Location)
                 .Include(f => f.OwnerProfile)
                 .Include(f => f.Images)
+                .Include(f => f.Reviews)
                 .Where(f => f.OwnerProfile.Status == "Approved")
                 .ToListAsync();
 
@@ -32,6 +33,7 @@ namespace Goplay_API.Repositories.Services
                 .Include(f => f.Location)
                 .Include(f => f.OwnerProfile)
                 .Include(f => f.Images)
+                .Include(f => f.Reviews)
                 .FirstOrDefaultAsync(f => f.FieldId == id && f.OwnerProfile.Status == "Approved");
 
         public async Task<IEnumerable<Field>> FilterAsync(string? city, string? district, int? sportTypeId)
@@ -40,6 +42,8 @@ namespace Goplay_API.Repositories.Services
                 .Include(f => f.SportType)
                 .Include(f => f.Location)
                 .Include(f => f.OwnerProfile)
+                .Include(f => f.Images)
+                .Include(f => f.Reviews)
                 .Where(f => f.OwnerProfile.Status == "Approved")
                 .AsQueryable();
 

@@ -1,5 +1,4 @@
-﻿using Goplay_API.Model.Domain;
-using Goplay_API.Model.DTO;
+﻿using Goplay_API.Model.DTO;
 using Goplay_API.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +42,7 @@ namespace Goplay_API.Controllers
             return Ok(new ContactResponseDTO(contact));
         }
 
+        [Authorize(Roles = "Admin,OwnerField")]
         [HttpPost("reply/{id}")]
         public async Task<IActionResult> Reply(int id, ContactReplyDTO dto)
         {
@@ -51,6 +51,7 @@ namespace Goplay_API.Controllers
             return result ? NoContent() : NotFound();
         }
 
+        [Authorize(Roles = "Admin,OwnerField")]
         [HttpPost("close/{id}")]
         public async Task<IActionResult> Close(int id)
         {
@@ -58,5 +59,4 @@ namespace Goplay_API.Controllers
             return result ? NoContent() : NotFound();
         }
     }
-
 }
