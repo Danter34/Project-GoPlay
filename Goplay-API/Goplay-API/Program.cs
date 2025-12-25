@@ -16,6 +16,9 @@ builder.Configuration.AddEnvironmentVariables();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 var vnPayHashSecret = builder.Configuration["VnPaySettings:HashSecret"];
+
+var momoAccessKey = builder.Configuration["MomoSettings:AccessKey"];
+var momoSecretKey = builder.Configuration["MomoSettings:SecretKey"];
 // Add services to the container.
 
 builder.Services.AddControllers();

@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "D:\\Goplay\\Goplay-API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|D:\\Goplay\\Goplay-API\\goplay-api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|d:\\goplay\\goplay-api\\goplay-api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|solutionrelative:goplay-api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|d:\\goplay\\goplay-api\\goplay-api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|D:\\Goplay\\Goplay-API\\goplay-api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|solutionrelative:goplay-api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|D:\\Goplay\\Goplay-API\\goplay-api\\goplay-api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|solutionrelative:goplay-api\\goplay-api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|D:\\Goplay\\Goplay-API\\goplay-api\\controllers\\bookingscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -219,10 +223,6 @@
       "RelativeMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|solutionrelative:goplay-api\\model\\dto\\fieldcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|D:\\Goplay\\Goplay-API\\goplay-api\\goplay-api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
-      "RelativeMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|solutionrelative:goplay-api\\goplay-api.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|D:\\Goplay\\Goplay-API\\goplay-api\\repositories\\services\\sporttyperepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A251F893-DAE8-4C91-B5F6-53AFB8B9F29C}|Goplay-API\\Goplay-API.csproj|solutionrelative:goplay-api\\repositories\\services\\sporttyperepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -341,7 +341,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -350,18 +350,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "PaymentController.cs",
-              "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\PaymentController.cs",
-              "RelativeDocumentMoniker": "Goplay-API\\Controllers\\PaymentController.cs",
-              "ToolTip": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\PaymentController.cs",
-              "RelativeToolTip": "Goplay-API\\Controllers\\PaymentController.cs",
-              "ViewState": "AQIAACUAAAAAAAAAAAA5wDYAAAAuAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-19T12:25:35.495Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
               "Title": "AuthController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\AuthController.cs",
@@ -373,7 +361,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "BookingsController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\BookingsController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\BookingsController.cs",
@@ -391,10 +379,9 @@
               "RelativeDocumentMoniker": "Goplay-API\\Program.cs",
               "ToolTip": "D:\\Goplay\\Goplay-API\\Goplay-API\\Program.cs",
               "RelativeToolTip": "Goplay-API\\Program.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAsAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAABEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-17T08:32:38.543Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-17T08:32:38.543Z"
             },
             {
               "$type": "Document",
@@ -404,14 +391,14 @@
               "RelativeDocumentMoniker": "Goplay-API\\appsettings.json",
               "ToolTip": "D:\\Goplay\\Goplay-API\\Goplay-API\\appsettings.json",
               "RelativeToolTip": "Goplay-API\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAABBAAAA",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAAAoAAAAEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-12-17T08:31:24.018Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "PaymentRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Services\\PaymentRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Services\\PaymentRepository.cs",
@@ -423,7 +410,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 2,
+              "Title": "Goplay-API.http",
+              "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Goplay-API.http",
+              "RelativeDocumentMoniker": "Goplay-API\\Goplay-API.http",
+              "ToolTip": "D:\\Goplay\\Goplay-API\\Goplay-API\\Goplay-API.http",
+              "RelativeToolTip": "Goplay-API\\Goplay-API.http",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-12-19T17:32:47.722Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PaymentController.cs",
+              "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\PaymentController.cs",
+              "RelativeDocumentMoniker": "Goplay-API\\Controllers\\PaymentController.cs",
+              "ToolTip": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\PaymentController.cs",
+              "RelativeToolTip": "Goplay-API\\Controllers\\PaymentController.cs",
+              "ViewState": "AQIAACUAAAAAAAAAAAA5wDYAAAAuAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-19T12:25:35.495Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Payment.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\Payment.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\Payment.cs",
@@ -435,7 +446,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "BookingTimeSlot.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\BookingTimeSlot.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\BookingTimeSlot.cs",
@@ -459,7 +470,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "OwnerProfileRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Services\\OwnerProfileRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Services\\OwnerProfileRepository.cs",
@@ -471,7 +482,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "JwtService.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Helpers\\JwtService.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Helpers\\JwtService.cs",
@@ -483,7 +494,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "BookingStatus.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Helpers\\BookingStatus.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Helpers\\BookingStatus.cs",
@@ -495,7 +506,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "BookingRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Services\\BookingRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Services\\BookingRepository.cs",
@@ -507,7 +518,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "PaymentRequest.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\PaymentRequest.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\PaymentRequest.cs",
@@ -519,7 +530,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "PaymentResponse.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\PaymentResponse.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\PaymentResponse.cs",
@@ -531,7 +542,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "BookingCreateDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\BookingCreateDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\BookingCreateDTO.cs",
@@ -543,7 +554,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "IBookingRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Interface\\IBookingRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Interface\\IBookingRepository.cs",
@@ -555,7 +566,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "IOwnerProfileRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Interface\\IOwnerProfileRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Interface\\IOwnerProfileRepository.cs",
@@ -567,7 +578,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "OwnerProfilesController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\OwnerProfilesController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\OwnerProfilesController.cs",
@@ -579,7 +590,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "UpdateBookingStatusDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\UpdateBookingStatusDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\UpdateBookingStatusDTO.cs",
@@ -591,7 +602,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "FieldsController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\FieldsController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\FieldsController.cs",
@@ -603,7 +614,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "BookingResponseDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\BookingResponseDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\BookingResponseDTO.cs",
@@ -615,7 +626,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "Booking.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\Booking.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\Booking.cs",
@@ -627,7 +638,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "ContactRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Services\\ContactRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Services\\ContactRepository.cs",
@@ -639,7 +650,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 24,
               "Title": "User.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\User.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\User.cs",
@@ -651,7 +662,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 30,
               "Title": "Image.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\Image.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\Image.cs",
@@ -663,7 +674,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "TimeSlot.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\TimeSlot.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\TimeSlot.cs",
@@ -675,7 +686,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 26,
               "Title": "SportType.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\SportType.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\SportType.cs",
@@ -687,7 +698,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 27,
               "Title": "Review.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\Review.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\Review.cs",
@@ -699,7 +710,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 28,
               "Title": "OwnerProfile.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\OwnerProfile.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\OwnerProfile.cs",
@@ -711,7 +722,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 29,
               "Title": "Location.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\Location.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\Location.cs",
@@ -723,7 +734,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 31,
               "Title": "Field.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\Field.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\Field.cs",
@@ -735,7 +746,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 32,
               "Title": "Contact.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\Domain\\Contact.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\Domain\\Contact.cs",
@@ -747,7 +758,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 33,
               "Title": "TimeSlotsController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\TimeSlotsController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\TimeSlotsController.cs",
@@ -759,7 +770,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 34,
               "Title": "StatisticsController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\StatisticsController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\StatisticsController.cs",
@@ -771,7 +782,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 35,
               "Title": "SportTypesController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\SportTypesController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\SportTypesController.cs",
@@ -783,7 +794,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 36,
               "Title": "ReviewsController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\ReviewsController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\ReviewsController.cs",
@@ -795,7 +806,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 37,
               "Title": "ReviewRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Services\\ReviewRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Services\\ReviewRepository.cs",
@@ -807,7 +818,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 38,
               "Title": "LocationController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\LocationController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\LocationController.cs",
@@ -819,7 +830,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 39,
               "Title": "ImageController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\ImageController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\ImageController.cs",
@@ -831,7 +842,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 40,
               "Title": "ContactsController.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Controllers\\ContactsController.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Controllers\\ContactsController.cs",
@@ -843,7 +854,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 41,
               "Title": "StatisticsRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Services\\StatisticsRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Services\\StatisticsRepository.cs",
@@ -855,7 +866,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 42,
               "Title": "IStatisticsRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Interface\\IStatisticsRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Interface\\IStatisticsRepository.cs",
@@ -867,7 +878,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 44,
               "Title": "OwnerDashboardDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\OwnerDashboardDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\OwnerDashboardDTO.cs",
@@ -879,7 +890,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 45,
               "Title": "RevenueByFieldDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\RevenueByFieldDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\RevenueByFieldDTO.cs",
@@ -891,7 +902,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 43,
               "Title": "IReviewRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Interface\\IReviewRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Interface\\IReviewRepository.cs",
@@ -903,7 +914,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 46,
               "Title": "RevenueByTimeDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\RevenueByTimeDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\RevenueByTimeDTO.cs",
@@ -927,7 +938,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 48,
               "Title": "DbContext.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Data\\DbContext.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Data\\DbContext.cs",
@@ -939,7 +950,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 50,
               "Title": "FieldResponseDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\FieldResponseDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\FieldResponseDTO.cs",
@@ -951,7 +962,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 47,
               "Title": "FieldRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Services\\FieldRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Services\\FieldRepository.cs",
@@ -963,7 +974,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 49,
               "Title": "ImageRepository.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Repositories\\Services\\ImageRepository.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Repositories\\Services\\ImageRepository.cs",
@@ -975,7 +986,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 50,
+              "DocumentIndex": 51,
               "Title": "OwnerProfileResponseDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\OwnerProfileResponseDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\OwnerProfileResponseDTO.cs",
@@ -987,7 +998,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 51,
+              "DocumentIndex": 52,
               "Title": "OwnerProfileRegisterDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\OwnerProfileRegisterDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\OwnerProfileRegisterDTO.cs",
@@ -999,7 +1010,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 52,
+              "DocumentIndex": 53,
               "Title": "FieldUpdateDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\FieldUpdateDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\FieldUpdateDTO.cs",
@@ -1011,7 +1022,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 53,
+              "DocumentIndex": 54,
               "Title": "FieldCreateDTO.cs",
               "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Model\\DTO\\FieldCreateDTO.cs",
               "RelativeDocumentMoniker": "Goplay-API\\Model\\DTO\\FieldCreateDTO.cs",
@@ -1020,18 +1031,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-19T13:24:13.775Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 54,
-              "Title": "Goplay-API.http",
-              "DocumentMoniker": "D:\\Goplay\\Goplay-API\\Goplay-API\\Goplay-API.http",
-              "RelativeDocumentMoniker": "Goplay-API\\Goplay-API.http",
-              "ToolTip": "D:\\Goplay\\Goplay-API\\Goplay-API\\Goplay-API.http",
-              "RelativeToolTip": "Goplay-API\\Goplay-API.http",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2025-12-19T17:32:47.722Z"
             },
             {
               "$type": "Document",
