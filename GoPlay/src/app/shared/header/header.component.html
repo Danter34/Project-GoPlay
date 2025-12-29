@@ -1,0 +1,42 @@
+<nav class="navbar">
+  <div class="container nav-container">
+    
+    <div class="left-section">
+      <div class="mobile-menu-btn" (click)="openSidebar()">
+        <i class="fas fa-bars"></i>
+      </div>
+      <a routerLink="/" class="logo">
+        <i class="fas fa-futbol"></i> SportBook
+      </a>
+    </div>
+
+    <div class="right-section">
+      <a href="#" class="btn-login">Đăng nhập</a>
+    </div>
+
+  </div>
+</nav>
+
+<aside class="sidebar-menu" [class.active]="isSidebarOpen">
+  <div class="sidebar-header">
+    <span class="sidebar-title">Menu</span>
+    <button class="close-btn" (click)="closeSidebar()">&times;</button>
+  </div>
+  
+  <div class="sidebar-links">
+    <a routerLink="/" class="sidebar-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
+      <i class="fas fa-home"></i> Trang chủ
+    </a>
+    <a routerLink="/fields" class="sidebar-link" routerLinkActive="active" (click)="closeSidebar()">
+      <i class="fas fa-map-marked-alt"></i> Sân bãi
+    </a>
+    <a href="#" class="sidebar-link" (click)="closeSidebar()">
+      <i class="fas fa-newspaper"></i> Tin tức
+    </a>
+    <a href="#" class="sidebar-link" (click)="closeSidebar()">
+      <i class="fas fa-envelope"></i> Liên hệ
+    </a>
+  </div>
+</aside>
+
+<div class="sidebar-overlay" [class.active]="isSidebarOpen" (click)="closeSidebar()"></div>

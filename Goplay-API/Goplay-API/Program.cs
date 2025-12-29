@@ -22,7 +22,16 @@ var momoSecretKey = builder.Configuration["MomoSettings:SecretKey"];
 // Add services to the container.
 
 builder.Services.AddControllers();
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200") // Địa chỉ Angular
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -104,13 +113,14 @@ builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "GoPlay API v1");
+});
 
-app.UseHttpsRedirection();
+app.UseCors("AllowAngular");
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

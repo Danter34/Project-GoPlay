@@ -1,0 +1,48 @@
+<div class="container detail-page" *ngIf="field">
+  <div class="gallery-section">
+    <div class="main-image">
+      <img [src]="selectedImage || 'assets/placeholder.jpg'" alt="Main view">
+    </div>
+    <div class="thumbnail-list">
+      <img *ngFor="let img of field.images" 
+           [src]="img" 
+           (click)="changeImage(img)" 
+           [class.active]="img === selectedImage">
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="header-info">
+      <span class="status-badge" [class.open]="field.status === 'Active'">{{ field.status === 'Active' ? 'Còn sân' : 'Đã đầy' }}</span>
+      <h1 class="title">{{ field.fieldName }}</h1>
+      <p class="address"><i class="fa fa-map-marker"></i> {{ field.district }}, {{ field.city }}</p>
+    </div>
+
+    <div class="price-box">
+      <span class="label">Giá thuê từ:</span>
+      <span class="price">{{ field.price | number }}đ / giờ</span>
+    </div>
+
+    <div class="specs">
+      <div class="spec-item">
+        <strong>Môn:</strong> {{ field.sportName }}
+      </div>
+      <div class="spec-item">
+        <strong>Đánh giá:</strong> {{ field.averageRating }} <i class="fa fa-star text-warning"></i>
+      </div>
+      <div class="spec-item">
+        <strong>Lượt xem:</strong> {{ field.totalReviews }}
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-booking">Đặt lịch ngay</button>
+      <button class="btn-contact">Liên hệ chủ sân</button>
+    </div>
+
+    <div class="description">
+      <h3>Mô tả</h3>
+      <p>Sân bóng chất lượng cao, cỏ nhân tạo mới, hệ thống đèn chiếu sáng tiêu chuẩn...</p>
+      </div>
+  </div>
+</div>
