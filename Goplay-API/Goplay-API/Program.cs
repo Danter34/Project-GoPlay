@@ -4,13 +4,15 @@ using Goplay_API.Repositories.Interface;
 using Goplay_API.Repositories.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.Configure<AppSettings>(
+    builder.Configuration.GetSection("AppSettings"));
 //cấu hình biến môi trường 
 builder.Configuration.AddEnvironmentVariables();
 

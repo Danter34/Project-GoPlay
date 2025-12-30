@@ -146,3 +146,4 @@ D:\Goplay\Goplay-API\Goplay-API\obj\Release\net8.0\refint\Goplay-API.dll
 D:\Goplay\Goplay-API\Goplay-API\obj\Release\net8.0\Goplay-API.pdb
 D:\Goplay\Goplay-API\Goplay-API\obj\Release\net8.0\Goplay-API.genruntimeconfig.cache
 D:\Goplay\Goplay-API\Goplay-API\obj\Release\net8.0\ref\Goplay-API.dll
+D:\Goplay\Goplay-API\Goplay-API\bin\Release\net8.0\Goplay-API.staticwebassets.runtime.json

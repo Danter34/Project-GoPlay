@@ -1,7 +1,9 @@
-﻿using Goplay_API.Model.DTO;
+﻿using Goplay_API.Helpers;
+using Goplay_API.Model.DTO;
 using Goplay_API.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Security.Claims;
 
 namespace Goplay_API.Controllers
@@ -11,18 +13,51 @@ namespace Goplay_API.Controllers
     public class FieldsController : ControllerBase
     {
         private readonly IFieldRepository _service;
+        private readonly string _baseUrl;
 
-        public FieldsController(IFieldRepository service)
+        public FieldsController(IFieldRepository service, IOptions<AppSettings> appSettings)
         {
             _service = service;
+            _baseUrl = appSettings.Value.BaseUrl;
         }
 
         [AllowAnonymous]
         [HttpGet("get-all")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllPaged(
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
         {
-            var fields = await _service.GetAllAsync();
-            return Ok(fields.Select(f => new FieldResponseDTO(f)));
+            if (page < 1) page = 1;
+            if (pageSize < 1 || pageSize > 50) pageSize = 10;
+
+            var result = await _service.GetAllPagedAsync(page, pageSize);
+
+            return Ok(new PagedResult<FieldResponseDTO>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = result.TotalItems,
+                Items = result.Items
+                    .Select(f => new FieldResponseDTO(f, _baseUrl))
+                    .ToList()
+            });
+        }
+
+        [AllowAnonymous]
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromQuery] FieldSearchQueryDTO query)
+        {
+            var result = await _service.SearchAsync(query);
+
+            return Ok(new PagedResult<FieldResponseDTO>
+            {
+                Page = query.Page,
+                PageSize = query.PageSize,
+                TotalItems = result.TotalItems,
+                Items = result.Items
+                    .Select(f => new FieldResponseDTO(f, _baseUrl))
+                    .ToList()
+            });
         }
 
         [AllowAnonymous]
@@ -31,19 +66,56 @@ namespace Goplay_API.Controllers
         {
             var field = await _service.GetByIdAsync(id);
             if (field == null) return NotFound();
-            return Ok(new FieldResponseDTO(field));
+            return Ok(new FieldResponseDTO(field, _baseUrl));
+        }
+        [Authorize(Roles = "OwnerField")]
+        [HttpGet("my-fields")]
+        public async Task<IActionResult> GetMyFields(
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+            var result = await _service.GetMyFieldsAsync(userId, page, pageSize);
+
+            return Ok(new PagedResult<FieldResponseDTO>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = result.TotalItems,
+                Items = result.Items
+                    .Select(f => new FieldResponseDTO(f, _baseUrl))
+                    .ToList()
+            });
         }
 
         [AllowAnonymous]
         [HttpGet("filter")]
-        public async Task<IActionResult> Filter(
-            [FromQuery] string? city,
-            [FromQuery] string? district,
-            [FromQuery] int? sportTypeId)
+        public async Task<IActionResult> FilterPaged(
+     [FromQuery] string? city,
+     [FromQuery] string? district,
+     [FromQuery] int? sportTypeId,
+     [FromQuery] int page = 1,
+     [FromQuery] int pageSize = 10)
         {
-            var fields = await _service.FilterAsync(city, district, sportTypeId);
-            return Ok(fields.Select(f => new FieldResponseDTO(f)));
+            if (page < 1) page = 1;
+            if (pageSize < 1 || pageSize > 50) pageSize = 10;
+
+            var result = await _service.FilterPagedAsync(
+                city, district, sportTypeId, page, pageSize);
+
+            return Ok(new PagedResult<FieldResponseDTO>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = result.TotalItems,
+                Items = result.Items
+                    .Select(f => new FieldResponseDTO(f, _baseUrl))
+                    .ToList()
+            });
         }
+
+
 
         [Authorize(Roles = "OwnerField")]
         [HttpPost("create")]

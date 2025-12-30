@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\images\\fields\\46f58fba-9d4f-41da-8350-e4054fec0897.png",
+      "PackagePath": "staticwebassets\\images\\fields\\46f58fba-9d4f-41da-8350-e4054fec0897.png"
+    },
+    {
+      "Id": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\images\\fields\\86c424f9-934e-4fd6-9fe5-356adff2b148.png",
+      "PackagePath": "staticwebassets\\images\\fields\\86c424f9-934e-4fd6-9fe5-356adff2b148.png"
+    },
+    {
+      "Id": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\images\\fields\\cf66720a-1c60-4f8c-880c-846b7bfefbf2.png",
+      "PackagePath": "staticwebassets\\images\\fields\\cf66720a-1c60-4f8c-880c-846b7bfefbf2.png"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.Goplay-API.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.build.Goplay-API.props",
+      "PackagePath": "build\\Goplay-API.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Goplay-API.props",
+      "PackagePath": "buildMultiTargeting\\Goplay-API.props"
+    },
+    {
+      "Id": "obj\\Release\\net8.0\\staticwebassets\\msbuild.buildTransitive.Goplay-API.props",
+      "PackagePath": "buildTransitive\\Goplay-API.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

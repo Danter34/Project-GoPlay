@@ -1,4 +1,5 @@
-﻿using Goplay_API.Model.Domain;
+﻿using Azure.Core;
+using Goplay_API.Model.Domain;
 
 namespace Goplay_API.Model.DTO
 {
@@ -26,7 +27,7 @@ namespace Goplay_API.Model.DTO
         // Tên doanh nghiệp
         public string BusinessName { get; set; }
 
-        public FieldResponseDTO(Field f)
+        public FieldResponseDTO(Field f, string baseUrl)
         {
             FieldId = f.FieldId;
             FieldName = f.FieldName;
@@ -42,7 +43,9 @@ namespace Goplay_API.Model.DTO
             Longitude = f.Location != null ? (decimal?)f.Location.Longitude : null;
 
             // Check property ảnh đúng tên
-            Images = f.Images?.Select(i => i.ImageUrl).ToList() ?? new List<string>();
+            Images = f.Images?
+             .Select(img => baseUrl.TrimEnd('/') + img.ImageUrl)
+             .ToList() ?? new();
 
             BusinessName = f.OwnerProfile?.BusinessName ?? "";
 

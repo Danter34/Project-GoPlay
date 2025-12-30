@@ -26,6 +26,28 @@ namespace Goplay_API.Repositories.Services
                 .Include(f => f.Reviews)
                 .Where(f => f.OwnerProfile.Status == "Approved")
                 .ToListAsync();
+        public async Task<(int TotalItems, List<Field> Items)> GetAllPagedAsync(
+    int page, int pageSize)
+        {
+            var query = _context.Fields
+                .Include(f => f.SportType)
+                .Include(f => f.Location)
+                .Include(f => f.OwnerProfile)
+                .Include(f => f.Images)
+                .Include(f => f.Reviews)
+                .Where(f => f.OwnerProfile.Status == "Approved");
+
+            var totalItems = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(f => f.FieldId) // ổn định + mới trước
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (totalItems, items);
+        }
+
 
         public async Task<Field?> GetByIdAsync(int id) =>
             await _context.Fields
@@ -159,5 +181,95 @@ namespace Goplay_API.Repositories.Services
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<(int TotalItems, List<Field> Items)> SearchAsync(FieldSearchQueryDTO q)
+        {
+            var query = _context.Fields
+                .Include(f => f.SportType)
+                .Include(f => f.Location)
+                .Include(f => f.OwnerProfile)
+                .Include(f => f.Images)
+                .Include(f => f.Reviews)
+                .Where(f => f.OwnerProfile.Status == "Approved")
+                .AsQueryable();
+            if (!string.IsNullOrWhiteSpace(q.Keyword))
+            {
+                query = query.Where(f =>
+                    EF.Functions.Like(f.FieldName, $"%{q.Keyword}%"));
+            }
+
+            var totalItems = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(f => f.FieldId) // ổn định
+                .Skip((q.Page - 1) * q.PageSize)
+                .Take(q.PageSize)
+                .ToListAsync();
+
+            return (totalItems, items);
+        }
+        public async Task<(int TotalItems, List<Field> Items)> GetMyFieldsAsync(
+    int userId, int page, int pageSize)
+        {
+            var owner = await _context.OwnerProfiles
+                .FirstOrDefaultAsync(o => o.UserId == userId);
+
+            if (owner == null)
+                return (0, new());
+
+            var query = _context.Fields
+                .Include(f => f.SportType)
+                .Include(f => f.Location)
+                .Include(f => f.Images)
+                .Include(f => f.Reviews)
+                .Where(f => f.OwnerProfileId == owner.OwnerProfileId);
+
+            var totalItems = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(f => f.FieldId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (totalItems, items);
+        }
+
+        public async Task<(int TotalItems, List<Field> Items)> FilterPagedAsync(
+    string? city,
+    string? district,
+    int? sportTypeId,
+    int page,
+    int pageSize)
+        {
+            var query = _context.Fields
+                .Include(f => f.SportType)
+                .Include(f => f.Location)
+                .Include(f => f.OwnerProfile)
+                .Include(f => f.Images)
+                .Include(f => f.Reviews)
+                .Where(f => f.OwnerProfile.Status == "Approved")
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(city))
+                query = query.Where(f => f.Location.City == city);
+
+            if (!string.IsNullOrEmpty(district))
+                query = query.Where(f => f.Location.District == district);
+
+            if (sportTypeId.HasValue)
+                query = query.Where(f => f.SportTypeId == sportTypeId);
+
+            var totalItems = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(f => f.FieldId)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (totalItems, items);
+        }
+
+
     }
 }

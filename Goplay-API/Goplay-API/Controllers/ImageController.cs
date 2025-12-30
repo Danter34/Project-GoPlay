@@ -1,6 +1,8 @@
-﻿using Goplay_API.Repositories.Interface;
-using Microsoft.AspNetCore.Http;
+﻿using Goplay_API.Helpers;
+using Goplay_API.Model.DTO;
+using Goplay_API.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Goplay_API.Controllers
 {
@@ -9,10 +11,14 @@ namespace Goplay_API.Controllers
     public class ImageController : ControllerBase
     {
         private readonly IImageRepository _imageRepository;
+        private readonly string _baseUrl;
 
-        public ImageController(IImageRepository imageRepository)
+        public ImageController(
+            IImageRepository imageRepository,
+            IOptions<AppSettings> appSettings)
         {
             _imageRepository = imageRepository;
+            _baseUrl = appSettings.Value.BaseUrl;
         }
 
         [HttpPost("upload/{fieldId}")]
@@ -21,7 +27,7 @@ namespace Goplay_API.Controllers
             try
             {
                 var image = await _imageRepository.UploadAsync(fieldId, file);
-                return Ok(image);
+                return Ok(new ImageResponseDTO(image, _baseUrl));
             }
             catch (Exception ex)
             {
@@ -33,7 +39,12 @@ namespace Goplay_API.Controllers
         public async Task<IActionResult> GetByField(int fieldId)
         {
             var images = await _imageRepository.GetByFieldAsync(fieldId);
-            return Ok(images);
+
+            var result = images
+                .Select(img => new ImageResponseDTO(img, _baseUrl))
+                .ToList();
+
+            return Ok(result);
         }
 
         [HttpDelete("delete/{id}")]

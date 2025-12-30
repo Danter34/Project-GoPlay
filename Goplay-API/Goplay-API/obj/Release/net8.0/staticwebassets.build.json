@@ -1,11 +1,77 @@
 {
   "Version": 1,
-  "Hash": "weZeb78VsyCfF0Osnh1Cngks7xpiJbwsHVt5AvTZNPg=",
+  "Hash": "d0arbTRitdSTXX54jOvzEJoppYvczMUCOg5Dxv/x1DY=",
   "Source": "Goplay-API",
   "BasePath": "_content/Goplay-API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "Goplay-API\\wwwroot",
+      "Source": "Goplay-API",
+      "ContentRoot": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\",
+      "BasePath": "_content/Goplay-API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\images\\fields\\46f58fba-9d4f-41da-8350-e4054fec0897.png",
+      "SourceId": "Goplay-API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\",
+      "BasePath": "_content/Goplay-API",
+      "RelativePath": "images/fields/46f58fba-9d4f-41da-8350-e4054fec0897.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\fields\\46f58fba-9d4f-41da-8350-e4054fec0897.png"
+    },
+    {
+      "Identity": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\images\\fields\\86c424f9-934e-4fd6-9fe5-356adff2b148.png",
+      "SourceId": "Goplay-API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\",
+      "BasePath": "_content/Goplay-API",
+      "RelativePath": "images/fields/86c424f9-934e-4fd6-9fe5-356adff2b148.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\fields\\86c424f9-934e-4fd6-9fe5-356adff2b148.png"
+    },
+    {
+      "Identity": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\images\\fields\\cf66720a-1c60-4f8c-880c-846b7bfefbf2.png",
+      "SourceId": "Goplay-API",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Goplay\\Goplay-API\\Goplay-API\\wwwroot\\",
+      "BasePath": "_content/Goplay-API",
+      "RelativePath": "images/fields/cf66720a-1c60-4f8c-880c-846b7bfefbf2.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\fields\\cf66720a-1c60-4f8c-880c-846b7bfefbf2.png"
+    }
+  ]
 }

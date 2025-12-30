@@ -42,7 +42,7 @@
   <h2 class="section-title">Danh Sách Sân Bãi</h2>
   
   <div class="fields-grid">
-      <div class="field-card" *ngFor="let field of paginatedFields" [routerLink]="['/field', field.fieldId]">
+      <div class="field-card" *ngFor="let field of fields" [routerLink]="['/field', field.fieldId]">
           <div class="card-img-wrapper">
               <div class="status-badge" [ngClass]="field.status === 'Active' ? 'bg-success' : 'bg-danger'">
                   {{ field.status === 'Active' ? 'Còn sân' : 'Đã đầy' }}

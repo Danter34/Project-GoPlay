@@ -1,0 +1,72 @@
+<div class="container" style="margin-top: 40px;">
+
+  <h2 class="section-title">
+    Kết quả tìm kiếm: "{{ keyword }}" 
+    <span style="font-size: 0.6em; color: #777; font-weight: normal">
+      ({{ totalItems }} kết quả)
+    </span>
+  </h2>
+
+  <div class="filter-bar">
+      <div class="select-wrapper">
+        <select class="custom-select" [(ngModel)]="sortPrice" (change)="onSortChange()">
+            <option value="">Sắp xếp giá</option>
+            <option value="asc">Giá: Thấp đến Cao</option>
+            <option value="desc">Giá: Cao đến Thấp</option>
+        </select>
+        <i class="fas fa-tag select-icon"></i>
+      </div>
+  </div>
+
+  <div class="fields-grid">
+      <div class="field-card" *ngFor="let field of fields" [routerLink]="['/field', field.fieldId]">
+          <div class="card-img-wrapper">
+              <div class="status-badge" [ngClass]="field.status === 'Active' ? 'bg-success' : 'bg-danger'">
+                  {{ field.status === 'Active' ? 'Còn sân' : 'Đã đầy' }}
+              </div>
+              <div class="rating-badge"><i class="fas fa-star"></i> {{ field.averageRating }}</div>
+              
+              <img [src]="field.images.length > 0 ? field.images[0] : 'assets/placeholder.jpg'" 
+                   [alt]="field.fieldName" class="card-img">
+          </div>
+          
+          <div class="card-body">
+              <h3 class="card-title">{{ field.fieldName }}</h3>
+              <div class="card-meta">
+                  <i class="fas fa-map-marker-alt"></i> {{ field.district }}, {{ field.city }}
+              </div>
+              <div class="card-meta">
+                  <i class="fas fa-users"></i> {{ field.sportName }}
+              </div>
+              
+              <div class="card-footer">
+                  <div class="price">{{ field.price | number }}đ <span>/giờ</span></div>
+                  <button class="btn-book">Chi tiết</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <div *ngIf="fields.length === 0" style="text-align: center; padding: 60px 0;">
+      <i class="fas fa-search" style="font-size: 3rem; color: #ddd; margin-bottom: 20px;"></i>
+      <p style="color: #999; font-size: 1.1rem;">Không tìm thấy sân nào phù hợp.</p>
+  </div>
+
+  <div class="pagination-container" *ngIf="totalPages > 1">
+      <button class="btn-page" (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1">
+          <i class="fas fa-chevron-left"></i>
+      </button>
+
+      <button *ngFor="let page of pageNumbers" 
+              class="btn-page" 
+              [class.active]="page === currentPage"
+              (click)="changePage(page)">
+          {{ page }}
+      </button>
+
+      <button class="btn-page" (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages">
+          <i class="fas fa-chevron-right"></i>
+      </button>
+  </div>
+
+</div>
