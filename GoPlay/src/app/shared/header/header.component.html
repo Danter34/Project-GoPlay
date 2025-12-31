@@ -22,8 +22,24 @@
 </div>
 
     <div class="right-section">
-      <a href="#" class="btn-login">Đăng nhập</a>
-    </div>
+  
+  <a *ngIf="!currentUser" routerLink="/login" class="btn-login">Đăng nhập</a>
+
+  <div class="user-dropdown" *ngIf="currentUser" (click)="toggleUserMenu()">
+  
+  <div class="user-avatar">
+    <i class="fas fa-user-circle"></i>
+    <span class="user-name">{{ currentUser.unique_name || currentUser.email }}</span>
+  </div>
+  
+  <div class="dropdown-content" [class.show]="isUserMenuOpen">
+    <a href="#">Hồ sơ của tôi</a>
+    <a (click)="onLogout()">Đăng xuất</a>
+  </div>
+
+</div>
+
+</div>
 
   </div>
 </nav>
@@ -38,8 +54,8 @@
     <a routerLink="/" class="sidebar-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
       <i class="fas fa-home"></i> Trang chủ
     </a>
-    <a routerLink="/fields" class="sidebar-link" routerLinkActive="active" (click)="closeSidebar()">
-      <i class="fas fa-map-marked-alt"></i> Sân bãi
+    <a routerLink="/map" class="sidebar-link" routerLinkActive="active" (click)="closeSidebar()">
+      <i class="fas fa-map-marked-alt"></i> Bản đồ
     </a>
     <a href="#" class="sidebar-link" (click)="closeSidebar()">
       <i class="fas fa-newspaper"></i> Tin tức

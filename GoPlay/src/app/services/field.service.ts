@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Field } from '../models/field.model';
 import { PagedResult } from '../models/paged-result.model';
 @Injectable({
@@ -42,12 +42,18 @@ export class FieldService {
     );
   }
   search(query: any) {
-  let params = new HttpParams({ fromObject: query });
+    let params = new HttpParams({ fromObject: query });
 
-  return this.http.get<PagedResult<Field>>(
-    `${this.apiUrl}/search`,
-    { params }
-  );
-}
-  
+    return this.http.get<PagedResult<Field>>(
+      `${this.apiUrl}/search`,
+      { params }
+    );
+  }
+  getAllForMap(): Observable<Field[]> {
+    return this.http.get<Field[]>(`${this.apiUrl}/get-all`).pipe(
+      map(data => {
+      return data.filter(f => f.latitude != null && f.longitude != null);
+      })
+    );
+  }
 }

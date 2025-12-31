@@ -1,0 +1,26 @@
+<div class="auth-container">
+  <div class="auth-box">
+    <h2>Đăng Nhập</h2>
+    <p class="auth-subtitle">Chào mừng bạn quay trở lại!</p>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="model.email" name="email" required class="form-input" placeholder="Nhập email...">
+      </div>
+
+      <div class="form-group">
+        <label>Mật khẩu</label>
+        <input type="password" [(ngModel)]="model.password" name="password" required class="form-input" placeholder="******">
+      </div>
+
+      <button type="submit" class="btn-auth" [disabled]="isLoading">
+        {{ isLoading ? 'Đang đăng nhập...' : 'Đăng Nhập' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Chưa có tài khoản? <a routerLink="/register">Đăng ký ngay</a></p>
+    </div>
+  </div>
+</div>

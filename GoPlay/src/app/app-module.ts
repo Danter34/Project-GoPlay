@@ -11,7 +11,10 @@ import { FieldDetailComponent } from './view/field-detail/field-detail.component
 import { SearchResultComponent } from './view/search-result/search-result.component';
 import { HeaderComponent } from './shared/header/header.component';
 import { FooterComponent } from './shared/footer/footer.component';
-
+import { GoogleMapsModule } from '@angular/google-maps';
+import { MapSearchComponent } from './view/map-search/map-search.component';
+import { RegisterComponent } from './view/auth/register/register.component';
+import { LoginComponent } from './view/auth/login/login.component';
 @NgModule({
   declarations: [
     App,
@@ -19,13 +22,17 @@ import { FooterComponent } from './shared/footer/footer.component';
     FieldDetailComponent,
     SearchResultComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    MapSearchComponent,
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    GoogleMapsModule,
   ],
   providers: [],
   bootstrap: [App]

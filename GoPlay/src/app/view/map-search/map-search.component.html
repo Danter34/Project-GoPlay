@@ -1,0 +1,51 @@
+<div class="map-container">
+  
+  <div class="floating-filters">
+    <div class="filter-scroll">
+      <div class="filter-chip" 
+           *ngFor="let sport of sportFilters" 
+           [class.active]="sport.active"
+           (click)="filterSport(sport.id)">
+        <i class="fas" [ngClass]="sport.icon"></i> {{ sport.name }}
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-gps" (click)="getCurrentLocation()" title="Vị trí của tôi">
+    <i class="fas fa-crosshairs"></i>
+  </button>
+
+  <google-map 
+    height="100%" 
+    width="100%" 
+    [center]="center" 
+    [zoom]="zoom" 
+    [options]="mapOptions">
+
+    <map-marker 
+      *ngFor="let field of displayFields"
+      [position]="{ lat: field.latitude!, lng: field.longitude! }"
+      [title]="field.fieldName"
+      (mapClick)="openInfoWindow(markerElem, field)"
+      #markerElem="mapMarker">
+    </map-marker>
+
+    <map-info-window>
+      <div class="info-card" *ngIf="selectedField">
+        <div class="info-img-wrap">
+          <img [src]="selectedField.images[0] || 'assets/placeholder.jpg'" class="info-img">
+        </div>
+        <div class="info-content">
+          <h4 class="info-title">{{ selectedField.fieldName }}</h4>
+          <p class="info-sport"><i class="fas fa-running"></i> {{ selectedField.sportName }}</p>
+          <p class="info-addr"><i class="fas fa-map-marker-alt"></i> {{ selectedField.district }}, {{ selectedField.city }}</p>
+          <div class="info-footer">
+            <span class="info-price">{{ selectedField.price | number }}đ/h</span>
+            <a [routerLink]="['/field', selectedField.fieldId]" class="btn-detail">Xem</a>
+          </div>
+        </div>
+      </div>
+    </map-info-window>
+
+  </google-map>
+</div>
