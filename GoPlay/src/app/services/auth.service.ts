@@ -9,27 +9,34 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://apigplay.qzz.io/api/auth'; // Đổi port theo API của bạn
+  private apiUrl = 'https://apigplay.qzz.io/api/auth';
   private userSubject = new BehaviorSubject<any>(null);
-  public user$ = this.userSubject.asObservable(); // Observable để Header lắng nghe
+  public user$ = this.userSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
     this.loadUserFromStorage();
   }
+  private normalizeUser(token: string): any {
+    const decoded: any = jwtDecode(token);
+    return {
+      ...decoded,
+      // Ưu tiên role thường -> Role hoa -> Role theo link Microsoft
+      role: decoded.role || decoded.Role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+    };
+  }
 
-  // 1. Kiểm tra xem có token trong máy không khi web load lại
   private loadUserFromStorage() {
-   if (isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId)) {
       const token = localStorage.getItem('authToken');
       if (token) {
         if (this.isTokenExpired(token)) {
           this.logout();
         } else {
           try {
-            const decoded: any = jwtDecode(token);
-            this.userSubject.next(decoded);
+            // SỬA: Dùng hàm chuẩn hóa
+            const user = this.normalizeUser(token);
+            this.userSubject.next(user);
           } catch (e) {
-            // Nếu token lỗi format thì xóa đi
             localStorage.removeItem('authToken');
           }
         }
@@ -37,26 +44,23 @@ export class AuthService {
     }
   }
 
-  // 2. Đăng ký
   register(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data, { responseType: 'text' });
   }
 
-  // 3. Đăng nhập
- login(data: any): Observable<any> {
+  login(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, data).pipe(
       tap((res: any) => {
-        // 5. Kiểm tra trước khi lưu token
         if (isPlatformBrowser(this.platformId)) {
           localStorage.setItem('authToken', res.token);
         }
-        const decoded: any = jwtDecode(res.token);
-        this.userSubject.next(decoded);
+        // SỬA: Dùng hàm chuẩn hóa
+        const user = this.normalizeUser(res.token);
+        this.userSubject.next(user);
       })
     );
   }
 
-  // 4. Đăng xuất
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('authToken');
@@ -65,16 +69,13 @@ export class AuthService {
     window.location.href = '/';
   }
 
-  // 5. Kiểm tra đăng nhập chưa
   get isLoggedIn(): boolean {
-    // 7. Kiểm tra khi get trạng thái
     if (isPlatformBrowser(this.platformId)) {
       return !!localStorage.getItem('authToken');
     }
     return false;
   }
 
-  // Helper: Check token hết hạn
   private isTokenExpired(token: string): boolean {
     const decoded: any = jwtDecode(token);
     const currentTime = Date.now() / 1000;

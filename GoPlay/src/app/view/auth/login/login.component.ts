@@ -18,7 +18,7 @@ export class LoginComponent {
     this.isLoading = true;
     this.auth.login(this.model).subscribe({
       next: (res) => {
-        // Token đã được lưu trong Service
+
         this.router.navigate(['/']); // Về trang chủ
       },
       error: (err) => {

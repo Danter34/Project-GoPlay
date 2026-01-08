@@ -15,6 +15,9 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { MapSearchComponent } from './view/map-search/map-search.component';
 import { RegisterComponent } from './view/auth/register/register.component';
 import { LoginComponent } from './view/auth/login/login.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { OwnerRegisterComponent } from './view/owner-register/owner-register.component';
 @NgModule({
   declarations: [
     App,
@@ -25,7 +28,8 @@ import { LoginComponent } from './view/auth/login/login.component';
     FooterComponent,
     MapSearchComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    OwnerRegisterComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +38,9 @@ import { LoginComponent } from './view/auth/login/login.component';
     AppRoutingModule,
     GoogleMapsModule,
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [App]
 })
 export class AppModule {}
