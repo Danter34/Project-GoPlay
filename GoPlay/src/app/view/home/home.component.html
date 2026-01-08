@@ -44,8 +44,8 @@
   <div class="fields-grid">
       <div class="field-card" *ngFor="let field of fields" [routerLink]="['/field', field.fieldId]">
           <div class="card-img-wrapper">
-              <div class="status-badge" [ngClass]="field.status === 'Active' ? 'bg-success' : 'bg-danger'">
-                  {{ field.status === 'Active' ? 'Còn sân' : 'Đã đầy' }}
+              <div class="status-badge" [ngClass]="field.status === 'Available' ? 'bg-success' : 'bg-danger'">
+                  {{ field.status === 'Available' ? 'Còn sân' : 'Đã đầy' }}
               </div>
               <div class="rating-badge"><i class="fas fa-star"></i> {{ field.averageRating }}</div>
               <img [src]="field.images.length > 0 ? field.images[0] : 'assets/placeholder.jpg'" 

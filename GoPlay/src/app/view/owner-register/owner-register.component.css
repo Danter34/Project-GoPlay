@@ -1,3 +1,8 @@
+.auth-container {
+  display: flex; justify-content: center; align-items: center;
+  min-height: calc(100vh - 140px);
+  background: #f4f6f8; padding: 20px;
+}
 .owner-container {
   display: flex; justify-content: center; align-items: center;
   min-height: calc(100vh - 70px); background: #f4f6f8; padding: 20px;

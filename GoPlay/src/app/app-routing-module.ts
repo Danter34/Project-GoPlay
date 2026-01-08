@@ -8,7 +8,10 @@ import { MapSearchComponent } from './view/map-search/map-search.component';
 import { LoginComponent } from './view/auth/login/login.component';
 import { RegisterComponent } from './view/auth/register/register.component';
 import { OwnerRegisterComponent } from './view/owner-register/owner-register.component';
-
+import { OwnerLayoutComponent } from './shared/owner-layout/owner-layout.component';
+import { OwnerDashboardComponent } from './view/owner/owner-dashboard/owner-dashboard.component';
+import { OwnerGuard } from './core/guards/owner-guard';
+import { FieldSaveComponent } from './view/owner/field-save/field-save.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'field/:id', component: FieldDetailComponent },
@@ -17,7 +20,18 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'owner/register', component: OwnerRegisterComponent },
-  { path: '**', redirectTo: '' }
+  {
+    path: 'owner',
+    component: OwnerLayoutComponent,
+    canActivate: [OwnerGuard],
+    children: [
+      { path: 'dashboard', component: OwnerDashboardComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: 'field/create', component: FieldSaveComponent },
+      { path: 'field/edit/:id', component: FieldSaveComponent },
+    ]
+  },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

@@ -12,3 +12,21 @@ export interface Field {
   totalReviews: number;
   images: string[];
 }
+
+export interface FieldCreateDTO {
+  fieldName: string;
+  price: number;
+  sportTypeId: number;
+  location: {
+    city: string;
+    district: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+  };
+  images?: File[]; // Dùng để gửi file lên API
+}
+export interface FieldUpdateDTO extends FieldCreateDTO {
+  deleteImageIds?: number[];
+  newImages?: File[];
+}

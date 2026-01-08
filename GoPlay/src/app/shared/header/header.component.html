@@ -36,7 +36,10 @@
     <a href="#">Hồ sơ của tôi</a>
     <a *ngIf="currentUser?.role === 'User'" routerLink="/owner/register">
     Trở thành chủ sân
-  </a>
+    </a>
+    <a *ngIf="currentUser?.role === 'OwnerField'" routerLink="/owner/dashboard">
+    <i class="fas fa-chart-line"></i> Quản lý sân
+    </a>
   <div class="divider" style="height:1px; background:#eee; margin:5px 0;"></div>
     <a (click)="onLogout()">Đăng xuất</a>
   </div>
@@ -57,6 +60,9 @@
   <div class="sidebar-links">
     <a routerLink="/" class="sidebar-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
       <i class="fas fa-home"></i> Trang chủ
+    </a>
+    <a *ngIf="currentUser?.role === 'OwnerField'" routerLink="/owner/dashboard" class="sidebar-link" (click)="closeSidebar()">
+      <i class="fas fa-tasks"></i> Quản lý sân
     </a>
     <a routerLink="/map" class="sidebar-link" routerLinkActive="active" (click)="closeSidebar()">
       <i class="fas fa-map-marked-alt"></i> Bản đồ

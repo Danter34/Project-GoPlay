@@ -1,0 +1,95 @@
+<div class="save-container">
+  <div class="header-section">
+    <h3>{{ isEditMode ? 'Cập Nhật Thông Tin' : 'Thêm Sân Mới' }}</h3>
+    <p class="sub-text">Vui lòng điền đầy đủ thông tin bên dưới để hiển thị sân bãi.</p>
+  </div>
+  
+  <form (ngSubmit)="onSubmit()" #f="ngForm">
+    
+    <div class="form-body">
+      
+      <div class="col-left">
+        <div class="form-group">
+          <label>Tên sân bãi <span class="req">*</span></label>
+          <input type="text" [(ngModel)]="fieldData.fieldName" name="fieldName" required 
+                 class="form-control" placeholder="Ví dụ: Sân bóng Thiên Trường">
+        </div>
+
+        <div class="row-group">
+          <div class="form-group half">
+            <label>Loại hình <span class="req">*</span></label>
+            <div class="select-wrapper">
+              <select [(ngModel)]="fieldData.sportTypeId" name="sportTypeId" class="form-control">
+                <option *ngFor="let s of sportTypes" [value]="s.id">{{ s.name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
+          </div>
+          <div class="form-group half">
+            <label>Giá thuê (VNĐ/giờ) <span class="req">*</span></label>
+            <input type="number" [(ngModel)]="fieldData.price" name="price" required 
+                   class="form-control" placeholder="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Địa chỉ chi tiết <span class="req">*</span></label>
+          <input type="text" [(ngModel)]="fieldData.location.address" name="address" required 
+                 class="form-control" placeholder="Số nhà, tên đường...">
+        </div>
+
+        <div class="row-group">
+          <div class="form-group half">
+            <label>Thành phố</label>
+            <input type="text" [(ngModel)]="fieldData.location.city" name="city" required class="form-control">
+          </div>
+          <div class="form-group half">
+            <label>Quận/Huyện</label>
+            <input type="text" [(ngModel)]="fieldData.location.district" name="district" required class="form-control">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+        <label class="section-label">Hình ảnh sân</label>
+        
+        <div class="upload-area">
+          <input type="file" multiple (change)="onFileSelected($event)" accept="image/*" id="fileInput" class="hidden-input">
+          <label for="fileInput" class="upload-placeholder">
+            <div class="icon-cloud"><i class="fas fa-cloud-upload-alt"></i></div>
+            <span>Kéo thả hoặc click để chọn ảnh</span>
+            <small>Hỗ trợ JPG, PNG (Tối đa 5 ảnh)</small>
+          </label>
+        </div>
+
+        <div class="preview-grid" *ngIf="previewImages.length > 0 || (isEditMode && currentImages.length > 0)">
+          
+          <ng-container *ngIf="isEditMode">
+            <div class="img-card" *ngFor="let img of currentImages; let i = index">
+              <img [src]="img.imageUrl || img">
+              <button type="button" class="btn-remove" (click)="markDeleteOldImage(img.imageId, i)">
+                <i class="fas fa-times"></i>
+              </button>
+              <span class="badge-old">Cũ</span>
+            </div>
+          </ng-container>
+
+          <div class="img-card new" *ngFor="let img of previewImages; let i = index">
+            <img [src]="img">
+            <button type="button" class="btn-remove" (click)="removeNewImage(i)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div> <div class="form-actions">
+      <button type="button" class="btn-cancel" routerLink="/owner/dashboard">Hủy bỏ</button>
+      <button type="submit" class="btn-save" [disabled]="f.invalid || isLoading">
+        <i class="fas fa-save"></i> 
+        {{ isLoading ? 'Đang xử lý...' : (isEditMode ? 'Lưu Thay Đổi' : 'Tạo Sân Mới') }}
+      </button>
+    </div>
+
+  </form>
+</div>

@@ -18,6 +18,9 @@ import { LoginComponent } from './view/auth/login/login.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { OwnerRegisterComponent } from './view/owner-register/owner-register.component';
+import { OwnerLayoutComponent } from './shared/owner-layout/owner-layout.component';
+import { OwnerDashboardComponent } from './view/owner/owner-dashboard/owner-dashboard.component';
+import { FieldSaveComponent } from './view/owner/field-save/field-save.component';
 @NgModule({
   declarations: [
     App,
@@ -29,7 +32,10 @@ import { OwnerRegisterComponent } from './view/owner-register/owner-register.com
     MapSearchComponent,
     RegisterComponent,
     LoginComponent,
-    OwnerRegisterComponent
+    OwnerRegisterComponent,
+    OwnerLayoutComponent,
+    OwnerDashboardComponent,
+    FieldSaveComponent
   ],
   imports: [
     BrowserModule,

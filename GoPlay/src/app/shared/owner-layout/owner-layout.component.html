@@ -1,0 +1,43 @@
+<div class="owner-wrapper">
+  <nav class="owner-sidebar">
+    <div class="sidebar-brand">
+      <i class="fas fa-chart-line"></i> Owner Panel
+    </div>
+    
+    <ul class="sidebar-nav">
+      <li>
+        <a routerLink="/owner/dashboard" routerLinkActive="active">
+          <i class="fas fa-list"></i> Quản lý sân
+        </a>
+      </li>
+      <li>
+        <a routerLink="/owner/booking" routerLinkActive="active">
+          <i class="fas fa-calendar-alt"></i> Lịch đặt sân
+        </a>
+      </li>
+      <li>
+        <a routerLink="/owner/profile" routerLinkActive="active">
+          <i class="fas fa-user-tie"></i> Hồ sơ đối tác
+        </a>
+      </li>
+      <li class="bottom-nav">
+        <a routerLink="/">
+          <i class="fas fa-arrow-left"></i> Về trang chủ
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="owner-content">
+    <div class="top-bar">
+      <h2>Dashboard</h2>
+      <div class="user-info">
+        <span>Xin chào, Chủ sân</span>
+      </div>
+    </div>
+    
+    <div class="main-view">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,136 @@
+/* Container chính */
+.dashboard-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 20px;
+}
+
+/* Header (Tiêu đề + Nút thêm mới) */
+.action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+}
+
+.action-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+.btn-create {
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.3s;
+  text-decoration: none;
+}
+
+.btn-create:hover {
+  background: #219150;
+  box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+}
+
+/* Bảng dữ liệu */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.custom-table th {
+  background: #f8f9fa;
+  color: #555;
+  font-weight: 600;
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 2px solid #eee;
+}
+
+.custom-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f1f1f1;
+  vertical-align: middle;
+  color: #333;
+}
+
+.custom-table tr:hover {
+  background-color: #fcfcfc;
+}
+
+/* Cột hình ảnh */
+.thumb-img {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+/* Text phụ */
+.small-text {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* Giá tiền */
+.text-price {
+  color: #d35400;
+  font-weight: bold;
+}
+
+/* Trạng thái (Badge) */
+.badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  background: #e74c3c; /* Màu đỏ mặc định (Hết sân/Đóng cửa) */
+  color: white;
+}
+
+.badge.active {
+  background: #27ae60; /* Màu xanh (Còn sân) */
+}
+
+/* Nút hành động (Sửa/Xóa) */
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon.edit {
+  background: #e1f5fe;
+  color: #0288d1;
+}
+.btn-icon.edit:hover { background: #b3e5fc; }
+
+.btn-icon.delete {
+  background: #ffebee;
+  color: #d32f2f;
+}
+.btn-icon.delete:hover { background: #ffcdd2; }

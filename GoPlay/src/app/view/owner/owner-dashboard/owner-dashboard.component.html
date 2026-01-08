@@ -1,0 +1,47 @@
+<div class="dashboard-container">
+  <div class="action-header">
+    <h3>Quản lý Sân bãi</h3>
+    <button class="btn-create" routerLink="/owner/field/create">
+      <i class="fas fa-plus"></i> Thêm sân mới
+    </button>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table custom-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Hình ảnh</th>
+          <th>Tên sân</th>
+          <th>Môn</th>
+          <th>Giá/h</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let f of fields">
+          <td>#{{ f.fieldId }}</td>
+          <td>
+            <img [src]="f.images[0] || 'assets/no-img.jpg'" class="thumb-img">
+          </td>
+          <td>
+            <strong>{{ f.fieldName }}</strong>
+            <div class="small-text">{{ f.district }}, {{ f.city }}</div>
+          </td>
+          <td>{{ f.sportName }}</td>
+          <td class="text-price">{{ f.price | number }}đ</td>
+          <td>
+            <span class="badge" [class.active]="f.status === 'Available'">{{ f.status }}</span>
+          </td>
+          <td>
+            <button class="btn-icon edit" [routerLink]="['/owner/field/edit', f.fieldId]"><i class="fas fa-edit"></i></button>
+            <button class="btn-icon delete" (click)="onDelete(f.fieldId)"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <p *ngIf="fields.length === 0 && !isLoading" class="text-center">Chưa có sân nào.</p>
+  </div>
+</div>
