@@ -152,6 +152,47 @@
         }
       }
     },
+    "/api/auth/profile": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserProfileDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserProfileDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/bookings/my-bookings": {
       "get": {
         "tags": [
@@ -327,7 +368,7 @@
         }
       }
     },
-    "/api/contacts/inbox": {
+    "/api/contacts/conversations": {
       "get": {
         "tags": [
           "Contacts"
@@ -339,51 +380,8 @@
         }
       }
     },
-    "/api/contacts/sent": {
+    "/api/contacts/{id}/messages": {
       "get": {
-        "tags": [
-          "Contacts"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/contacts/create": {
-      "post": {
-        "tags": [
-          "Contacts"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ContactCreateDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ContactCreateDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ContactCreateDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
-    "/api/contacts/reply/{id}": {
-      "post": {
         "tags": [
           "Contacts"
         ],
@@ -398,25 +396,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ContactReplyDTO"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ContactReplyDTO"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/ContactReplyDTO"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success"
@@ -424,22 +403,30 @@
         }
       }
     },
-    "/api/contacts/close/{id}": {
+    "/api/contacts": {
       "post": {
         "tags": [
           "Contacts"
         ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactDTO"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactDTO"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactDTO"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "description": "Success"
@@ -647,6 +634,9 @@
                     "type": "integer",
                     "format": "int32"
                   },
+                  "Description": {
+                    "type": "string"
+                  },
                   "Location.City": {
                     "type": "string"
                   },
@@ -681,6 +671,9 @@
                   "style": "form"
                 },
                 "SportTypeId": {
+                  "style": "form"
+                },
+                "Description": {
                   "style": "form"
                 },
                 "Location.City": {
@@ -745,6 +738,9 @@
                     "type": "integer",
                     "format": "int32"
                   },
+                  "Description": {
+                    "type": "string"
+                  },
                   "Location.City": {
                     "type": "string"
                   },
@@ -786,6 +782,9 @@
                   "style": "form"
                 },
                 "SportTypeId": {
+                  "style": "form"
+                },
+                "Description": {
                   "style": "form"
                 },
                 "Location.City": {
@@ -1249,6 +1248,18 @@
               "format": "int32"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/owner-profiles/my-profile": {
+      "get": {
+        "tags": [
+          "OwnerProfiles"
         ],
         "responses": {
           "200": {
@@ -1794,7 +1805,7 @@
         },
         "additionalProperties": false
       },
-      "ContactCreateDTO": {
+      "CreateContactDTO": {
         "type": "object",
         "properties": {
           "receiverId": {
@@ -1805,17 +1816,7 @@
             "type": "string",
             "nullable": true
           },
-          "message": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ContactReplyDTO": {
-        "type": "object",
-        "properties": {
-          "message": {
+          "initialMessage": {
             "type": "string",
             "nullable": true
           }
@@ -1959,6 +1960,24 @@
         "type": "object",
         "properties": {
           "status": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateUserProfileDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
             "type": "string",
             "nullable": true
           }

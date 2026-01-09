@@ -33,7 +33,7 @@
   </div>
   
   <div class="dropdown-content" [class.show]="isUserMenuOpen">
-    <a href="#">Hồ sơ của tôi</a>
+    <a href="profile">Hồ sơ của tôi</a>
     <a *ngIf="currentUser?.role === 'User'" routerLink="/owner/register">
     Trở thành chủ sân
     </a>

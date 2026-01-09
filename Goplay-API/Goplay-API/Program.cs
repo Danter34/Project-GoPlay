@@ -1,5 +1,6 @@
 ﻿using Goplay_API.Data;
 using Goplay_API.Helpers;
+using Goplay_API.Hubs;
 using Goplay_API.Repositories.Interface;
 using Goplay_API.Repositories.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,7 +24,12 @@ var momoAccessKey = builder.Configuration["MomoSettings:AccessKey"];
 var momoSecretKey = builder.Configuration["MomoSettings:SecretKey"];
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Dòng này giúp bỏ qua các object bị lặp lại, tránh lỗi Cycle
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
@@ -31,7 +37,8 @@ builder.Services.AddCors(options =>
         {
             policy.WithOrigins("http://localhost:4200") // Địa chỉ Angular
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials();
         });
 });
 
@@ -79,7 +86,8 @@ builder.Services.AddSwaggerGen(options =>
         Example = new OpenApiString("00:00:00")
     });
 });
-
+//add signal
+builder.Services.AddSignalR();
 //JWT
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -95,6 +103,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var accessToken = context.Request.Query["access_token"];
+                // Nếu request đến đường dẫn bắt đầu bằng /chatHub
+                var path = context.HttpContext.Request.Path;
+                if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chatHub"))
+                {
+                    context.Token = accessToken;
+                }
+                return Task.CompletedTask;
+            }
         };
     });
 
@@ -112,6 +134,7 @@ builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IOwnerProfileRepository, OwnerProfileRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -123,7 +146,7 @@ app.UseSwaggerUI(c =>
 
 app.UseCors("AllowAngular");
 //app.UseHttpsRedirection();
-
+app.MapHub<ChatHub>("/chatHub");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();

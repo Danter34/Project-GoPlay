@@ -21,6 +21,9 @@ import { OwnerRegisterComponent } from './view/owner-register/owner-register.com
 import { OwnerLayoutComponent } from './shared/owner-layout/owner-layout.component';
 import { OwnerDashboardComponent } from './view/owner/owner-dashboard/owner-dashboard.component';
 import { FieldSaveComponent } from './view/owner/field-save/field-save.component';
+import { OwnerProfileComponent } from './view/owner/owner-profile/owner-profile.component';
+import { UserProfileComponent } from './view/user-profile/user-profile.component';
+import { ChatComponent } from './view/chat/chat.component';
 @NgModule({
   declarations: [
     App,
@@ -35,7 +38,10 @@ import { FieldSaveComponent } from './view/owner/field-save/field-save.component
     OwnerRegisterComponent,
     OwnerLayoutComponent,
     OwnerDashboardComponent,
-    FieldSaveComponent
+    FieldSaveComponent,
+    OwnerProfileComponent,
+    UserProfileComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

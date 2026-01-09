@@ -1,21 +1,27 @@
 <div class="container detail-page" *ngIf="field">
+  
   <div class="gallery-section">
     <div class="main-image">
       <img [src]="selectedImage || 'assets/placeholder.jpg'" alt="Main view">
     </div>
     <div class="thumbnail-list">
       <img *ngFor="let img of field.images" 
-           [src]="img" 
-           (click)="changeImage(img)" 
-           [class.active]="img === selectedImage">
+           [src]="img.imageUrl" 
+           (click)="changeImage(img.imageUrl)" 
+           [class.active]="img.imageUrl === selectedImage">
     </div>
   </div>
 
   <div class="info-section">
     <div class="header-info">
-      <span class="status-badge" [class.open]="field.status === 'Active'">{{ field.status === 'Active' ? 'Còn sân' : 'Đã đầy' }}</span>
+      <span class="status-badge" [class.open]="field.status === 'Available'">
+        {{ field.status === 'Available' ? 'Còn sân' : 'Đã đầy' }}
+      </span>
       <h1 class="title">{{ field.fieldName }}</h1>
-      <p class="address"><i class="fa fa-map-marker"></i> {{ field.district }}, {{ field.city }}</p>
+      <p class="address">
+        <i class="fas fa-map-marker-alt"></i> 
+        {{ field.address ? field.address + ', ' : '' }}{{ field.district }}, {{ field.city }}
+      </p>
     </div>
 
     <div class="price-box">
@@ -36,13 +42,25 @@
     </div>
 
     <div class="actions">
-      <button class="btn-booking">Đặt lịch ngay</button>
-      <button class="btn-contact">Liên hệ chủ sân</button>
+      <button class="btn-booking"*ngIf="field && currentUserId !== field.ownerId" 
+              (click)="contactOwner()">Đặt lịch ngay</button>
+      
+      <button class="btn-contact" 
+              *ngIf="field && currentUserId !== field.ownerId" 
+              (click)="contactOwner()">
+        Liên hệ chủ sân
+      </button>
     </div>
 
     <div class="description">
       <h3>Mô tả</h3>
-      <p>Sân bóng chất lượng cao, cỏ nhân tạo mới, hệ thống đèn chiếu sáng tiêu chuẩn...</p>
-      </div>
+      <p *ngIf="field.description; else noDesc" class="desc-content">
+        {{ field.description }}
+      </p>
+      <ng-template #noDesc>
+        <p class="text-muted">Chủ sân chưa cập nhật mô tả chi tiết cho sân này.</p>
+      </ng-template>
+    </div>
+    
   </div>
 </div>

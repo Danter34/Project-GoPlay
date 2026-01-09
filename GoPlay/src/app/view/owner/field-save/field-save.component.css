@@ -202,7 +202,47 @@ select.form-control { appearance: none; cursor: pointer; }
   transform: translateY(-2px);
 }
 .btn-save:disabled { background: #95a5a6; cursor: not-allowed; box-shadow: none; }
+/* ... Code cũ giữ nguyên ... */
 
+/* [MỚI] CSS cho phần Header của input Tọa độ */
+.label-with-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+/* [MỚI] Nút lấy tọa độ */
+.btn-location {
+  background: #e8f5e9;
+  color: #27ae60;
+  border: 1px solid #c8e6c9;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-location:hover {
+  background: #27ae60;
+  color: white;
+}
+
+.btn-location:active {
+  transform: scale(0.95);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: 1.5;
+}
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .form-body { flex-direction: column; gap: 30px; }

@@ -1,0 +1,124 @@
+/* Container chính */
+.chat-container { 
+    display: flex; 
+    height: 85vh; 
+    border: 1px solid #ddd; 
+    background: #fff; 
+    border-radius: 8px; /* Bo góc khung chat cho đẹp */
+    overflow: hidden;
+}
+
+/* Sidebar */
+.chat-sidebar { 
+    width: 300px; 
+    border-right: 1px solid #eee; 
+    display: flex;
+    flex-direction: column;
+}
+.sidebar-header { padding: 15px; background: #f8f9fa; border-bottom: 1px solid #eee; }
+.conversation-list { list-style: none; padding: 0; margin: 0; overflow-y: auto; flex: 1; }
+.conversation-list li { padding: 10px 15px; display: flex; align-items: center; cursor: pointer; border-bottom: 1px solid #f1f1f1; transition: background 0.2s; }
+.conversation-list li:hover, .conversation-list li.active { background: #e9ecef; }
+
+/* Avatar */
+.avatar-circle { 
+    width: 45px; height: 45px; 
+    background: #007bff; color: #fff; 
+    border-radius: 50%; 
+    display: flex; align-items: center; justify-content: center; 
+    font-weight: bold; font-size: 18px;
+    margin-right: 12px; flex-shrink: 0;
+}
+.conv-info { display: flex; flex-direction: column; overflow: hidden; }
+.username { font-weight: 600; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.subject { font-size: 13px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Khu vực Chat Chính */
+.chat-main { flex: 1; display: flex; flex-direction: column; background-color: #fcfcfc; }
+
+/* Vùng hiển thị tin nhắn */
+.messages-area { 
+    flex: 1; 
+    padding: 20px; 
+    overflow-y: auto; 
+    display: flex; 
+    flex-direction: column; /* Quan trọng để xếp tin nhắn dọc */
+    gap: 10px; 
+}
+
+/* Style chung cho 1 dòng tin nhắn */
+.message-item { 
+    max-width: 70%; 
+    display: flex; 
+    flex-direction: column; 
+    margin-bottom: 5px;
+}
+
+/* --- TIN NHẮN CỦA TÔI (Bên Phải - Màu Xanh Lá) --- */
+.my-message { 
+    align-self: flex-end; /* Đẩy sang phải */
+    align-items: flex-end; /* Căn nội dung (giờ) sang phải */
+}
+
+.my-message .bubble { 
+    background: #28a745; /* Màu xanh lá */
+    color: white; /* Chữ trắng */
+    border-radius: 15px 15px 2px 15px; /* Bo tròn trừ góc dưới phải */
+}
+
+/* --- TIN NHẮN NGƯỜI KHÁC (Bên Trái - Màu Xám) --- */
+.other-message { 
+    align-self: flex-start; /* Đẩy sang trái */
+    align-items: flex-start; /* Căn nội dung sang trái */
+}
+
+.other-message .bubble { 
+    background: #e4e6eb; /* Màu xám nhạt (giống Messenger) */
+    color: #050505; /* Chữ đen */
+    border-radius: 15px 15px 15px 2px; /* Bo tròn trừ góc dưới trái */
+}
+
+/* Style bong bóng chat */
+.bubble { 
+    padding: 10px 15px; 
+    font-size: 15px; 
+    line-height: 1.4; 
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    word-wrap: break-word; /* Xuống dòng nếu tin nhắn dài */
+}
+
+/* Thời gian */
+.time { font-size: 11px; color: #999; margin-top: 5px; margin-bottom: 5px; }
+
+/* Khu vực nhập liệu */
+.input-area { 
+    padding: 15px; 
+    border-top: 1px solid #eee; 
+    display: flex; gap: 10px; 
+    background: #fff;
+    align-items: center;
+}
+.input-area input { 
+    flex: 1; 
+    padding: 12px 15px; 
+    border: 1px solid #ddd; 
+    border-radius: 25px; 
+    outline: none; 
+    font-size: 14px;
+    background: #f0f2f5;
+}
+.input-area input:focus { border-color: #28a745; background: #fff; }
+
+.input-area button { 
+    width: 45px; height: 45px; 
+    border-radius: 50%; 
+    border: none; 
+    background: #28a745; /* Nút gửi cũng màu xanh cho đồng bộ */
+    color: white; 
+    cursor: pointer; 
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+}
+.input-area button:hover { background: #218838; }
+
+.empty-state { flex: 1; display: flex; align-items: center; justify-content: center; color: #888; flex-direction: column; }

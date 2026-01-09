@@ -11,7 +11,7 @@ namespace Goplay_API.Model.Domain
 
         public int SportTypeId { get; set; }
         public SportType SportType { get; set; }
-
+        public string? Description { get; set; }
         public int LocationId { get; set; }
         public Location Location { get; set; }
 

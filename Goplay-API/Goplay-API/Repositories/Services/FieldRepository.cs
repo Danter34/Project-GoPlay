@@ -104,6 +104,7 @@ namespace Goplay_API.Repositories.Services
                     SportTypeId = dto.SportTypeId,
                     LocationId = location.LocationId,
                     OwnerProfileId = owner.OwnerProfileId,
+                    Description = dto.Description,
                     Status = "Available"
                 };
                 _context.Fields.Add(field);
@@ -142,6 +143,7 @@ namespace Goplay_API.Repositories.Services
                 field.FieldName = dto.FieldName;
                 field.Price = dto.Price;
                 field.SportTypeId = dto.SportTypeId;
+                field.Description = dto.Description;
 
                 // update location
                 field.Location.City = dto.Location.City;

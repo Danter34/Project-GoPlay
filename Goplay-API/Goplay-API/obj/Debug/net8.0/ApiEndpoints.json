@@ -33,6 +33,32 @@
   },
   {
     "ContainingType": "Goplay_API.Controllers.AuthController",
+    "Method": "GetProfile",
+    "RelativePath": "api/auth/profile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.AuthController",
+    "Method": "UpdateProfile",
+    "RelativePath": "api/auth/profile",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Goplay_API.Model.DTO.UserProfileDTO\u002BUpdateUserProfileDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.AuthController",
     "Method": "Register",
     "RelativePath": "api/auth/register",
     "HttpMethod": "POST",
@@ -189,72 +215,41 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Goplay_API.Controllers.ContactsController",
-    "Method": "Close",
-    "RelativePath": "api/contacts/close/{id}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Goplay_API.Controllers.ContactsController",
-    "Method": "Create",
-    "RelativePath": "api/contacts/create",
+    "ContainingType": "ContactsController",
+    "Method": "CreateContact",
+    "RelativePath": "api/contacts",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "dto",
-        "Type": "Goplay_API.Model.DTO.ContactCreateDTO",
+        "Type": "Goplay_API.Model.DTO.CreateContactDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Goplay_API.Controllers.ContactsController",
-    "Method": "Inbox",
-    "RelativePath": "api/contacts/inbox",
+    "ContainingType": "ContactsController",
+    "Method": "GetMessages",
+    "RelativePath": "api/contacts/{id}/messages",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Goplay_API.Controllers.ContactsController",
-    "Method": "Reply",
-    "RelativePath": "api/contacts/reply/{id}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
     "Parameters": [
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "dto",
-        "Type": "Goplay_API.Model.DTO.ContactReplyDTO",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Goplay_API.Controllers.ContactsController",
-    "Method": "Sent",
-    "RelativePath": "api/contacts/sent",
+    "ContainingType": "ContactsController",
+    "Method": "GetConversations",
+    "RelativePath": "api/contacts/conversations",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -282,6 +277,11 @@
       {
         "Name": "SportTypeId",
         "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
         "IsRequired": false
       },
       {
@@ -479,6 +479,11 @@
       {
         "Name": "SportTypeId",
         "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "Description",
+        "Type": "System.String",
         "IsRequired": false
       },
       {
@@ -728,6 +733,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.OwnerProfilesController",
+    "Method": "GetMyProfile",
+    "RelativePath": "api/owner-profiles/my-profile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

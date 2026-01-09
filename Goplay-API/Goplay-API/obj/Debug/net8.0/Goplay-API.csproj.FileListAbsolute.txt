@@ -292,10 +292,10 @@ D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\staticwebassets
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\staticwebassets.development.json
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\swae.build.ex.cache
-D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\Goplay-API.csproj.Up2Date
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\Goplay-API.dll
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\refint\Goplay-API.dll
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\Goplay-API.pdb
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\Goplay-API.genruntimeconfig.cache
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\ref\Goplay-API.dll
+D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

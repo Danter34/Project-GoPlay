@@ -1,0 +1,96 @@
+<div class="profile-wrapper">
+  <div class="save-container profile-container">
+    
+    <div class="header-section">
+      <h3>Hồ Sơ Cá Nhân</h3>
+      <p class="sub-text">Quản lý thông tin tài khoản và bảo mật.</p>
+    </div>
+  
+    <div *ngIf="isLoading && !user" class="loading-state">Đang tải...</div>
+  
+    <div *ngIf="user" class="profile-content">
+      
+      <div class="profile-header">
+        <div class="avatar-circle user-avatar">
+          {{ user.fullName.charAt(0).toUpperCase() }}
+        </div>
+        <div class="profile-title">
+          <h2>{{ user.fullName }}</h2>
+          <span class="role-badge">{{ user.role }}</span>
+        </div>
+      </div>
+  
+      <div class="form-body info-grid">
+        
+        <div class="info-col">
+          <div class="form-group">
+            <label>Email <span class="req" *ngIf="isEditMode">*</span></label>
+            <div *ngIf="!isEditMode" class="static-value">{{ user.email }}</div>
+            <input *ngIf="isEditMode" type="email" [(ngModel)]="editData.email" class="form-control">
+          </div>
+  
+          <div class="form-group">
+            <label>Họ và tên <span class="req" *ngIf="isEditMode">*</span></label>
+            <div *ngIf="!isEditMode" class="static-value">{{ user.fullName }}</div>
+            <input *ngIf="isEditMode" type="text" [(ngModel)]="editData.fullName" class="form-control">
+          </div>
+        </div>
+  
+        <div class="info-col">
+          <div class="form-group">
+            <label>Số điện thoại</label>
+            <div *ngIf="!isEditMode" class="static-value">{{ user.phone || 'Chưa cập nhật' }}</div>
+            <input *ngIf="isEditMode" type="text" [(ngModel)]="editData.phone" class="form-control" placeholder="Nhập số điện thoại">
+          </div>
+          
+          </div>
+      </div>
+  
+      <div class="form-actions">
+        <ng-container *ngIf="!isEditMode">
+          <button class="btn-change-pass-action" (click)="openPassModal()">
+            <i class="fas fa-key"></i> Đổi mật khẩu
+          </button>
+          <button class="btn-save" (click)="toggleEdit()">
+            <i class="fas fa-edit"></i> Chỉnh sửa hồ sơ
+          </button>
+        </ng-container>
+  
+        <ng-container *ngIf="isEditMode">
+          <button class="btn-cancel" (click)="toggleEdit()" [disabled]="isLoading">Hủy bỏ</button>
+          <button class="btn-save" (click)="onSubmit()" [disabled]="isLoading">
+            <i class="fas fa-save"></i> Lưu thay đổi
+          </button>
+        </ng-container>
+      </div>
+  
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showPasswordModal" (click)="closePassModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Đổi Mật Khẩu</h3>
+      <span class="close-btn" (click)="closePassModal()">&times;</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Mật khẩu hiện tại</label>
+        <input type="password" [(ngModel)]="passData.currentPassword" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Mật khẩu mới</label>
+        <input type="password" [(ngModel)]="passData.newPassword" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>Xác nhận mật khẩu mới</label>
+        <input type="password" [(ngModel)]="passData.confirmNewPassword" class="form-control">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="closePassModal()">Hủy</button>
+      <button class="btn-save" (click)="onChangePassword()">Xác nhận</button>
+    </div>
+  </div>
+</div>

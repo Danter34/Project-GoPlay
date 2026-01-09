@@ -5,10 +5,8 @@ namespace Goplay_API.Repositories.Interface
 {
     public interface IContactRepository
     {
-        Task<IEnumerable<Contact>> GetInboxAsync(int userId);
-        Task<IEnumerable<Contact>> GetSentAsync(int userId);
-        Task<Contact> CreateAsync(int senderId, ContactCreateDTO dto);
-        Task<bool> ReplyAsync(int contactId, string message, int userId);
-        Task<bool> CloseAsync(int contactId);
+        Task<List<object>> GetConversationsAsync(int userId);
+        Task<List<ChatMessageDTO>> GetMessagesAsync(int contactId);
+        Task<Contact> CreateContactAsync(int senderId, CreateContactDTO dto);
     }
 }

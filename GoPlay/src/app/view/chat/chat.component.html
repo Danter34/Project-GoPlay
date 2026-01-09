@@ -1,0 +1,47 @@
+<div class="chat-container">
+  <div class="chat-sidebar">
+    <div class="sidebar-header">
+      <h3>Tin nhắn</h3>
+    </div>
+    <ul class="conversation-list">
+      <li *ngFor="let c of conversations" 
+          [class.active]="c.contactId === selectedContactId"
+          (click)="selectContact(c.contactId)">
+        
+        <div class="avatar-circle">
+          {{ (c.otherUser && c.otherUser.length > 0) ? c.otherUser.charAt(0).toUpperCase() : '?' }}
+        </div>
+        
+        <div class="conv-info">
+          <span class="username">{{ c.otherUser || 'Người dùng' }}</span>
+          <span class="subject">{{ c.subject }}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="chat-main" *ngIf="selectedContactId; else noChatSelected">
+    <div class="messages-area" #scrollMe>
+      <div *ngFor="let msg of messages" 
+        [class.message-item]="true"
+        [class.my-message]="msg.senderId == currentUserId" 
+        [class.other-message]="msg.senderId != currentUserId">
+        <div class="bubble">
+          {{ msg.content }}
+        </div>
+        <span class="time">{{ msg.createdAt | date:'HH:mm' }}</span>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <input type="text" [(ngModel)]="messageContent" (keyup.enter)="sendMessage()" placeholder="Nhập tin nhắn...">
+      <button (click)="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <ng-template #noChatSelected>
+    <div class="empty-state">
+      <p>Chọn một cuộc hội thoại để bắt đầu chat</p>
+    </div>
+  </ng-template>
+</div>

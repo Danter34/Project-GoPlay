@@ -48,7 +48,7 @@
                   {{ field.status === 'Available' ? 'Còn sân' : 'Đã đầy' }}
               </div>
               <div class="rating-badge"><i class="fas fa-star"></i> {{ field.averageRating }}</div>
-              <img [src]="field.images.length > 0 ? field.images[0] : 'assets/placeholder.jpg'" 
+              <img [src]="field.images.length > 0 ? field.images[0].imageUrl : 'assets/placeholder.jpg'" 
                    [alt]="field.fieldName" class="card-img">
           </div>
           <div class="card-body">

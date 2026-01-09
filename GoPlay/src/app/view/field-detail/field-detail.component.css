@@ -20,3 +20,13 @@
 .btn-booking { flex: 1; background: #00a651; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; }
 .btn-booking:hover { background: #008e45; }
 .btn-contact { flex: 1; background: white; color: #00a651; border: 2px solid #00a651; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+.desc-content {
+    white-space: pre-line;
+    line-height: 1.6;
+    color: #555;
+    text-align: justify;
+}
+.text-muted {
+    color: #999;
+    font-style: italic;
+}

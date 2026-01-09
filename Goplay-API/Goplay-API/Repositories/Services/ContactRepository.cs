@@ -3,6 +3,7 @@ using Goplay_API.Model.Domain;
 using Goplay_API.Model.DTO;
 using Goplay_API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Goplay_API.Repositories.Services
 {
@@ -15,57 +16,80 @@ namespace Goplay_API.Repositories.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<Contact>> GetInboxAsync(int userId) =>
-            await _context.Contacts
-                .Include(c => c.Sender)
-                .Where(c => c.ReceiverId == userId)
-                .OrderByDescending(c => c.CreatedAt)
-                .ToListAsync();
-
-        public async Task<IEnumerable<Contact>> GetSentAsync(int userId) =>
-            await _context.Contacts
-                .Include(c => c.Receiver)
-                .Where(c => c.SenderId == userId)
-                .OrderByDescending(c => c.CreatedAt)
-                .ToListAsync();
-
-        public async Task<Contact> CreateAsync(int senderId, ContactCreateDTO dto)
+        public async Task<List<object>> GetConversationsAsync(int userId)
         {
-            var contact = new Contact
+            return await _context.Contacts
+                .Include(c => c.Sender)  
+                .Include(c => c.Receiver) 
+                .Where(c => c.SenderId == userId || c.ReceiverId == userId)
+                .OrderByDescending(c => c.LastActivity)
+                .Select(c => new
+                {
+                    c.ContactId,
+                    c.Subject,
+                    c.Status,
+                    c.LastActivity,
+                    OtherUser = c.SenderId == userId ? c.Receiver.FullName : c.Sender.FullName,
+                    OtherUserId = c.SenderId == userId ? c.ReceiverId : c.SenderId 
+                })
+                .ToListAsync<object>();
+        }
+        public async Task<List<ChatMessageDTO>> GetMessagesAsync(int contactId)
+        {
+            return await _context.ContactMessages
+                .Where(m => m.ContactId == contactId)
+                .OrderBy(m => m.CreatedAt)
+                .Select(m => new ChatMessageDTO
+                {
+                    ContactId = m.ContactId,
+                    SenderId = m.UserId,
+                    Content = m.Content,
+                    CreatedAt = m.CreatedAt
+                })
+                .ToListAsync();
+        }
+       
+
+
+        // ContactRepository
+        public async Task<Contact> CreateContactAsync(int senderId, CreateContactDTO dto)
+        {
+            // 1. Kiểm tra xem đã có hội thoại giữa 2 người này chưa
+            var existing = await _context.Contacts
+                .FirstOrDefaultAsync(c => (c.SenderId == senderId && c.ReceiverId == dto.ReceiverId) ||
+                                          (c.SenderId == dto.ReceiverId && c.ReceiverId == senderId));
+
+            if (existing != null) return existing; // Nếu có rồi thì trả về cái cũ
+
+            // 2. Tạo mới
+            var newContact = new Contact
             {
                 SenderId = senderId,
                 ReceiverId = dto.ReceiverId,
-                Subject = dto.Subject,
-                Message = dto.Message,
-                Status = "Open"
+                Subject = dto.Subject ?? "Conversation",
+                Status = "Open",
+                CreatedAt = DateTime.UtcNow,
+                LastActivity = DateTime.UtcNow
             };
 
-            _context.Contacts.Add(contact);
+            _context.Contacts.Add(newContact);
             await _context.SaveChangesAsync();
-            return contact;
-        }
 
-        public async Task<bool> ReplyAsync(int contactId, string replyMessage, int receiverId)
-        {
-            var contact = await _context.Contacts.FindAsync(contactId);
-            if (contact == null) return false;
+            // 3. Nếu có tin nhắn mở đầu thì thêm luôn
+            if (!string.IsNullOrEmpty(dto.InitialMessage))
+            {
+                var msg = new ContactMessage
+                {
+                    ContactId = newContact.ContactId,
+                    UserId = senderId,
+                    Content = dto.InitialMessage,
+                    CreatedAt = DateTime.UtcNow
+                };
+                _context.ContactMessages.Add(msg);
+                await _context.SaveChangesAsync();
+            }
 
-            contact.Message += $"\n\n[Reply]: {replyMessage}";
-            contact.ReceiverId = receiverId;
-            contact.Status = "Replied";
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
-
-        public async Task<bool> CloseAsync(int contactId)
-        {
-            var contact = await _context.Contacts.FindAsync(contactId);
-            if (contact == null) return false;
-
-            contact.Status = "Closed";
-            await _context.SaveChangesAsync();
-            return true;
+            return newContact;
         }
     }
 }

@@ -64,6 +64,31 @@ namespace Goplay_API.Controllers
         [HttpPut("{id}/reject")]
         public async Task<IActionResult> Reject(int id)
             => await _service.RejectAsync(id) ? NoContent() : NotFound();
+
+        [Authorize]
+        [HttpGet("my-profile")]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            // 1. Lấy ID user từ token
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Unauthorized("Không tìm thấy thông tin người dùng.");
+            }
+            int userId = int.Parse(userIdString);
+
+            // 2. Gọi Repo lấy profile theo UserId
+            var profile = await _service.GetByUserIdAsync(userId);
+
+            // 3. Nếu chưa có profile (chưa đăng ký làm chủ sân)
+            if (profile == null)
+            {
+                return NotFound(new { message = "Bạn chưa đăng ký hồ sơ chủ sân." });
+            }
+
+            // 4. Trả về DTO
+            return Ok(new OwnerProfileResponseDTO(profile));
+        }
     }
 
 

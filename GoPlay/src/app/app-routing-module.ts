@@ -12,6 +12,10 @@ import { OwnerLayoutComponent } from './shared/owner-layout/owner-layout.compone
 import { OwnerDashboardComponent } from './view/owner/owner-dashboard/owner-dashboard.component';
 import { OwnerGuard } from './core/guards/owner-guard';
 import { FieldSaveComponent } from './view/owner/field-save/field-save.component';
+import { OwnerProfile } from './models/owner-profile.model';
+import { OwnerProfileComponent } from './view/owner/owner-profile/owner-profile.component';
+import { UserProfileComponent } from './view/user-profile/user-profile.component';
+import { ChatComponent } from './view/chat/chat.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'field/:id', component: FieldDetailComponent },
@@ -29,8 +33,13 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'field/create', component: FieldSaveComponent },
       { path: 'field/edit/:id', component: FieldSaveComponent },
+      { path: 'profile', component: OwnerProfileComponent },
+      { path: 'chat', component: ChatComponent }
     ]
   },
+  { path: 'profile', component: UserProfileComponent },
+  { path: 'chat', component: ChatComponent},
+  { path: 'chat/:id', component: ChatComponent },
   { path: '**', redirectTo: '' },
 ];
 

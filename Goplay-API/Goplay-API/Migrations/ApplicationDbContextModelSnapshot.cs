@@ -84,9 +84,8 @@ namespace Goplay_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("LastActivity")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("ReceiverId")
                         .HasColumnType("int");
@@ -111,6 +110,34 @@ namespace Goplay_API.Migrations
                     b.ToTable("Contacts");
                 });
 
+            modelBuilder.Entity("Goplay_API.Model.Domain.ContactMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ContactId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContactId");
+
+                    b.ToTable("ContactMessages");
+                });
+
             modelBuilder.Entity("Goplay_API.Model.Domain.Field", b =>
                 {
                     b.Property<int>("FieldId")
@@ -121,6 +148,9 @@ namespace Goplay_API.Migrations
 
                     b.Property<double>("AverageRating")
                         .HasColumnType("float");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FieldName")
                         .IsRequired()
@@ -447,6 +477,17 @@ namespace Goplay_API.Migrations
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("Goplay_API.Model.Domain.ContactMessage", b =>
+                {
+                    b.HasOne("Goplay_API.Model.Domain.Contact", "Contact")
+                        .WithMany("Messages")
+                        .HasForeignKey("ContactId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contact");
+                });
+
             modelBuilder.Entity("Goplay_API.Model.Domain.Field", b =>
                 {
                     b.HasOne("Goplay_API.Model.Domain.Location", "Location")
@@ -531,6 +572,11 @@ namespace Goplay_API.Migrations
                     b.Navigation("BookingTimeSlots");
 
                     b.Navigation("Payment");
+                });
+
+            modelBuilder.Entity("Goplay_API.Model.Domain.Contact", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Goplay_API.Model.Domain.Field", b =>
