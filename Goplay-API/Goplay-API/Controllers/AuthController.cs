@@ -30,6 +30,7 @@ namespace Goplay_API.Controllers
             var user = new User
             {
                 FullName = dto.FullName,
+                Phone = dto.Phone,
                 Email = dto.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 Role = "User"
@@ -51,7 +52,19 @@ namespace Goplay_API.Controllers
                 return Unauthorized("Invalid credentials");
 
             var token = _jwt.GenerateToken(user);
-            return Ok(new { token });
+           
+            return Ok(new
+            {
+                user = new
+                {
+                    user.UserId,
+                    user.FullName,
+                    user.Email,
+                    user.Phone,
+                    user.Role
+                },
+                token 
+            });
         }
 
         [Authorize]
@@ -87,7 +100,8 @@ namespace Goplay_API.Controllers
                 u.UserId,
                 u.FullName,
                 u.Email,
-                u.Role
+                u.Role,
+                u.Phone
             });
 
             return Ok(users);
@@ -109,7 +123,8 @@ namespace Goplay_API.Controllers
                 user.UserId,
                 user.FullName,
                 user.Email,
-                user.Role
+                user.Role,
+                user.Phone
             });
         }
         [Authorize]

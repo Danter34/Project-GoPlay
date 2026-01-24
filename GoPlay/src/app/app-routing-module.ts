@@ -16,8 +16,12 @@ import { OwnerProfile } from './models/owner-profile.model';
 import { OwnerProfileComponent } from './view/owner/owner-profile/owner-profile.component';
 import { UserProfileComponent } from './view/user-profile/user-profile.component';
 import { ChatComponent } from './view/chat/chat.component';
+import { MyBookingsComponent } from './view/my-bookings/my-bookings.component';
+import { BookingListComponent } from './view/owner/booking-list/booking-list.component';
+import { PaymentReturnComponent } from './view/payment-return/payment-return.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'payment-return', component: PaymentReturnComponent },
   { path: 'field/:id', component: FieldDetailComponent },
   { path: 'search', component: SearchResultComponent },
   { path: 'map', component: MapSearchComponent },
@@ -34,10 +38,12 @@ const routes: Routes = [
       { path: 'field/create', component: FieldSaveComponent },
       { path: 'field/edit/:id', component: FieldSaveComponent },
       { path: 'profile', component: OwnerProfileComponent },
+      { path: 'booking', component: BookingListComponent },
       { path: 'chat', component: ChatComponent }
     ]
   },
   { path: 'profile', component: UserProfileComponent },
+  { path: 'my-bookings', component: MyBookingsComponent },
   { path: 'chat', component: ChatComponent},
   { path: 'chat/:id', component: ChatComponent },
   { path: '**', redirectTo: '' },

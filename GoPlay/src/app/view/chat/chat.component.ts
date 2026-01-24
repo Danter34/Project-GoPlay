@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, NgZone, OnDestroy, ChangeDetectorRef } from '@angular/core'; // <--- 1. Import ChangeDetectorRef
+import { Component, OnInit, ViewChild, ElementRef, AfterViewChecked, NgZone, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ChatService } from '../../services/chat.service'; 
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service'; 
@@ -23,21 +23,25 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     private route: ActivatedRoute,
     private authService: AuthService,
     private ngZone: NgZone,
-    private cdr: ChangeDetectorRef // <--- 2. Inject CDR
+    private cdr: ChangeDetectorRef
   ) {}
 
   async ngOnInit(): Promise<void> {
     this.currentUserId = this.authService.getCurrentUserId();
     
+    // Nếu là User thật -> Mới load danh sách hội thoại
+    if (this.currentUserId !== 0) {
+        this.loadConversations();
+    }
+    
     await this.chatService.startConnection();
-    this.loadConversations();
 
     this.chatService.messageReceived$.subscribe((msg) => {
       this.ngZone.run(() => {
         if (msg && msg.contactId === this.selectedContactId) {
           this.messages.push(msg);
-          this.scrollToBottom(); // Không cần setTimeout ở đây cũng được nếu dùng cdr
-          this.cdr.detectChanges(); // <--- 3. Ép cập nhật giao diện khi có tin mới
+          this.cdr.detectChanges();
+          this.scrollToBottom();
         }
       });
     });
@@ -57,30 +61,26 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
   loadConversations() {
     this.chatService.getConversations().subscribe(data => {
       this.conversations = data;
-      this.cdr.detectChanges(); // <--- Ép cập nhật danh sách
+      this.cdr.detectChanges();
     });
   }
 
   selectContact(contactId: number) {
     this.selectedContactId = contactId;
-    
     this.chatService.joinGroup(contactId);
-
     this.chatService.getMessages(contactId).subscribe(data => {
       this.messages = data;
-      // Ép giao diện render xong messages rồi mới scroll
-      this.cdr.detectChanges(); 
+      this.cdr.detectChanges();
       this.scrollToBottom();
     });
   }
 
   sendMessage() {
     if (!this.messageContent.trim() || !this.selectedContactId) return;
-
     this.chatService.sendMessage(this.selectedContactId, this.messageContent)
       .then(() => {
         this.messageContent = '';
-        this.cdr.detectChanges(); // <--- Cập nhật để xóa text trong ô input
+        this.cdr.detectChanges();
       });
   }
 

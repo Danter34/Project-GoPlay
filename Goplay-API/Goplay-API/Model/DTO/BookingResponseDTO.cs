@@ -7,6 +7,11 @@
         public string Status { get; set; }
         public decimal TotalPrice { get; set; }
         public int FieldId { get; set; }
-        public List<int> SlotIds { get; set; } = new List<int>();
+        public List<BookingTimeSlotDTO> TimeSlots { get; set; } = new();
+        public string? GuestName { get; set; }
+        public string? GuestPhone { get; set; }
+        public bool HasReviewed { get; set; }
+        public string FieldName { get; set; }
+
     }
 }

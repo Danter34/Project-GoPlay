@@ -10,7 +10,7 @@ import { ChangePasswordDTO } from '../models/user-profile.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://apigplay.qzz.io/api/auth';
+  private apiUrl = 'http://localhost:5210/api/auth';
   private userSubject = new BehaviorSubject<any>(null);
   public user$ = this.userSubject.asObservable();
 
@@ -21,7 +21,6 @@ export class AuthService {
     const decoded: any = jwtDecode(token);
     return {
       ...decoded,
-      // Ưu tiên role thường -> Role hoa -> Role theo link Microsoft
       id: decoded.nameid || decoded.sub || decoded.Id || decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
       role: decoded.role || decoded.Role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
     };
@@ -34,16 +33,24 @@ export class AuthService {
   private loadUserFromStorage() {
     if (isPlatformBrowser(this.platformId)) {
       const token = localStorage.getItem('authToken');
+      const savedPhone = localStorage.getItem('userPhone');
       if (token) {
         if (this.isTokenExpired(token)) {
           this.logout();
         } else {
           try {
             //  Dùng hàm chuẩn hóa
-            const user = this.normalizeUser(token);
+            const userFromToken = this.normalizeUser(token);
+            
+            // [MỚI] Gộp lại thông tin phone đã lưu
+            const user = {
+              ...userFromToken,
+              phone: savedPhone || null 
+            };
             this.userSubject.next(user);
           } catch (e) {
             localStorage.removeItem('authToken');
+            localStorage.removeItem('userPhone');
           }
         }
       }
@@ -59,9 +66,17 @@ export class AuthService {
       tap((res: any) => {
         if (isPlatformBrowser(this.platformId)) {
           localStorage.setItem('authToken', res.token);
+        if (res.user && res.user.phone) {
+            localStorage.setItem('userPhone', res.user.phone);
+          }
         }
         // Dùng hàm chuẩn hóa
-        const user = this.normalizeUser(res.token);
+        const userFromToken = this.normalizeUser(res.token);
+        const user = {
+          ...userFromToken,
+          phone: res.user?.phone || null,
+          fullName: res.user?.fullName || null
+        };
         this.userSubject.next(user);
       })
     );
@@ -70,6 +85,7 @@ export class AuthService {
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('authToken');
+      localStorage.removeItem('userPhone');
     }
     this.userSubject.next(null);
     window.location.href = '/';

@@ -11,7 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  private readonly API_URL = 'https://apigplay.qzz.io';
+  private readonly API_URL = 'http://localhost:5210';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object
@@ -22,12 +22,12 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
 
-    // 🔥 SSR không xử lý token
+    // SSR không xử lý token
     if (!isPlatformBrowser(this.platformId)) {
       return next.handle(request);
     }
 
-    // 🔥 CHỈ GẮN TOKEN CHO API CỦA MÌNH
+    // CHỈ GẮN TOKEN CHO API CỦA MÌNH
     if (!request.url.startsWith(this.API_URL)) {
       return next.handle(request);
     }

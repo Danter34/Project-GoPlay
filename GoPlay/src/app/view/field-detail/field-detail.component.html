@@ -14,9 +14,6 @@
 
   <div class="info-section">
     <div class="header-info">
-      <span class="status-badge" [class.open]="field.status === 'Available'">
-        {{ field.status === 'Available' ? 'Còn sân' : 'Đã đầy' }}
-      </span>
       <h1 class="title">{{ field.fieldName }}</h1>
       <p class="address">
         <i class="fas fa-map-marker-alt"></i> 
@@ -42,8 +39,9 @@
     </div>
 
     <div class="actions">
-      <button class="btn-booking"*ngIf="field && currentUserId !== field.ownerId" 
-              (click)="contactOwner()">Đặt lịch ngay</button>
+        <button class="btn-booking" *ngIf="field && currentUserId !== field.ownerId" 
+          (click)="openBooking()"> Đặt lịch ngay
+        </button>
       
       <button class="btn-contact" 
               *ngIf="field && currentUserId !== field.ownerId" 
@@ -51,6 +49,11 @@
         Liên hệ chủ sân
       </button>
     </div>
+    
+    <app-booking-modal *ngIf="showBookingModal" 
+      [field]="field" 
+      (close)="closeBooking()">>
+    </app-booking-modal>
 
     <div class="description">
       <h3>Mô tả</h3>

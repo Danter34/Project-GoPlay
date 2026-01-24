@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+
+import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing-module';
@@ -24,6 +25,11 @@ import { FieldSaveComponent } from './view/owner/field-save/field-save.component
 import { OwnerProfileComponent } from './view/owner/owner-profile/owner-profile.component';
 import { UserProfileComponent } from './view/user-profile/user-profile.component';
 import { ChatComponent } from './view/chat/chat.component';
+import { BookingModalComponent } from './view/booking-modal/booking-modal.component';
+import { MyBookingsComponent } from './view/my-bookings/my-bookings.component';
+import { BookingListComponent } from './view/owner/booking-list/booking-list.component';
+import { PaymentReturnComponent } from './view/payment-return/payment-return.component';
+import { ReviewModalComponent } from './view/review-modal/review-modal.component';
 @NgModule({
   declarations: [
     App,
@@ -41,16 +47,21 @@ import { ChatComponent } from './view/chat/chat.component';
     FieldSaveComponent,
     OwnerProfileComponent,
     UserProfileComponent,
-    ChatComponent
+    ChatComponent,
+    BookingModalComponent,
+    MyBookingsComponent,
+    BookingListComponent,
+    PaymentReturnComponent,
+    ReviewModalComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule,
     FormsModule,
     AppRoutingModule,
-    GoogleMapsModule,
-  ],
+    GoogleMapsModule
+],
   providers: [
+    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [App]

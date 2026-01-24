@@ -45,32 +45,35 @@ export class FieldDetailComponent implements OnInit {
   }
 
   contactOwner() {
-    if (!this.field || !this.field.ownerId) {
-      alert('Không tìm thấy thông tin chủ sân!');
-      return;
-    }
-    
-    
-    if (this.currentUserId === 0) {
-        this.router.navigate(['/login']);
-        return;
-    }
+    if (!this.field || !this.field.ownerId) return;
 
     const contactData = {
-      receiverId: this.field.ownerId, 
-      subject: `Liên hệ thuê sân`,
-      initialMessage: 'Xin chào, tôi muốn thuê sân'
+      receiverId: this.field.ownerId,
+      // [MỚI] Truyền ID sân xuống
+      fieldId: this.field.fieldId, 
+      
+      // Subject frontend gửi chỉ là dự phòng, backend sẽ tự override bằng tên sân
+      subject: 'Liên hệ thuê sân', 
+      initialMessage: `Xin chào, tôi quan tâm đến sân "${this.field.fieldName}".`
     };
 
-    this.chatService.createContact(contactData.receiverId, contactData.subject, contactData.initialMessage)
-      .subscribe({
+    this.chatService.createContact(contactData).subscribe({
         next: (res) => {
           this.router.navigate(['/chat', res.contactId]);
         },
         error: (err) => {
           console.error(err);
-          alert('Có lỗi khi kết nối với chủ sân.');
+          alert('Không thể kết nối máy chủ.');
         }
       });
+  }
+  showBookingModal = false;
+  // Hàm được gọi khi bấm nút "Đặt lịch ngay"
+  openBooking() {
+    this.showBookingModal = true;
+  }
+
+  closeBooking() {
+    this.showBookingModal = false;
   }
 }

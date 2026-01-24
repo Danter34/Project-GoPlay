@@ -8,18 +8,17 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ChatService {
   private hubConnection: signalR.HubConnection | undefined;
-  private apiUrl = 'https://apigplay.qzz.io/api/contacts'; 
-  private hubUrl = 'https://apigplay.qzz.io/chatHub';
+  private apiUrl = 'http://localhost:5210/api/contacts'; 
+  private hubUrl = 'http://localhost:5210/chatHub';
 
   public messageReceived$ = new BehaviorSubject<any>(null);
 
   constructor(private http: HttpClient) { }
 
-  // --- API CALLS ---
 
-  // Tạo cuộc hội thoại mới (Dùng khi bấm nút "Liên hệ chủ sân")
-  createContact(receiverId: number, subject: string, initialMessage: string = ''): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, { receiverId, subject, initialMessage });
+ // createContact nhận object data linh động
+  createContact(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, data);
   }
 
   // Lấy danh sách hội thoại
@@ -32,7 +31,7 @@ export class ChatService {
     return this.http.get<any[]>(`${this.apiUrl}/${contactId}/messages`);
   }
 
-  // --- SIGNALR ---
+
 
   public async startConnection(): Promise<void> {
   const token = localStorage.getItem('authToken'); 

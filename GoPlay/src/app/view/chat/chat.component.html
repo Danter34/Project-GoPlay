@@ -1,5 +1,6 @@
 <div class="chat-container">
-  <div class="chat-sidebar">
+  
+  <div class="chat-sidebar" *ngIf="currentUserId !== 0">
     <div class="sidebar-header">
       <h3>Tin nhắn</h3>
     </div>
@@ -7,25 +8,27 @@
       <li *ngFor="let c of conversations" 
           [class.active]="c.contactId === selectedContactId"
           (click)="selectContact(c.contactId)">
-        
         <div class="avatar-circle">
           {{ (c.otherUser && c.otherUser.length > 0) ? c.otherUser.charAt(0).toUpperCase() : '?' }}
         </div>
-        
         <div class="conv-info">
-          <span class="username">{{ c.otherUser || 'Người dùng' }}</span>
-          <span class="subject">{{ c.subject }}</span>
+          <span class="username">{{ c.otherUser || 'Khách vãng lai' }}</span>
+          <span class="subject" [title]="c.subject">{{ c.subject }}</span>
         </div>
       </li>
     </ul>
   </div>
 
-  <div class="chat-main" *ngIf="selectedContactId; else noChatSelected">
+  <div class="chat-main" 
+       [style.width]="currentUserId === 0 ? '100%' : 'auto'"
+       *ngIf="selectedContactId; else noChatSelected">
+    
     <div class="messages-area" #scrollMe>
       <div *ngFor="let msg of messages" 
-        [class.message-item]="true"
-        [class.my-message]="msg.senderId == currentUserId" 
-        [class.other-message]="msg.senderId != currentUserId">
+        class="message-item"
+        [class.my-message]="(currentUserId !== 0 && msg.senderId == currentUserId) || (currentUserId === 0 && (!msg.senderId || msg.senderId === 0))" 
+        [class.other-message]="!((currentUserId !== 0 && msg.senderId == currentUserId) || (currentUserId === 0 && (!msg.senderId || msg.senderId === 0)))">
+        
         <div class="bubble">
           {{ msg.content }}
         </div>

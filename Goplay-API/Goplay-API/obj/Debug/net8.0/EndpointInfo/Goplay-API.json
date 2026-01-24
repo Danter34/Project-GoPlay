@@ -1940,6 +1940,10 @@
       "TimeSlotDTO": {
         "type": "object",
         "properties": {
+          "slotId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "startTime": {
             "type": "string",
             "format": "time",

@@ -24,40 +24,50 @@ namespace Goplay_API.Controllers
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            var bookings = await _bookingRepository.GetByUserAsync(userId);
-
-            var response = bookings.Select(b => new BookingResponseDTO
-            {
-                BookingId = b.BookingId,
-                BookingDate = b.BookingDate,
-                Status = b.Status,
-                TotalPrice = b.TotalPrice,
-                FieldId = b.FieldId,
-                SlotIds = b.BookingTimeSlots.Select(bts => bts.SlotId).ToList()
-            });
+            // Gọi Repository lấy DTO đã có sẵn HasReviewed
+            var response = await _bookingRepository.GetMyBookingsAsync(userId);
 
             return Ok(response);
         }
 
-        [Authorize(Roles="OwnerField")]
-        [HttpGet("owner-bookings")]
-        public async Task<IActionResult> GetOwnerBookings()
+        [Authorize(Roles = "OwnerField")]
+        [HttpGet("owner/field/{fieldId}")]
+        public async Task<IActionResult> GetBookingsByField(int fieldId)
         {
-            int ownerUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-
-            var bookings = await _bookingRepository.GetByOwnerAsync(ownerUserId);
-
-            var response = bookings.Select(b => new BookingResponseDTO
+            try
             {
-                BookingId = b.BookingId,
-                BookingDate = b.BookingDate,
-                Status = b.Status,
-                TotalPrice = b.TotalPrice,
-                FieldId = b.FieldId,
-                SlotIds = b.BookingTimeSlots.Select(s => s.SlotId).ToList()
-            });
+                // 1. Lấy ID chủ sân từ Token
+                int ownerUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            return Ok(response);
+                // 2. Gọi Repo lấy list booking của sân đó
+                var bookings = await _bookingRepository.GetByFieldAndOwnerAsync(fieldId, ownerUserId);
+
+                // 3. Map dữ liệu trả về
+                var response = bookings.Select(b => new BookingResponseDTO
+                {
+                    BookingId = b.BookingId,
+                    BookingDate = b.BookingDate,
+                    Status = b.Status,
+                    TotalPrice = b.TotalPrice,
+                    FieldId = b.FieldId,
+
+                    // [MỚI] Trả về thông tin khách (Ưu tiên Guest, nếu ko có thì lấy User)
+                    GuestName = !string.IsNullOrEmpty(b.GuestName) ? b.GuestName : b.User?.FullName,
+                    GuestPhone = !string.IsNullOrEmpty(b.GuestPhone) ? b.GuestPhone : b.User?.Phone,
+
+                    TimeSlots = b.BookingTimeSlots.Select(ts => new BookingTimeSlotDTO
+                    {
+                        StartTime = ts.TimeSlot.StartTime,
+                        EndTime = ts.TimeSlot.EndTime
+                    }).ToList()
+                });
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = "Lỗi tải danh sách đặt sân." });
+            }
         }
 
         [Authorize(Roles = "OwnerField")]
@@ -82,7 +92,23 @@ namespace Goplay_API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+        [HttpPut("update-time")]
+        [Authorize] // Chủ sân hoặc Admin mới được đổi
+        public async Task<IActionResult> UpdateBookingTime([FromBody] UpdateBookingTimeDTO dto)
+        {
+            try
+            {
+                // [FIX LỖI CỦA BẠN Ở ĐÂY] 
+                // Truyền đủ 3 tham số: ID, Ngày mới, List Slot mới
+                await _bookingRepository.UpdateBookingTimeAsync(dto.BookingId, dto.NewDate, dto.NewSlotIds);
 
+                return Ok(new { message = "Cập nhật khung giờ thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
         [AllowAnonymous]
         [HttpGet("by-field/{fieldId}/date/{date}")]
         public async Task<IActionResult> GetByFieldAndDate(int fieldId, DateTime date)
@@ -108,22 +134,39 @@ namespace Goplay_API.Controllers
                 Status = booking.Status,
                 TotalPrice = booking.TotalPrice,
                 FieldId = booking.FieldId,
-                SlotIds = booking.BookingTimeSlots.Select(bts => bts.SlotId).ToList()
+                TimeSlots = booking.BookingTimeSlots.Select(ts => new BookingTimeSlotDTO
+                {
+                    StartTime = ts.TimeSlot.StartTime,
+                    EndTime = ts.TimeSlot.EndTime
+                }).ToList()
+
             };
 
             return Ok(response);
         }
 
-        [Authorize]
         [HttpPost("create")]
+        [AllowAnonymous] // <--- QUAN TRỌNG: Cho phép cả khách chưa đăng nhập gọi
         public async Task<IActionResult> Create([FromBody] BookingCreateDTO dto)
         {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-
             try
             {
+                int? userId = null;
+
+                // Kiểm tra xem request có token User hợp lệ không
+                if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    var claimId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    if (!string.IsNullOrEmpty(claimId))
+                    {
+                        userId = int.Parse(claimId);
+                    }
+                }
+
+                // Gọi Repo xử lý
                 var booking = await _bookingRepository.CreateAsync(userId, dto);
 
+                // Trả về kết quả
                 return Ok(new BookingResponseDTO
                 {
                     BookingId = booking.BookingId,
@@ -131,7 +174,12 @@ namespace Goplay_API.Controllers
                     Status = booking.Status,
                     TotalPrice = booking.TotalPrice,
                     FieldId = booking.FieldId,
-                    SlotIds = booking.BookingTimeSlots.Select(b => b.SlotId).ToList()
+                    // Trả về list giờ đã đặt để hiển thị lại bill
+                    TimeSlots = booking.BookingTimeSlots.Select(ts => new BookingTimeSlotDTO
+                    {
+                        StartTime = ts.TimeSlot.StartTime,
+                        EndTime = ts.TimeSlot.EndTime
+                    }).ToList()
                 });
             }
             catch (Exception ex)

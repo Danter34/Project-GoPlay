@@ -1,6 +1,7 @@
 ﻿using Goplay_API.Model.DTO;
 using Goplay_API.Repositories.Interface;
 using Goplay_API.Repositories.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -26,19 +27,23 @@ public class ContactsController : ControllerBase
 
     // Chi tiết tin nhắn
     [HttpGet("{id}/messages")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetMessages(int id)
     {
         var msgs = await _contactRepository.GetMessagesAsync(id);
         return Ok(msgs);
     }
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> CreateContact([FromBody] CreateContactDTO dto)
     {
-        int currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        int? currentUserId = null;
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        }
 
-        // Gọi Repository để tạo (logic bên dưới)
         var contact = await _contactRepository.CreateContactAsync(currentUserId, dto);
-
         return Ok(contact);
     }
 }

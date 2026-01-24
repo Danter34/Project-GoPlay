@@ -22,7 +22,7 @@ namespace Goplay_API.Repositories.Services
                 .Include(b => b.Field)
                 .Where(b =>
                     b.Field.OwnerProfileId == owner.OwnerProfileId &&
-                    b.Status == "Paid");
+                    b.Status == "Completed");
 
             return new OwnerDashboardDTO
             {
@@ -41,7 +41,7 @@ namespace Goplay_API.Repositories.Services
                 .Include(b => b.Field)
                 .Where(b =>
                     b.Field.OwnerProfileId == owner.OwnerProfileId &&
-                    b.Status == "Paid" &&
+                    b.Status == "Completed" &&
                     b.BookingDate.Year == year)
                 .GroupBy(b => b.BookingDate.Month)
                 .Select(g => new RevenueByTimeDTO
@@ -62,7 +62,7 @@ namespace Goplay_API.Repositories.Services
                 .Include(b => b.Field)
                 .Where(b =>
                     b.Field.OwnerProfileId == owner.OwnerProfileId &&
-                    b.Status == "Paid");
+                    b.Status == "Completed");
 
             if (from.HasValue)
                 query = query.Where(b => b.BookingDate >= from.Value);

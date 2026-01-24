@@ -7,7 +7,7 @@ import { PagedResult } from '../models/paged-result.model';
   providedIn: 'root'
 })
 export class FieldService {
-  private apiUrl = 'https://apigplay.qzz.io/api/fields';
+  private apiUrl = 'http://localhost:5210/api/fields';
 
   constructor(private http: HttpClient) { }
 

@@ -64,6 +64,9 @@
     <a *ngIf="currentUser?.role === 'OwnerField'" routerLink="/owner/dashboard" class="sidebar-link" (click)="closeSidebar()">
       <i class="fas fa-tasks"></i> Quản lý sân
     </a>
+    <a *ngIf="currentUser?.role === 'User'" routerLink="/my-bookings" class="sidebar-link" (click)="closeSidebar()">
+      <i class="fas fa-history"></i> Lịch sử đặt sân
+    </a>
     <a routerLink="/map" class="sidebar-link" routerLinkActive="active" (click)="closeSidebar()">
       <i class="fas fa-map-marked-alt"></i> Bản đồ
     </a>

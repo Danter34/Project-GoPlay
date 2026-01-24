@@ -13,7 +13,11 @@
         <label>Email</label>
         <input type="email" [(ngModel)]="model.email" name="email" required class="form-input" placeholder="example@mail.com">
       </div>
-
+      <div class="form-group">
+        <label>Số điện thoại</label>
+        <input type="tel" [(ngModel)]="model.phone" name="phone" required 
+               class="form-control" placeholder="số điện thoại">
+      </div>
       <div class="form-group">
         <label>Mật khẩu</label>
         <input type="password" [(ngModel)]="model.password" name="password" required class="form-input" placeholder="******">

@@ -22,3 +22,35 @@ p { text-align: center; color: #666; margin-bottom: 30px; }
 }
 .btn-submit { background: #00a651; color: white; }
 .btn-cancel { background: #eee; color: #333; }
+
+.use-phone-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #555;
+  background: #e8f5e9; /* Màu nền xanh nhạt */
+  padding: 8px 12px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.use-phone-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #00a651;
+}
+
+.use-phone-check label {
+  margin-bottom: 0; /* Override margin cũ của label */
+  cursor: pointer;
+  font-weight: normal;
+}
+
+/* Thêm hiệu ứng khi input bị readonly (nếu bạn dùng thuộc tính readonly ở HTML) */
+.form-input[readonly] {
+  background-color: #f9f9f9;
+  color: #777;
+  cursor: not-allowed; }

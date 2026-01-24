@@ -1,0 +1,90 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Lịch Sử Đặt Sân</h2>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <p>Đang tải dữ liệu...</p>
+  </div>
+
+  <div *ngIf="!isLoading && bookings.length === 0" class="text-center py-5 text-muted">
+    <i class="fas fa-calendar-times fa-3x mb-3"></i>
+    <p>Bạn chưa đặt sân nào.</p>
+    <a routerLink="/" class="btn btn-primary mt-2">Tìm sân ngay</a>
+  </div>
+
+  <div class="table-responsive" *ngIf="!isLoading && bookings.length > 0">
+    <table class="table custom-table">
+      <thead>
+        <tr>
+          <th>Mã đơn</th>
+          <th>Ngày đá</th>
+          <th>Sân</th>
+          <th>Khung giờ</th> <th>Tổng tiền</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let b of bookings">
+          <td>#{{ b.bookingId }}</td>
+          <td>{{ b.bookingDate | date:'dd/MM/yyyy' }}</td>
+          
+          <td class="fw-bold">{{ b.fieldName }}</td>
+
+          <td>
+            <div *ngFor="let slot of b.timeSlots" class="badge bg-info text-dark me-1 mb-1 d-inline-block">
+              {{ slot.startTime.toString().slice(0,5) }} - {{ slot.endTime.toString().slice(0,5) }}
+            </div>
+          </td>
+
+          <td class="fw-bold text-danger">{{ b.totalPrice | number }}đ</td>
+          
+          <td>
+            <span class="badge-status" [ngClass]="getStatusClass(b.status)">
+              <ng-container [ngSwitch]="b.status">
+                <span *ngSwitchCase="'Pending'">Chờ duyệt</span>
+                <span *ngSwitchCase="'AwaitingPayment'">Chờ thanh toán</span>
+                <span *ngSwitchCase="'Confirmed'">Đã xác nhận</span>
+                <span *ngSwitchCase="'Completed'">Hoàn tất</span>
+                <span *ngSwitchCase="'Cancelled'">Đã hủy</span>
+                <span *ngSwitchDefault>{{ b.status }}</span>
+              </ng-container>
+            </span>
+          </td>
+          
+          <td>
+            <button *ngIf="b.status === 'Pending' || b.status === 'AwaitingPayment'" 
+                    class="btn btn-sm btn-outline-danger" 
+                    (click)="cancelBooking(b.bookingId)">
+              <i class="fas fa-times"></i> Hủy
+            </button>
+            
+            <button *ngIf="b.status === 'Completed' && !b.hasReviewed" 
+                    class="btn btn-sm btn-warning text-white" 
+                    (click)="openReviewModal(b)">
+              <i class="fas fa-star"></i> Đánh giá
+            </button>
+
+            <span *ngIf="b.status === 'Completed' && b.hasReviewed" class="text-success small">
+              <i class="fas fa-check-circle"></i> Đã đánh giá
+            </span>
+
+            <span *ngIf="b.status === 'Confirmed' || b.status === 'Cancelled'" class="text-muted small">
+              --
+            </span>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-review-modal 
+      *ngIf="showReviewModal" 
+      [fieldId]="selectedReviewFieldId"
+      [bookingId]="selectedReviewBookingId"
+      [fieldName]="selectedReviewFieldName"
+      (success)="onReviewSuccess()" 
+      (close)="showReviewModal = false">
+  </app-review-modal>
+
+</div>

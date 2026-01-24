@@ -1,0 +1,98 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header">
+      <div class="header-left">
+        <h3>{{ field?.fieldName }}</h3>
+        <span class="price-tag">{{ field?.price | number }}đ/h</span>
+      </div>
+      <button class="btn-close" (click)="closeModal()">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      
+      <div class="control-section">
+        <label>Ngày đặt sân:</label>
+        <input type="date" [(ngModel)]="selectedDate" (change)="onDateChange()" class="form-control date-input">
+      </div>
+
+      <div class="slots-section">
+        <label>Chọn khung giờ ({{ timeSlots.length }} khung giờ):</label>
+        
+        <div class="legend">
+          <span class="legend-item"><span class="dot available"></span> Trống</span>
+          <span class="legend-item"><span class="dot selected"></span> Đang chọn</span>
+          <span class="legend-item"><span class="dot booked"></span> Đã đặt</span>
+        </div>
+
+      <div class="slots-grid" *ngIf="!isLoading; else loading">
+          <div *ngFor="let slot of timeSlots" 
+               class="slot-item"
+               [ngClass]="getSlotClass(slot)"
+               (click)="toggleSlot(slot)">
+            
+            <span class="slot-time">
+              {{ slot.startTime.toString().slice(0,5) }} - {{ slot.endTime.toString().slice(0,5) }}
+            </span>
+
+          </div>
+        </div>
+        
+        <ng-template #loading>
+          <div class="loading-box"><i class="fas fa-spinner fa-spin"></i> Đang tải lịch...</div>
+        </ng-template>
+      </div>
+
+      <div class="guest-form" *ngIf="currentUserId === 0">
+        <div class="divider"><span>Thông tin liên hệ</span></div>
+        <div class="form-row">
+          <input type="text" [(ngModel)]="guestName" placeholder="Họ và tên của bạn *" class="form-control">
+          <input type="tel" [(ngModel)]="guestPhone" placeholder="Số điện thoại *" class="form-control">
+        </div>
+        <small class="hint-text">* Bạn chưa đăng nhập. Vui lòng để lại thông tin để chủ sân liên hệ.</small>
+      </div>
+
+      <div class="summary-section">
+        <div class="summary-row">
+          <span>Số giờ chọn:</span>
+          <strong>{{ selectedSlotIds.length }} giờ</strong>
+        </div>
+        <div class="summary-row total">
+          <span>Tổng cộng:</span>
+          <span class="total-price">{{ totalPrice | number }}đ</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="payment-method-section">
+        <label>Chọn phương thức thanh toán cọc:</label>
+        <div class="payment-options">
+          
+          <div class="payment-option" 
+               [class.active]="selectedPaymentMethod === 'VNPay'"
+               (click)="selectedPaymentMethod = 'VNPay'">
+            <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPay" class="payment-logo"> <span>VNPay QR</span>
+            <i class="fas fa-check-circle check-icon" *ngIf="selectedPaymentMethod === 'VNPay'"></i>
+          </div>
+
+          <div class="payment-option" 
+               [class.active]="selectedPaymentMethod === 'Momo'"
+               (click)="selectedPaymentMethod = 'Momo'">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTepW9oXtSheSZoOWbGZq577FcGgN50NTuvoQ&s" alt="MoMo" class="payment-logo">
+            <span>Ví MoMo</span>
+            <i class="fas fa-check-circle check-icon" *ngIf="selectedPaymentMethod === 'Momo'"></i>
+          </div>
+
+        </div>
+      </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeModal()">Đóng</button>
+      <button class="btn-confirm" (click)="submitBooking()" 
+              [disabled]="selectedSlotIds.length === 0 || isLoading">
+        {{ isLoading ? 'Đang xử lý...' : 'Xác nhận đặt sân' }}
+      </button>
+    </div>
+  </div>
+</div>
