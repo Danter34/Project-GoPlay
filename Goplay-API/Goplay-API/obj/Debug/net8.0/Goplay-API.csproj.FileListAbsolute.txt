@@ -298,3 +298,4 @@ D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\refint\Goplay-A
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\Goplay-API.pdb
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\Goplay-API.genruntimeconfig.cache
 D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\ref\Goplay-API.dll
+D:\Project\Angular\Goplay\Goplay-API\Goplay-API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

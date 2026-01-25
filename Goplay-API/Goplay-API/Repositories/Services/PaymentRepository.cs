@@ -127,7 +127,7 @@ namespace Goplay_API.Repositories.Services
             {
                 payment.Status = PaymentStatus.ThấtBại;
 
-                // [MỚI] Hủy luôn Booking nếu thanh toán thất bại
+               
                 if (payment.Booking != null)
                 {
                     payment.Booking.Status = "Cancelled";
@@ -239,7 +239,7 @@ namespace Goplay_API.Repositories.Services
             {
                 payment.Status = PaymentStatus.ThấtBại;
 
-                // [MỚI] Hủy luôn Booking nếu thanh toán thất bại
+               
                 if (payment.Booking != null)
                 {
                     payment.Booking.Status = "Cancelled";

@@ -89,6 +89,14 @@ namespace Goplay_API.Controllers
             // 4. Trả về DTO
             return Ok(new OwnerProfileResponseDTO(profile));
         }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin/profile/{userId}")]
+        public async Task<IActionResult> GetProfileByUserId(int userId)
+        {
+            var profile = await _service.GetByUserIdAsync(userId);
+            if (profile == null) return NotFound();
+            return Ok(new OwnerProfileResponseDTO(profile));
+        }
     }
 
 

@@ -15,13 +15,11 @@ export class PaymentService {
   }
  // Kiểm tra kết quả MoMo
   checkMomoReturn(params: any): Observable<any> {
-    // [SỬA] Thêm responseType: 'text'
     return this.http.get(`${this.apiUrl}/momo-return`, { params, responseType: 'text' });
   }
 
   // Kiểm tra kết quả VNPay
   checkVnPayReturn(params: any): Observable<any> {
-    // [SỬA] Thêm responseType: 'text'
     return this.http.get(`${this.apiUrl}/vnpay-return`, { params, responseType: 'text' });
   }
 }

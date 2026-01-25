@@ -30,6 +30,16 @@ import { MyBookingsComponent } from './view/my-bookings/my-bookings.component';
 import { BookingListComponent } from './view/owner/booking-list/booking-list.component';
 import { PaymentReturnComponent } from './view/payment-return/payment-return.component';
 import { ReviewModalComponent } from './view/review-modal/review-modal.component';
+import { BaseChartDirective } from 'ng2-charts';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { StatisticsComponent } from './view/owner/statistics/statistics.component';
+import { AdminLayoutComponent } from './shared/admin-layout/admin-layout.component';
+import { ApproveOwnerComponent } from './view/admin/approve-owner/approve-owner.component';
+import { UserManagementComponent } from './view/admin/user-management/user-management.component';
+import { DashboardComponent } from './view/admin/dashboard/dashboard.component';
+import { PartnerDetailComponent } from './view/admin/partner-detail/partner-detail.component';
+import { SportTypeManagementComponent } from './view/admin/sport-type-management/sport-type-management.component';
+import { TimeSlotManagementComponent } from './view/admin/time-slot-management/time-slot-management.component';
 @NgModule({
   declarations: [
     App,
@@ -52,16 +62,26 @@ import { ReviewModalComponent } from './view/review-modal/review-modal.component
     MyBookingsComponent,
     BookingListComponent,
     PaymentReturnComponent,
-    ReviewModalComponent
+    ReviewModalComponent,
+    StatisticsComponent,
+    AdminLayoutComponent,
+    ApproveOwnerComponent,
+    UserManagementComponent,
+    DashboardComponent,
+    PartnerDetailComponent,
+    SportTypeManagementComponent,
+    TimeSlotManagementComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     AppRoutingModule,
-    GoogleMapsModule
+    GoogleMapsModule,
+    BaseChartDirective
 ],
   providers: [
     provideHttpClient(withFetch(), withInterceptorsFromDi()),
+    provideCharts(withDefaultRegisterables()),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [App]

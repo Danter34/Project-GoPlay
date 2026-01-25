@@ -44,7 +44,7 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
     this.loadTimeSlots();
   }
 
-  // [FIX 2] Dùng ngOnChanges để đảm bảo khi modal hiện lên và nhận được 'field' là load lịch ngay
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['field'] && this.field) {
       // Nếu đã có slot rồi thì chỉ cần check lại trạng thái booking
@@ -90,7 +90,7 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
       });
   }
 
-  // [FIX 1] Hàm kiểm tra xem slot có phải quá khứ không
+
   isSlotPast(slot: TimeSlot): boolean {
     const now = new Date();
     const selectedDate = new Date(this.selectedDate);
@@ -108,7 +108,7 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
 
     // 3. Nếu chọn HÔM NAY -> Check giờ
     if (selectedDate.getTime() === today.getTime()) {
-      // Giả sử slot.startTime format là "07:00:00"
+      
       const parts = slot.startTime.toString().split(':');
       const slotHour = parseInt(parts[0], 10);
       const slotMinute = parseInt(parts[1], 10);
@@ -127,7 +127,7 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
   }
 
   getSlotClass(slot: any): string {
-    // Ưu tiên 1: Đã đặt (hiện màu theo trạng thái)
+ 
     if (this.bookedSlotIds.includes(slot.slotId)) {
       const status = this.slotStatuses[slot.slotId];
       if (status === 'Completed') return 'completed';
@@ -137,13 +137,13 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
       return 'booked';
     }
 
-    // Ưu tiên 2: Đang chọn
+
     if (this.selectedSlotIds.includes(slot.slotId)) return 'selected';
 
-    // [FIX 1] Ưu tiên 3: Quá khứ (Disable)
-    if (this.isSlotPast(slot)) return 'past-slot'; // Thêm class này vào CSS
 
-    // Còn lại: Trống
+    if (this.isSlotPast(slot)) return 'past-slot'; 
+
+  
     return 'available';
   }
 
@@ -153,7 +153,7 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
     // Chặn click nếu đã đặt
     if (this.bookedSlotIds.includes(id)) return;
 
-    // [FIX 1] Chặn click nếu là quá khứ
+   
     if (this.isSlotPast(slot)) return;
 
     const index = this.selectedSlotIds.indexOf(id);
@@ -165,7 +165,7 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
     this.calculateTotal();
   }
 
-  // ... (Giữ nguyên các hàm calculateTotal, submitBooking, createPayment, closeModal)
+
   calculateTotal() {
     this.totalPrice = this.selectedSlotIds.length * (this.field?.price || 0);
   }

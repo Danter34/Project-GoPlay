@@ -11,12 +11,12 @@ export class BookingService {
 
   constructor(private http: HttpClient) {}
 
-  // --- TimeSlot API ---
+
   getAllTimeSlots(): Observable<TimeSlot[]> {
     return this.http.get<TimeSlot[]>(`${this.apiUrl}/timeslots/get-all`);
   }
 
-  // --- Booking API ---
+
   createBooking(dto: BookingCreateDTO): Observable<Booking> {
     return this.http.post<Booking>(`${this.apiUrl}/bookings/create`, dto);
   }
@@ -29,7 +29,7 @@ export class BookingService {
     return this.http.get<any[]>(`${this.apiUrl}/bookings/my-bookings`);
   }
   getOwnerFields(): Observable<any> {
-    // Lưu ý: Backend trả về PagedResult, ta lấy pageSize lớn để hiện hết
+
     return this.http.get<any>(`${this.apiUrl}/fields/my-fields?page=1&pageSize=10`);
   }
  getBookingsByField(fieldId: number): Observable<any[]> {
@@ -39,12 +39,12 @@ export class BookingService {
     return this.http.put(`${this.apiUrl}/bookings/owner/${id}/status`, { status });
   }
   cancelBooking(id: number): Observable<any> {
-  //
+  
   return this.http.put(`${this.apiUrl}/bookings/cancel/${id}`, {});
   
 }
 getBookedSlots(fieldId: number, date: string): Observable<number[]> {
-    // API này trả về mảng slotId [1, 2, 5...] đã có người đặt
+  
     return this.http.get<number[]>(`${this.apiUrl}/bookings/booked-slots?fieldId=${fieldId}&date=${date}`);
   }
 

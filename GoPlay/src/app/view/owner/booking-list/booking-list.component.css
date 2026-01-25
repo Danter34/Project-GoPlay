@@ -123,3 +123,62 @@
 .price-diff { font-size: 1.2rem; font-weight: bold; }
 .text-danger { color: #dc3545; }
 .modal-footer { display: flex; justify-content: flex-end; }
+
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px; margin-top: 5px;
+}
+
+.slot-item {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px 5px;
+  text-align: center;
+  cursor: pointer;
+  background: white;
+  transition: 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+}
+
+.slot-time { font-weight: bold; font-size: 0.9rem; }
+.slot-status { font-size: 0.7rem; margin-top: 4px; }
+
+/* 1. Trạng thái TRỐNG */
+.slot-item:hover:not(.disabled) {
+  border-color: #00a651;
+  background: #f0fff4;
+}
+
+/* 2. Trạng thái ĐANG CHỌN (Xanh) */
+.slot-item.selected {
+  background: #00a651;
+  color: white;
+  border-color: #00a651;
+}
+
+/* 3. Trạng thái BỊ KHÓA / ĐÃ ĐẶT (Xám) */
+.slot-item.disabled {
+  background-color: #e9ecef; /* Màu nền xám */
+  color: #999;                /* Màu chữ mờ */
+  cursor: not-allowed;        /* Chuột hình cấm */
+  border-color: #dee2e6;
+}
+.slot-item.disabled .slot-status {
+    color: #c0392b; /* Chữ "Đã đặt" màu đỏ cho nổi bật */
+    font-weight: 600;
+}
+
+/* Chú thích Dot */
+.dot-sample { width: 12px; height: 12px; display: inline-block; margin-right: 5px; border-radius: 50%; border: 1px solid #ccc; }
+.dot-sample.available { background: white; }
+.dot-sample.selected { background: #00a651; border-color: #00a651; }
+.dot-sample.disabled { background: #e9ecef; }
+
+/* Modal Footer */
+.modal-footer { display: flex; justify-content: flex-end; }
+.price-diff { font-family: 'Arial', sans-serif; }

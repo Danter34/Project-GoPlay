@@ -67,16 +67,15 @@ namespace Goplay_API.Repositories.Services
 
             Contact newContact;
 
-            // TRƯỜNG HỢP 1: USER ĐÃ ĐĂNG NHẬP
+            
             if (senderId.HasValue)
             {
-                // [SỬA] Check trùng bao gồm cả FieldId
-                // Nếu user đã từng chat về sân này rồi thì mở lại chat đó
+                
                 var existing = await _context.Contacts
                     .FirstOrDefaultAsync(c =>
                         ((c.SenderId == senderId && c.ReceiverId == dto.ReceiverId) ||
                          (c.SenderId == dto.ReceiverId && c.ReceiverId == senderId))
-                        && c.FieldId == dto.FieldId // <--- QUAN TRỌNG: Phân biệt theo sân
+                        && c.FieldId == dto.FieldId 
                     );
 
                 if (existing != null) return existing;
@@ -90,7 +89,7 @@ namespace Goplay_API.Repositories.Services
                     Status = "Open"
                 };
             }
-            // TRƯỜNG HỢP 2: KHÁCH VÃNG LAI
+        
             else
             {
                 var randomId = new Random().Next(100, 999);

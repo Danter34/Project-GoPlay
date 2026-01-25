@@ -15,7 +15,6 @@ export class HomeComponent implements OnInit {
   fields: Field[] = [];
   currentUserId: number = 0;
 
-  // --- PHÂN TRANG ---
   currentPage = 1;
   itemsPerPage = 10;
   totalItems = 0;
@@ -28,7 +27,6 @@ export class HomeComponent implements OnInit {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  // --- ĐỊA CHÍNH ---
   vnData: any[] = [];
   cities: any[] = [];
   districts: any[] = [];
@@ -38,8 +36,7 @@ export class HomeComponent implements OnInit {
   searchDistrict = '';
   searchSportId = 0;
 
-  // --- MODAL CONFIG ---
-  showBookingModal = false; // Thống nhất dùng biến này giống FieldDetail
+  showBookingModal = false;
   selectedField: Field | null = null;
 
   constructor(
@@ -55,8 +52,7 @@ export class HomeComponent implements OnInit {
     this.loadVietnamData();
   }
 
-  // ... (Giữ nguyên các hàm loadFields, onSearch, changePage, loadVietnamData, onCityChange, onDistrictChange) ...
-  // Để gọn code mình ẩn các hàm không thay đổi đi, bạn giữ nguyên chúng nhé.
+
   loadFields(page: number = 1) {
     this.fieldService.getAllPaged(page, this.itemsPerPage).subscribe({
       next: res => {
@@ -103,9 +99,9 @@ export class HomeComponent implements OnInit {
 
   onDistrictChange() { this.onSearch(1); }
 
-  // --- MODAL LOGIC (ĐÃ SỬA) ---
+ 
   openBookingModal(field: Field) {
-    // Không check login nữa để khách vãng lai đặt được
+  
     this.selectedField = field;
     this.showBookingModal = true;
   }

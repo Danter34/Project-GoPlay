@@ -20,7 +20,7 @@ export class App {
         const url = event.urlAfterRedirects;
       
         // Ẩn Header/Footer nếu là trang Login, Register HOẶC trang Owner
-        if (url.includes('/login') || url.includes('/register') || url.includes('/owner')) {
+        if (url.includes('/login') || url.includes('/register') || url.includes('/owner') || url.includes('/admin')) {
           this.showLayout = false;
         } else {
           this.showLayout = true;

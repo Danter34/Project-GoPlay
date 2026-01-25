@@ -81,6 +81,37 @@ namespace Goplay_API.Repositories.Services
                 })
                 .ToListAsync();
         }
-    }
+        public async Task<AdminDashboardDTO> GetAdminDashboardAsync()
+        {
+            var totalUsers = await _context.Users.CountAsync();
 
+            // Đếm chủ sân Active
+            var totalOwners = await _context.OwnerProfiles.CountAsync(x => x.Status == "Approved");
+
+            // Đếm chủ sân chờ duyệt
+            var pendingOwners = await _context.OwnerProfiles.CountAsync(x => x.Status == "Pending");
+
+            
+            var totalFields = await _context.Fields.CountAsync(x => x.Status == "Available");
+
+            // Đếm đơn đã hoàn thành hoặc đã xác nhận
+            var totalBookings = await _context.Bookings
+                .CountAsync(x => x.Status == "Completed" || x.Status == "Confirmed");
+
+            // Tổng doanh thu toàn hệ thống
+            var totalRevenue = await _context.Bookings
+                .Where(x => x.Status == "Completed")
+                .SumAsync(x => x.TotalPrice);
+
+            return new AdminDashboardDTO
+            {
+                TotalUsers = totalUsers,
+                TotalOwners = totalOwners,
+                PendingOwners = pendingOwners,
+                TotalFields = totalFields,
+                TotalBookings = totalBookings,
+                TotalRevenueSystem = totalRevenue
+            };
+        }
+    }
 }

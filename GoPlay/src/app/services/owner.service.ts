@@ -7,7 +7,6 @@ import { OwnerProfile, OwnerProfileUpdateDTO } from '../models/owner-profile.mod
   providedIn: 'root'
 })
 export class OwnerService {
-  // Đổi API URL cho đúng với Controller Owner
   private apiUrl = 'http://localhost:5210/api/owner-profiles'; 
 
   constructor(private http: HttpClient) { }

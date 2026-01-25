@@ -19,6 +19,15 @@ import { ChatComponent } from './view/chat/chat.component';
 import { MyBookingsComponent } from './view/my-bookings/my-bookings.component';
 import { BookingListComponent } from './view/owner/booking-list/booking-list.component';
 import { PaymentReturnComponent } from './view/payment-return/payment-return.component';
+import { StatisticsComponent } from './view/owner/statistics/statistics.component';
+import { AdminLayoutComponent } from './shared/admin-layout/admin-layout.component';
+import { ApproveOwnerComponent } from './view/admin/approve-owner/approve-owner.component';
+import { UserManagementComponent } from './view/admin/user-management/user-management.component';
+import { adminGuard } from './core/guards/admin-guard';
+import { DashboardComponent } from './view/admin/dashboard/dashboard.component';
+import { PartnerDetailComponent } from './view/admin/partner-detail/partner-detail.component';
+import { SportTypeManagementComponent } from './view/admin/sport-type-management/sport-type-management.component';
+import { TimeSlotManagementComponent } from './view/admin/time-slot-management/time-slot-management.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'payment-return', component: PaymentReturnComponent },
@@ -39,7 +48,34 @@ const routes: Routes = [
       { path: 'field/edit/:id', component: FieldSaveComponent },
       { path: 'profile', component: OwnerProfileComponent },
       { path: 'booking', component: BookingListComponent },
-      { path: 'chat', component: ChatComponent }
+      { path: 'chat', component: ChatComponent },
+      { path: 'statistics', component: StatisticsComponent },
+    ]
+  },
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [adminGuard], // Nhớ tạo Guard check role='Admin'
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'approve-owners', component: ApproveOwnerComponent },
+      { 
+        path: 'users', 
+        component: UserManagementComponent, 
+        data: { type: 'user' } // Đánh dấu đây là trang User
+      },
+      { 
+        path: 'partners', 
+        component: UserManagementComponent, 
+        data: { type: 'owner' } // Đánh dấu đây là trang Chủ sân
+      },
+      { path: 'partners', component: UserManagementComponent, data: { type: 'owner' } },
+      { path: 'sport-types', component: SportTypeManagementComponent },
+      { path: 'time-slots', component: TimeSlotManagementComponent },
+      
+      // [THÊM] Route chi tiết
+      { path: 'partners/:id', component: PartnerDetailComponent },
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
   { path: 'profile', component: UserProfileComponent },

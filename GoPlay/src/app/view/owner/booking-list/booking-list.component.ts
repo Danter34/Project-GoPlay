@@ -14,180 +14,184 @@ export class BookingListComponent implements OnInit {
   selectedField: any = null;
   isLoading = false;
 
-  // --- LOGIC ĐỔI GIỜ NÂNG CAO ---
+  // --- LOGIC ĐỔI GIỜ ---
   showChangeTimeModal = false;
   changeModeData: any = {
     booking: null,
-    newDate: '',       // Ngày mới chọn (Format YYYY-MM-DD để gán vào input type=date)
+    newDate: '',
     slots: [],         // Danh sách tất cả slot hệ thống
     bookedSlotIds: [], // Các slot bị người khác đặt (để bôi xám)
     selectedNewSlotIds: [], // Các slot mình đang chọn
-    oldPrice: 0,
-    newPrice: 0,
-    diffPrice: 0       // Tiền chênh lệch
+    
+    // Biến tính tiền
+    oldTotalPrice: 0,   // Tổng tiền của đơn cũ
+    newTotalPrice: 0,   // Tổng tiền của đơn mới (Giá sân * số giờ)
+    depositAmount: 0,   // Số tiền khách đã cọc (30% đơn cũ)
+    remainingAmount: 0  // Số tiền khách phải trả tại sân (Mới - Cọc)
   };
 
   constructor(private bookingService: BookingService) {}
 
   ngOnInit(): void {
     this.loadOwnerFields();
-    // Load danh sách khung giờ hệ thống 1 lần duy nhất
+    // Load danh sách khung giờ hệ thống
     this.bookingService.getAllTimeSlots().subscribe(data => {
       this.changeModeData.slots = data;
     });
   }
 
-  // --- HÀM HELPER MỚI ĐỂ XỬ LÝ NGÀY THÁNG VIỆT NAM ---
-  // Chuyển đổi Date object thành chuỗi "YYYY-MM-DD" theo giờ địa phương (không bị lùi ngày)
+  // Helper format ngày
   formatDateLocal(dateInput: string | Date): string {
     const date = new Date(dateInput);
     const year = date.getFullYear();
-    const month = ('0' + (date.getMonth() + 1)).slice(-2); // Thêm số 0 nếu tháng < 10
-    const day = ('0' + date.getDate()).slice(-2);          // Thêm số 0 nếu ngày < 10
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
     return `${year}-${month}-${day}`;
   }
 
-  // ... Các hàm loadOwnerFields, onSelectField, loadBookings, backToFields, updateStatus GIỮ NGUYÊN ...
+  getCurrentDateString(): string {
+    return this.formatDateLocal(new Date());
+  }
+
+  // --- LOAD DATA ---
   loadOwnerFields() {
     this.isLoading = true;
     this.bookingService.getOwnerFields().subscribe({
-      next: (res) => { this.myFields = res.items || []; this.isLoading = false; },
+      next: (res: any) => { this.myFields = res.items || []; this.isLoading = false; },
       error: () => this.isLoading = false
     });
   }
+
   onSelectField(field: any) { this.selectedField = field; this.loadBookings(field.fieldId); }
+  
   loadBookings(fieldId: number) {
     this.isLoading = true;
     this.bookingService.getBookingsByField(fieldId).subscribe({
-      next: (res) => { this.bookings = res; this.isLoading = false; },
+      next: (res: any) => { this.bookings = res; this.isLoading = false; },
       error: () => this.isLoading = false
     });
   }
+
   backToFields() { this.selectedField = null; this.bookings = []; }
+
   updateStatus(id: number, newStatus: string) {
-      if(!confirm('Xác nhận cập nhật trạng thái?')) return;
-      this.bookingService.updateBookingStatus(id, newStatus).subscribe({
-          next: () => { alert('Thành công!'); this.loadBookings(this.selectedField.fieldId); },
-          error: (err) => alert('Lỗi: ' + err.error?.message)
-      });
+    if(!confirm('Xác nhận cập nhật trạng thái?')) return;
+    this.bookingService.updateBookingStatus(id, newStatus).subscribe({
+      next: () => { alert('Thành công!'); this.loadBookings(this.selectedField.fieldId); },
+      error: (err: any) => alert('Lỗi: ' + err.error?.message)
+    });
   }
 
-  // --- LOGIC MODAL ĐỔI GIỜ ---
-
+  // =========================================================
+  // LOGIC ĐỔI GIỜ (ĐÃ FIX THEO YÊU CẦU)
+  // =========================================================
+  
   // 1. Mở Modal
   openChangeTimeModal(booking: any) {
     this.changeModeData.booking = booking;
-    
-    // [SỬA LẠI CHỖ NÀY] Sử dụng hàm formatDateLocal thay vì toISOString()
     this.changeModeData.newDate = this.formatDateLocal(booking.bookingDate);
+    this.changeModeData.selectedNewSlotIds = [];
     
-    this.changeModeData.selectedNewSlotIds = []; // Reset chọn
-    this.changeModeData.oldPrice = booking.totalPrice;
-    this.changeModeData.newPrice = 0;
-    this.changeModeData.diffPrice = 0;
+    // Lưu giá cũ
+    this.changeModeData.oldTotalPrice = booking.totalPrice;
 
-    // Load các slot đã bị đặt trong ngày đó
+    // Tính tiền cọc (30% của đơn cũ)
+    // Lưu ý: Nếu DB có lưu cột Deposit riêng thì lấy cột đó, ở đây mình tính 30%
+    this.changeModeData.depositAmount = booking.totalPrice * 0.3;
+
+    // Reset giá mới
+    this.changeModeData.newTotalPrice = 0;
+    this.changeModeData.remainingAmount = 0;
+
     this.loadBookedSlotsForDate();
     this.showChangeTimeModal = true;
   }
 
-  // 2. Khi chủ sân đổi ngày trên lịch
+  // 2. Chọn ngày mới
   onDateChange(event: any) {
     this.changeModeData.newDate = event.target.value;
-    this.changeModeData.selectedNewSlotIds = []; // Reset chọn slot khi đổi ngày
+    this.changeModeData.selectedNewSlotIds = [];
     this.updatePricePreview();
     this.loadBookedSlotsForDate();
   }
 
-  // 3. Gọi API lấy danh sách slot đã bị đặt (để bôi xám)
+  // 3. Load slot đã bị đặt (để disable)
   loadBookedSlotsForDate() {
     if (!this.selectedField) return;
-    
-    const date = this.changeModeData.newDate;
-    // Gọi API check xem ngày đó sân này slot nào đã có người chốt
-    this.bookingService.getBookedSlots(this.selectedField.fieldId, date)
-      .subscribe(bookedIds => {
+    this.bookingService.getBookedSlots(this.selectedField.fieldId, this.changeModeData.newDate)
+      .subscribe((bookedIds: number[]) => {
         this.changeModeData.bookedSlotIds = bookedIds || [];
       });
   }
 
-  // 4. Hàm check xem slot có bị khóa không (Màu xám)
+  // 4. Check slot disable (Màu xám)
   isSlotDisabled(slot: any): boolean {
     // A. Check nếu đã bị người khác đặt
-    if (this.changeModeData.bookedSlotIds.includes(slot.slotId)) {
-       return true; 
-    }
+    // Lưu ý: Nếu đổi sang ngày khác thì check tất cả. 
+    // Nếu vẫn ở ngày cũ, lẽ ra phải trừ các slot của chính booking này ra (để khách có thể chọn lại giờ cũ).
+    // Nhưng để an toàn và đơn giản, mình cứ check theo list bookedIds trả về từ server.
+    if (this.changeModeData.bookedSlotIds.includes(slot.slotId)) return true;
 
-    // B. Check quá khứ (Cập nhật logic so sánh ngày giờ địa phương)
-    const now = new Date(); // Thời điểm hiện tại
-    
-    // Tạo Date object từ chuỗi YYYY-MM-DD đang chọn (lúc 00:00:00 giờ địa phương)
+    // B. Check quá khứ
+    const now = new Date();
     const selectedDateStart = new Date(this.changeModeData.newDate);
-    // Reset giờ về 0 để so sánh chuẩn
     selectedDateStart.setHours(0, 0, 0, 0);
-
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
 
-    // Nếu ngày chọn < ngày hôm nay -> Disable (Quá khứ)
     if (selectedDateStart.getTime() < todayStart.getTime()) return true;
-
-    // Nếu ngày chọn > ngày hôm nay -> OK (Tương lai), chỉ cần check A ở trên
-    if (selectedDateStart.getTime() > todayStart.getTime()) return false;
-
-    // Nếu BẰNG ngày hôm nay -> Check tiếp giờ
     if (selectedDateStart.getTime() === todayStart.getTime()) {
       const [hours, minutes] = slot.startTime.split(':').map(Number);
-      
-      // Tạo thời điểm của slot trong ngày hôm nay
       const slotTime = new Date();
       slotTime.setHours(hours, minutes, 0, 0);
-      
-      // Nếu giờ slot < giờ hiện tại -> Disable
-      if (slotTime < now) return true; 
+      if (slotTime < now) return true;
     }
-
     return false;
   }
 
-  // 5. Chọn / Bỏ chọn Slot
+  // 5. Chọn slot
   toggleSlot(slotId: number) {
     const index = this.changeModeData.selectedNewSlotIds.indexOf(slotId);
-    if (index > -1) {
-      this.changeModeData.selectedNewSlotIds.splice(index, 1);
-    } else {
-      this.changeModeData.selectedNewSlotIds.push(slotId);
-    }
+    if (index > -1) this.changeModeData.selectedNewSlotIds.splice(index, 1);
+    else this.changeModeData.selectedNewSlotIds.push(slotId);
+    
     this.updatePricePreview();
   }
 
-  // 6. Tính tiền chênh lệch
+  // 6. Tính toán tiền (Logic cốt lõi)
   updatePricePreview() {
-    // Giả sử giá sân nằm trong selectedField.price
-    const pricePerSlot = this.selectedField.price || 0; 
+    const pricePerSlot = this.selectedField.price || 0;
     
-    this.changeModeData.newPrice = this.changeModeData.selectedNewSlotIds.length * pricePerSlot;
-    this.changeModeData.diffPrice = this.changeModeData.newPrice - this.changeModeData.oldPrice;
+    // Tổng tiền mới = Số slot * Giá sân
+    this.changeModeData.newTotalPrice = this.changeModeData.selectedNewSlotIds.length * pricePerSlot;
+
+    // Số tiền phải thu tại sân = Tổng mới - Cọc đã đóng
+    this.changeModeData.remainingAmount = this.changeModeData.newTotalPrice - this.changeModeData.depositAmount;
+
+    // Nếu tính ra âm (vd: đổi từ 2h xuống 1h, tiền mới < tiền cọc), thì coi như không thu thêm (hoặc trả lại tùy chính sách, ở đây set = 0)
+    // Nhưng thường chủ sân sẽ không trả lại cọc, nên hiển thị số âm để biết là mình đang nợ khách hoặc hòa vốn.
+    // Ở đây mình để nguyên số học để bạn dễ xử lý.
   }
 
-  // 7. Lấy ngày hiện tại (để chặn chọn quá khứ ở datepicker)
-  getCurrentDateString(): string {
-    // [SỬA LẠI CHỖ NÀY] Sử dụng hàm formatDateLocal thay vì toISOString()
-    return this.formatDateLocal(new Date());
-  }
-
-  // 8. Submit
+  // 7. Submit
   submitChangeTime() {
     if (this.changeModeData.selectedNewSlotIds.length === 0) {
       alert("Vui lòng chọn ít nhất 1 khung giờ mới!");
       return;
     }
 
-    // Cảnh báo tiền nong
-    if (this.changeModeData.diffPrice > 0) {
-      const diff = this.changeModeData.diffPrice.toLocaleString();
-      if (!confirm(`Khách cần thanh toán thêm: ${diff}đ.\nBạn đã thu tiền chưa?`)) return;
+    const payAtField = this.changeModeData.remainingAmount;
+    let msg = `Xác nhận đổi giờ?\n\n`;
+    msg += `Tổng tiền mới: ${this.changeModeData.newTotalPrice.toLocaleString()}đ\n`;
+    msg += `Đã cọc: ${this.changeModeData.depositAmount.toLocaleString()}đ\n`;
+    
+    if (payAtField > 0) {
+        msg += `KHÁCH CẦN TRẢ THÊM: ${payAtField.toLocaleString()}đ`;
+    } else {
+        msg += `Khách không cần trả thêm (Đã dư cọc)`;
     }
+
+    if (!confirm(msg)) return;
 
     const payload = {
       bookingId: this.changeModeData.booking.bookingId,
@@ -201,7 +205,7 @@ export class BookingListComponent implements OnInit {
         this.showChangeTimeModal = false;
         this.loadBookings(this.selectedField.fieldId);
       },
-      error: (err) => alert("Lỗi: " + (err.error?.message || "Khung giờ bị trùng hoặc lỗi hệ thống."))
+      error: (err: any) => alert("Lỗi: " + (err.error?.message || "Lỗi hệ thống."))
     });
   }
 }

@@ -35,7 +35,6 @@ namespace Goplay_API.Repositories.Services
                     FieldId = b.FieldId,
                     FieldName = b.Field.FieldName, // Lấy tên sân
 
-                    // [LOGIC QUAN TRỌNG] Kiểm tra xem đơn này đã có Review chưa
                     HasReviewed = _context.Reviews.Any(r => r.BookingId == b.BookingId),
 
                     // Map TimeSlots
@@ -233,9 +232,7 @@ namespace Goplay_API.Repositories.Services
                 _context.BookingTimeSlots.Add(new BookingTimeSlot { BookingId = bookingId, SlotId = slotId });
             }
 
-            // 4. [QUAN TRỌNG] TÍNH LẠI TIỀN
-            // Giả sử giá sân cố định theo slot (Hoặc bạn có thể query bảng TimeSlot để lấy giá chi tiết)
-            // Ở đây mình lấy: Giá sân * Số lượng slot
+           
             decimal newPrice = booking.Field.Price * newSlotIds.Count;
 
             // Cập nhật giá mới vào DB luôn để thống kê doanh thu đúng

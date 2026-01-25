@@ -1,0 +1,60 @@
+<div class="admin-wrapper">
+  <nav class="admin-sidebar">
+    <div class="sidebar-brand">
+      <i class="fas fa-user-shield"></i> Admin Panel
+    </div>
+    
+    <ul class="sidebar-nav">
+      <li>
+        <a routerLink="/admin/dashboard" routerLinkActive="active">
+          <i class="fas fa-tachometer-alt"></i> Tổng quan
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/approve-owners" routerLinkActive="active">
+          <i class="fas fa-user-check"></i> Duyệt Đối Tác
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/users" routerLinkActive="active">
+          <i class="fas fa-users"></i> QL Khách Hàng
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/partners" routerLinkActive="active">
+          <i class="fas fa-user-tie"></i> QL Chủ Sân
+        </a>
+      </li>
+
+      <li>
+  <a routerLink="/admin/sport-types" routerLinkActive="active">
+    <i class="fas fa-table-tennis"></i> QL Môn Thể Thao
+  </a>
+</li>
+<li>
+  <a routerLink="/admin/time-slots" routerLinkActive="active">
+    <i class="fas fa-clock"></i> QL Khung Giờ
+  </a>
+</li>
+      
+      <li class="bottom-nav">
+        <a routerLink="/">
+          <i class="fas fa-arrow-left"></i> Về trang chủ
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="admin-content">
+    <div class="top-bar">
+      <h2>Hệ thống quản trị</h2>
+      <div class="user-info">
+        <span>Xin chào, Admin</span>
+        </div>
+    </div>
+    
+    <div class="main-view">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

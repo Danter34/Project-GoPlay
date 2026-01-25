@@ -42,7 +42,7 @@ export class AuthService {
             //  Dùng hàm chuẩn hóa
             const userFromToken = this.normalizeUser(token);
             
-            // [MỚI] Gộp lại thông tin phone đã lưu
+      
             const user = {
               ...userFromToken,
               phone: savedPhone || null 

@@ -9,5 +9,7 @@ namespace Goplay_API.Repositories.Interface
         Task<IEnumerable<RevenueByTimeDTO>> GetRevenueByMonthAsync(int ownerId, int year);
 
         Task<IEnumerable<RevenueByFieldDTO>> GetRevenueByFieldAsync(int ownerId, DateTime? from, DateTime? to);
+
+        Task<AdminDashboardDTO> GetAdminDashboardAsync();
     }
 }

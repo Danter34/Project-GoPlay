@@ -29,7 +29,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.currentUserId = this.authService.getCurrentUserId();
     
-    // Nếu là User thật -> Mới load danh sách hội thoại
+
     if (this.currentUserId !== 0) {
         this.loadConversations();
     }

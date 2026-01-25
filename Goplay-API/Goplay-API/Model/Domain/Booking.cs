@@ -4,7 +4,7 @@
     {
         public int BookingId { get; set; }
         public DateTime BookingDate { get; set; }
-        public string Status { get; set; } = "Pending"; // Pending, Confirmed, Cancelled
+        public string Status { get; set; } = "Pending";
         public decimal TotalPrice { get; set; }
 
         // --- SỬA: Cho phép null để khách vãng lai đặt ---

@@ -18,7 +18,7 @@ namespace Goplay_API.Repositories.Services
 
         public async Task AddReviewAsync(int userId, CreateReviewDTO dto)
         {
-            // 1. Kiểm tra Booking này có tồn tại, thuộc về User và đã Completed chưa
+           
             var booking = await _context.Bookings.FirstOrDefaultAsync(b =>
                 b.BookingId == dto.BookingId &&
                 b.UserId == userId &&
@@ -27,17 +27,16 @@ namespace Goplay_API.Repositories.Services
             if (booking == null)
                 throw new Exception("Đơn đặt sân không hợp lệ hoặc chưa hoàn thành.");
 
-            // 2. Kiểm tra xem ĐƠN NÀY đã được đánh giá chưa
             bool alreadyReviewed = await _context.Reviews.AnyAsync(r => r.BookingId == dto.BookingId);
             if (alreadyReviewed)
                 throw new Exception("Đơn đặt sân này đã được đánh giá rồi.");
 
-            // 3. Tạo Review
+           
             var review = new Review
             {
                 UserId = userId,
-                FieldId = dto.FieldId, // Hoặc lấy từ booking.FieldId cho an toàn
-                BookingId = dto.BookingId, // [MỚI] Lưu BookingId
+                FieldId = dto.FieldId, 
+                BookingId = dto.BookingId,
                 Rating = dto.Rating,
                 Comment = dto.Comment,
                 CreatedAt = DateTime.UtcNow
@@ -46,7 +45,7 @@ namespace Goplay_API.Repositories.Services
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
 
-            // 4. Update AverageRating (Giữ nguyên logic cũ)
+           
             var field = await _context.Fields.FindAsync(dto.FieldId);
             if (field != null)
             {

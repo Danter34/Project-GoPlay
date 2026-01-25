@@ -14,5 +14,8 @@ namespace Goplay_API.Repositories.Interface
         Task<bool> ApproveAsync(int profileId);
         Task<bool> RejectAsync(int profileId);
 
+        // Thêm hàm này vào Interface cũ
+
+
     }
 }
