@@ -35,7 +35,7 @@
       </select>
     </div>
     
-    <div class="chart-wrapper">
+   <div class="chart-wrapper">
       <canvas baseChart
         [data]="barChartData"
         [options]="barChartOptions"
@@ -48,11 +48,19 @@
   <div class="table-section">
     <div class="section-header">
       <h3>Hiệu suất từng sân</h3>
+      
       <div class="filters">
-        <input type="date" [(ngModel)]="filterDateFrom" placeholder="Từ ngày">
+        <input type="date" [(ngModel)]="filterDateFrom" class="form-control-sm">
         <span class="separator">-</span>
-        <input type="date" [(ngModel)]="filterDateTo" placeholder="Đến ngày">
-        <button class="btn-filter" (click)="onFilterFieldClick()">Lọc</button>
+        <input type="date" [(ngModel)]="filterDateTo" class="form-control-sm">
+        
+        <button class="btn-filter" (click)="onFilterFieldClick()">
+            <i class="fas fa-filter"></i> Lọc
+        </button>
+
+        <button class="btn-excel" (click)="exportToExcel()" [disabled]="fieldRevenues.length === 0">
+            <i class="fas fa-file-excel"></i> Xuất Báo Cáo
+        </button>
       </div>
     </div>
 

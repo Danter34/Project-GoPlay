@@ -7,7 +7,7 @@ import { PagedResult } from '../models/paged-result.model';
   providedIn: 'root'
 })
 export class FieldService {
-  private apiUrl = 'http://localhost:5210/api/fields';
+  private apiUrl = 'http://localhost:5210/api';
 
   constructor(private http: HttpClient) { }
 
@@ -19,12 +19,12 @@ export class FieldService {
       .set('pageSize', pageSize);
 
     return this.http.get<PagedResult<Field>>(
-      `${this.apiUrl}/get-all`,
+      `${this.apiUrl}/fields/get-all`,
       { params }
     );
   }
   getById(id: number): Observable<Field> {
-  return this.http.get<Field>(`${this.apiUrl}/get-by-id/${id}`);
+  return this.http.get<Field>(`${this.apiUrl}/fields/get-by-id/${id}`);
 }
 
   filter(city?: string, district?: string, sportTypeId?: number, page = 1, pageSize = 10) {
@@ -37,7 +37,7 @@ export class FieldService {
     if (sportTypeId) params = params.set('sportTypeId', sportTypeId);
 
     return this.http.get<PagedResult<Field>>(
-      `${this.apiUrl}/filter`,
+      `${this.apiUrl}/fields/filter`,
       { params }
     );
   }
@@ -45,15 +45,18 @@ export class FieldService {
     let params = new HttpParams({ fromObject: query });
 
     return this.http.get<PagedResult<Field>>(
-      `${this.apiUrl}/search`,
+      `${this.apiUrl}/fields/search`,
       { params }
     );
   }
-  getAllForMap(): Observable<Field[]> {
-    return this.http.get<Field[]>(`${this.apiUrl}/get-all`).pipe(
-      map(data => {
-      return data.filter(f => f.latitude != null && f.longitude != null);
-      })
-    );
-  }
+ // field.service.ts
+getAllForMap(): Observable<Field[]> {
+  // Lấy danh sách sân bóng (tăng pageSize để hiển thị nhiều điểm trên bản đồ)
+  return this.http.get<any>(`${this.apiUrl}/fields/get-all?page=1&pageSize=100`).pipe(
+    map(res => {
+      // res.items chứa danh sách sân bóng từ API của bạn
+      return (res.items || []).filter((f: any) => f.latitude != null && f.longitude != null);
+    })
+  );
+}
 }

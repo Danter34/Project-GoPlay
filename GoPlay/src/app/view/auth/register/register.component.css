@@ -1,26 +1,109 @@
 .auth-container {
-  display: flex; justify-content: center; align-items: center;
-  min-height: calc(100vh - 140px); /* Trừ header/footer */
-  background: #f4f6f8; padding: 20px;
+  min-height: 100vh;          /* FULL màn hình */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 20px 40px;    /* CHỪA CHỖ CHO HEADER */
+
+  background-image: url("../../../assets/images/138077.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow-y: auto;
 }
+
+
 .auth-box {
-  background: white; padding: 40px; border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.05); width: 100%; max-width: 450px;
+  background: #fff;
+  padding: 42px 36px;
+  border-radius: 18px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+  animation: fadeUp 0.4s ease;
 }
-h2 { text-align: center; color: #27ae60; font-weight: 800; margin-bottom: 10px; }
-.auth-subtitle { text-align: center; color: #7f8c8d; margin-bottom: 30px; }
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.auth-box h2 {
+  text-align: center;
+  color: #00a651;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: #7f8c8d;
+  margin-bottom: 28px;
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
 .form-input {
-  width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; transition: 0.3s;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  transition: all 0.25s;
 }
-.form-input:focus { border-color: #27ae60; box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1); }
+
+.form-input:focus {
+  outline: none;
+  border-color: #00a651;
+  box-shadow: 0 0 0 4px rgba(0,166,81,0.15);
+}
+
 .btn-auth {
-  width: 100%; padding: 14px; background: #27ae60; color: white; border: none;
-  border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #00a651, #00c16a);
+  color: white;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
 }
-.btn-auth:hover { background: #219150; }
-.btn-auth:disabled { background: #95a5a6; cursor: not-allowed; }
-.auth-footer { text-align: center; margin-top: 20px; font-size: 0.95rem; }
-.auth-footer a { color: #27ae60; text-decoration: none; font-weight: 600; }
-.auth-footer a:hover { text-decoration: underline; }
+
+.btn-auth:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,166,81,0.35);
+}
+
+.btn-auth:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 22px;
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: #00a651;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
