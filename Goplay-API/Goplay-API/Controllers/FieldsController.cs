@@ -143,5 +143,21 @@ namespace Goplay_API.Controllers
             var result = await _service.DeleteFieldAsync(userId, id);
             return result ? NoContent() : Forbid();
         }
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin/fields/{userId}")]
+        public async Task<IActionResult> GetFieldsByUserId(int userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        {
+            // Tái sử dụng hàm GetMyFieldsAsync trong FieldRepository
+            var result = await _service.GetMyFieldsAsync(userId, page, pageSize);
+
+            // Map sang DTO trả về
+            return Ok(new PagedResult<FieldResponseDTO>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalItems = result.TotalItems,
+                Items = result.Items.Select(f => new FieldResponseDTO(f, _baseUrl)).ToList()
+            });
+        }
     }
 }

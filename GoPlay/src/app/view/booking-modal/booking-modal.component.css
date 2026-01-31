@@ -1,0 +1,152 @@
+/* Overlay & Modal Animation */
+.modal-overlay {
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%;
+  background: rgba(0,0,0,0.6); 
+  /* GIẢM z-index xuống dưới 1050 */
+  z-index: 1000; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  backdrop-filter: blur(4px);
+}
+
+
+.modal-content {
+  background: white; width: 95%; max-width: 600px;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  display: flex; flex-direction: column; max-height: 90vh;
+}
+
+/* Header */
+.modal-header {
+  background: #00a651; color: white; padding: 15px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.header-left h3 { margin: 0; font-size: 1.2rem; font-weight: 700; }
+.price-tag { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; margin-top: 4px; display: inline-block; }
+.btn-close { background: none; border: none; color: white; font-size: 2rem; cursor: pointer; opacity: 0.8; }
+.btn-close:hover { opacity: 1; }
+
+/* Body Scrollable */
+.modal-body { padding: 20px; overflow-y: auto; flex: 1; }
+
+/* Sections */
+.control-section, .slots-section, .guest-form { margin-bottom: 20px; }
+label { font-weight: 600; color: #444; margin-bottom: 8px; display: block; }
+.form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; }
+
+/* Grid Slots (Timeline) */
+.slots-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 cột cho gọn 24h */
+  gap: 8px; margin-top: 10px;
+}
+
+.slot-item {
+  background: #f8f9fa; border: 1px solid #e9ecef;
+  padding: 8px 2px; text-align: center; border-radius: 6px;
+  cursor: pointer; font-size: 0.8rem; color: #555;
+  transition: all 0.2s; user-select: none;
+  justify-content: center;
+  display: flex;
+}
+
+/* Available Hover */
+.slot-item:hover:not(.booked):not(.selected) { border-color: #00a651; color: #00a651; background: #e8f5e9; }
+
+/* Selected */
+.slot-item.selected { background: #00a651; color: white; border-color: #00a651; font-weight: bold; transform: scale(1.05); box-shadow: 0 2px 5px rgba(0,166,81,0.3); }
+
+/* Booked */
+.slot-item.booked { background: #eee; color: #bbb; border-color: transparent; cursor: not-allowed; text-decoration: line-through; }
+
+/* Legend */
+.legend { display: flex; gap: 15px; margin-bottom: 10px; font-size: 0.85rem; }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot.available { border: 1px solid #ddd; background: #f8f9fa; }
+.dot.selected { background: #00a651; }
+.dot.booked { background: #ccc; }
+
+/* Guest Form */
+.divider { display: flex; align-items: center; text-align: center; color: #888; font-size: 0.85rem; margin: 15px 0; }
+.divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #eee; }
+.divider span { padding: 0 10px; }
+.form-row { display: flex; gap: 10px; }
+.hint-text { font-size: 0.8rem; color: #e67e22; margin-top: 5px; display: block; }
+
+/* Summary */
+.summary-section { background: #fdfdfd; padding: 15px; border-radius: 8px; border: 1px dashed #ddd; }
+.summary-row { display: flex; justify-content: space-between; margin-bottom: 5px; color: #666; }
+.summary-row.total { margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; color: #333; font-size: 1.1rem; }
+.total-price { color: #e74c3c; font-weight: 800; font-size: 1.3rem; }
+
+/* Footer */
+.modal-footer { padding: 15px 20px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; }
+.btn-confirm { background: #00a651; color: white; padding: 10px 25px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+.btn-confirm:disabled { background: #95a5a6; cursor: not-allowed; }
+.btn-confirm:hover:not(:disabled) { background: #008e45; }
+.btn-cancel { background: white; border: 1px solid #ddd; padding: 10px 20px; border-radius: 8px; cursor: pointer; color: #555; }
+
+/* Mobile Responsive */
+@media (max-width: 500px) {
+  .slots-grid { grid-template-columns: repeat(4, 1fr); }
+  .form-row { flex-direction: column; }
+}
+.payment-method-section { margin: 20px 0; }
+.payment-options { display: flex; gap: 15px; margin-top: 10px; }
+
+.payment-option {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px;
+  border: 1px solid #ddd; border-radius: 8px; padding: 10px; cursor: pointer;
+  position: relative; transition: all 0.2s;
+}
+
+.payment-option:hover { background: #f9f9f9; border-color: #aaa; }
+
+.payment-option.active {
+  border-color: #00a651; background: #e8f5e9; color: #00a651; font-weight: bold;
+}
+
+.payment-logo { width: 30px; height: 30px; object-fit: contain; }
+.check-icon { position: absolute; top: -8px; right: -8px; background: white; border-radius: 50%; color: #00a651; font-size: 1.2rem; }
+.slot-item.booked {
+  background-color: #e74c3c; color: white; border-color: #e74c3c;
+  cursor: not-allowed; text-decoration: line-through; pointer-events: none;
+}
+
+/* Chờ thanh toán - Cam */
+.slot-item.awaiting {
+  background-color: #e67e22; color: white; border-color: #e67e22;
+  cursor: not-allowed; pointer-events: none;
+}
+
+/* Chờ duyệt - Vàng */
+.slot-item.pending {
+  background-color: #7f8c8d; color: white; border-color: #7f8c8d;
+  cursor: not-allowed; pointer-events: none;
+}
+
+/* Đã xong - Xám */
+.slot-item.completed {
+  background-color: #7f8c8d; color: white; border-color: #7f8c8d;
+  cursor: not-allowed; pointer-events: none;
+}
+
+/* Đang chọn - Xanh lá */
+.slot-item.selected {
+  background-color: #00a651; color: white; border-color: #00a651;
+  font-weight: bold; transform: scale(1.05);
+}
+.slot-item.past-slot {
+  background-color: #f0f0f0;
+  color: #ccc;
+  cursor: not-allowed;
+  border-color: #eee;
+  pointer-events: none; /* Không cho click */
+}

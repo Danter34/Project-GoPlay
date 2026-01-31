@@ -40,7 +40,9 @@ namespace Goplay_API.Controllers
             [FromQuery] string resultCode)
         {
             var success = await _repo.HandleMomoReturnAsync(orderId, resultCode);
-            return success ? Ok("Payment success") : BadRequest("Payment failed");
+            return success
+                ? Ok(new { message = "Payment success" })
+                : BadRequest(new { message = "Payment failed" });
         }
 
         [HttpPost("momo-notify")]
@@ -66,7 +68,10 @@ namespace Goplay_API.Controllers
                 .ToDictionary(k => k.Key, v => v.Value.ToString());
 
             var success = await _repo.HandleVnPayReturnAsync(queryParams);
-            return success ? Ok("Payment success") : BadRequest("Payment failed");
+         
+            return success
+                ? Ok(new { message = "Payment success" })
+                : BadRequest(new { message = "Payment failed" });
         }
     }
 }

@@ -1,32 +1,203 @@
-.detail-page { display: flex; padding-top: 40px; gap: 40px; }
-.gallery-section { width: 50%; }
-.info-section { width: 50%; }
-
-/* Gallery */
-.main-image img { width: 100%; height: 400px; object-fit: cover; border-radius: 10px; }
-.thumbnail-list { display: flex; gap: 10px; margin-top: 15px; overflow-x: auto; }
-.thumbnail-list img { width: 80px; height: 60px; object-fit: cover; border-radius: 5px; cursor: pointer; opacity: 0.6; }
-.thumbnail-list img.active { opacity: 1; border: 2px solid #00a651; }
-
-/* Info */
-.status-badge { background: #ccc; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-.status-badge.open { background: #e8f5e9; color: #2e7d32; }
-
-.title { margin: 10px 0; font-size: 32px; color: #333; }
-.price-box { background: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 5px solid #00a651; }
-.price-box .price { font-size: 24px; color: #d32f2f; font-weight: bold; margin-left: 10px; }
-
-.actions { display: flex; gap: 15px; margin: 25px 0; }
-.btn-booking { flex: 1; background: #00a651; color: white; border: none; padding: 15px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; }
-.btn-booking:hover { background: #008e45; }
-.btn-contact { flex: 1; background: white; color: #00a651; border: 2px solid #00a651; padding: 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-.desc-content {
-    white-space: pre-line;
-    line-height: 1.6;
-    color: #555;
-    text-align: justify;
+/* ===== Layout ===== */
+.detail-page {
+  display: flex;
+  gap: 48px;
+  padding: 40px 0;
+  align-items: flex-start;
 }
+
+.gallery-section,
+.info-section {
+  width: 50%;
+}
+
+/* ===== Card feel ===== */
+.gallery-section,
+.info-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* ===== Gallery ===== */
+.main-image img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 14px;
+  transition: transform 0.3s ease;
+}
+
+.main-image img:hover {
+  transform: scale(1.02);
+}
+
+.thumbnail-list {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.thumbnail-list img {
+  width: 90px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.6;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.thumbnail-list img:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.thumbnail-list img.active {
+  opacity: 1;
+  border-color: #00a651;
+}
+
+/* ===== Header Info ===== */
+.header-info .title {
+  font-size: 30px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 6px;
+}
+
+.address {
+  color: #666;
+  font-size: 14px;
+}
+
+.address i {
+  color: #00a651;
+  margin-right: 6px;
+}
+
+/* ===== Price Box ===== */
+.price-box {
+  margin: 24px 0;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #00a651, #00c16a);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.price-box .label {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.price-box .price {
+  font-size: 26px;
+  font-weight: 800;
+}
+
+/* ===== Specs ===== */
+.specs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.spec-item {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.spec-item strong {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* ===== Actions ===== */
+.actions {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.btn-booking {
+  flex: 1;
+  background: #00a651;
+  color: #fff;
+  border: none;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-booking:hover {
+  background: #008e45;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,166,81,0.35);
+}
+
+.btn-contact {
+  flex: 1;
+  background: #fff;
+  color: #00a651;
+  border: 2px solid #00a651;
+  padding: 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-contact:hover {
+  background: #00a651;
+  color: #fff;
+}
+
+/* ===== Description ===== */
+.description h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #222;
+}
+
+.desc-content {
+  white-space: pre-line;
+  line-height: 1.7;
+  color: #555;
+  text-align: justify;
+}
+
 .text-muted {
-    color: #999;
-    font-style: italic;
+  color: #999;
+  font-style: italic;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 992px) {
+  .detail-page {
+    flex-direction: column;
+  }
+
+  .gallery-section,
+  .info-section {
+    width: 100%;
+  }
+
+  .specs {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

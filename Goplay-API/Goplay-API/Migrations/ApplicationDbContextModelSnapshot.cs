@@ -39,6 +39,12 @@ namespace Goplay_API.Migrations
                     b.Property<int>("FieldId")
                         .HasColumnType("int");
 
+                    b.Property<string>("GuestName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GuestPhone")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -46,7 +52,7 @@ namespace Goplay_API.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("BookingId");
@@ -84,13 +90,22 @@ namespace Goplay_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("FieldId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GuestName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GuestPhone")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("LastActivity")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("ReceiverId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SenderId")
+                    b.Property<int?>("SenderId")
                         .HasColumnType("int");
 
                     b.Property<string>("Status")
@@ -102,6 +117,8 @@ namespace Goplay_API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ContactId");
+
+                    b.HasIndex("FieldId");
 
                     b.HasIndex("ReceiverId");
 
@@ -128,7 +145,7 @@ namespace Goplay_API.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -236,6 +253,41 @@ namespace Goplay_API.Migrations
                     b.ToTable("Locations");
                 });
 
+            modelBuilder.Entity("Goplay_API.Model.Domain.News", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Summary")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("News");
+                });
+
             modelBuilder.Entity("Goplay_API.Model.Domain.OwnerProfile", b =>
                 {
                     b.Property<int>("OwnerProfileId")
@@ -325,6 +377,9 @@ namespace Goplay_API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReviewId"));
 
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
 
@@ -341,6 +396,8 @@ namespace Goplay_API.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ReviewId");
+
+                    b.HasIndex("BookingId");
 
                     b.HasIndex("FieldId");
 
@@ -420,6 +477,40 @@ namespace Goplay_API.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Goplay_API.Model.Domain.lh", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("lhs");
+                });
+
             modelBuilder.Entity("Goplay_API.Model.Domain.Booking", b =>
                 {
                     b.HasOne("Goplay_API.Model.Domain.Field", "Field")
@@ -430,9 +521,7 @@ namespace Goplay_API.Migrations
 
                     b.HasOne("Goplay_API.Model.Domain.User", "User")
                         .WithMany("Bookings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Field");
 
@@ -460,6 +549,10 @@ namespace Goplay_API.Migrations
 
             modelBuilder.Entity("Goplay_API.Model.Domain.Contact", b =>
                 {
+                    b.HasOne("Goplay_API.Model.Domain.Field", "Field")
+                        .WithMany()
+                        .HasForeignKey("FieldId");
+
                     b.HasOne("Goplay_API.Model.Domain.User", "Receiver")
                         .WithMany("ReceivedContacts")
                         .HasForeignKey("ReceiverId")
@@ -469,8 +562,9 @@ namespace Goplay_API.Migrations
                     b.HasOne("Goplay_API.Model.Domain.User", "Sender")
                         .WithMany("SentContacts")
                         .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Field");
 
                     b.Navigation("Receiver");
 
@@ -550,17 +644,25 @@ namespace Goplay_API.Migrations
 
             modelBuilder.Entity("Goplay_API.Model.Domain.Review", b =>
                 {
+                    b.HasOne("Goplay_API.Model.Domain.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("Goplay_API.Model.Domain.Field", "Field")
                         .WithMany("Reviews")
                         .HasForeignKey("FieldId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Goplay_API.Model.Domain.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Booking");
 
                     b.Navigation("Field");
 

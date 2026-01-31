@@ -1,74 +1,138 @@
-<div class="save-container profile-container">
+<div class="save-container profile-container profile-card">
+
+  <!-- HEADER -->
   <div class="header-section">
     <h3>Hồ Sơ Chủ Sân</h3>
-    <p class="sub-text">Quản lý thông tin doanh nghiệp và liên hệ của bạn.</p>
+    <p class="sub-text">Quản lý thông tin doanh nghiệp và liên hệ của bạn</p>
   </div>
 
-  <div *ngIf="isLoading && !profile" class="loading-state">Đang tải dữ liệu...</div>
+  <!-- LOADING -->
+  <div *ngIf="isLoading && !profile" class="loading-state">
+    <span class="spinner"></span>
+    Đang tải dữ liệu...
+  </div>
 
+  <!-- CONTENT -->
   <div *ngIf="profile" class="profile-content">
-    
+
+    <!-- PROFILE HEADER -->
     <div class="profile-header">
       <div class="avatar-circle">
         {{ profile.businessName.charAt(0).toUpperCase() }}
       </div>
+
       <div class="profile-title">
         <h2>{{ profile.businessName }}</h2>
-        <span class="status-badge" 
-              [ngClass]="{
-                'active': profile.status === 'Active',
-                'pending': profile.status === 'Pending',
-                'rejected': profile.status === 'Rejected'
-              }">
+        <span
+          class="status-badge"
+          [ngClass]="{
+            'active': profile.status === 'Active',
+            'pending': profile.status === 'Pending',
+            'rejected': profile.status === 'Rejected'
+          }"
+        >
           {{ profile.status }}
         </span>
       </div>
     </div>
 
+    <!-- INFO GRID -->
     <div class="form-body info-grid">
-      
+
       <div class="info-col">
         <div class="form-group">
-          <label>CMND/CCCD (Không thể sửa)</label>
-          <div class="static-value disabled-look">{{ profile.identityNumber }}</div>
+          <label>CMND / CCCD</label>
+          <div class="static-value disabled-look">
+            {{ profile.identityNumber }}
+          </div>
         </div>
 
         <div class="form-group">
-          <label>Tên Doanh Nghiệp / Chủ Sân <span class="req" *ngIf="isEditMode">*</span></label>
-          <div *ngIf="!isEditMode" class="static-value">{{ profile.businessName }}</div>
-          <input *ngIf="isEditMode" type="text" [(ngModel)]="editData.businessName" class="form-control">
+          <label>
+            Tên Doanh Nghiệp / Chủ Sân
+            <span class="req" *ngIf="isEditMode">*</span>
+          </label>
+
+          <div *ngIf="!isEditMode" class="static-value">
+            {{ profile.businessName }}
+          </div>
+
+          <input
+            *ngIf="isEditMode"
+            type="text"
+            [(ngModel)]="editData.businessName"
+            class="form-control"
+          />
         </div>
       </div>
 
       <div class="info-col">
         <div class="form-group">
-          <label>Số điện thoại <span class="req" *ngIf="isEditMode">*</span></label>
-          <div *ngIf="!isEditMode" class="static-value">{{ profile.phone }}</div>
-          <input *ngIf="isEditMode" type="text" [(ngModel)]="editData.phone" class="form-control">
+          <label>
+            Số điện thoại
+            <span class="req" *ngIf="isEditMode">*</span>
+          </label>
+
+          <div *ngIf="!isEditMode" class="static-value">
+            {{ profile.phone }}
+          </div>
+
+          <input
+            *ngIf="isEditMode"
+            type="text"
+            [(ngModel)]="editData.phone"
+            class="form-control"
+          />
         </div>
 
         <div class="form-group">
           <label>Mã số thuế</label>
-          <div *ngIf="!isEditMode" class="static-value">{{ profile.taxCode || 'Chưa cập nhật' }}</div>
-          <input *ngIf="isEditMode" type="text" [(ngModel)]="editData.taxCode" class="form-control" placeholder="Nhập MST">
+
+          <div *ngIf="!isEditMode" class="static-value">
+            {{ profile.taxCode || 'Chưa cập nhật' }}
+          </div>
+
+          <input
+            *ngIf="isEditMode"
+            type="text"
+            [(ngModel)]="editData.taxCode"
+            class="form-control"
+            placeholder="Nhập mã số thuế"
+          />
         </div>
       </div>
 
     </div>
 
-    <div class="form-actions">
+    <!-- ACTIONS -->
+    <div class="form-actions sticky-actions">
+
       <ng-container *ngIf="!isEditMode">
         <button class="btn-save" (click)="toggleEdit()">
-          <i class="fas fa-edit"></i> Chỉnh sửa hồ sơ
+          <i class="fas fa-edit"></i>
+          Chỉnh sửa hồ sơ
         </button>
       </ng-container>
 
       <ng-container *ngIf="isEditMode">
-        <button class="btn-cancel" (click)="toggleEdit()" [disabled]="isLoading">Hủy bỏ</button>
-        <button class="btn-save" (click)="onSubmit()" [disabled]="isLoading">
-          <i class="fas fa-save"></i> Lưu thay đổi
+        <button
+          class="btn-cancel"
+          (click)="toggleEdit()"
+          [disabled]="isLoading"
+        >
+          Hủy bỏ
+        </button>
+
+        <button
+          class="btn-save"
+          (click)="onSubmit()"
+          [disabled]="isLoading"
+        >
+          <i class="fas fa-save"></i>
+          Lưu thay đổi
         </button>
       </ng-container>
+
     </div>
 
   </div>

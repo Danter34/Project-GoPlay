@@ -1,0 +1,41 @@
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Hồ Sơ Chờ Duyệt ({{ pendingList.length }})</h6>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên Doanh Nghiệp</th>
+            <th>CCCD</th>
+            <th>SĐT</th>
+            <th>Ngày ĐK</th>
+            <th>Thao Tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of pendingList">
+            <td>#{{ p.ownerProfileId }}</td>
+            <td class="fw-bold text-primary">{{ p.businessName }}</td>
+            <td>{{ p.identityNumber }}</td>
+            <td>{{ p.phone }}</td>
+            <td>{{ p.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              <button class="btn btn-success btn-sm me-2" (click)="approve(p.ownerProfileId)">
+                <i class="fas fa-check"></i> Duyệt
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="reject(p.ownerProfileId)">
+                <i class="fas fa-times"></i> Hủy
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="pendingList.length === 0 && !isLoading">
+            <td colspan="7" class="text-center">Không có hồ sơ nào đang chờ.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

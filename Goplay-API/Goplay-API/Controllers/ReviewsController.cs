@@ -1,4 +1,5 @@
-﻿using Goplay_API.Repositories.Interface;
+﻿using Goplay_API.Model.DTO;
+using Goplay_API.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,11 +20,18 @@ namespace Goplay_API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(int fieldId, int rating, string? comment)
+        public async Task<IActionResult> Create([FromBody] CreateReviewDTO dto)
         {
-            int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-            await _repo.AddReviewAsync(userId, fieldId, rating, comment);
-            return Ok("Review submitted");
+            try
+            {
+                int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                await _repo.AddReviewAsync(userId, dto);
+                return Ok(new { message = "Đánh giá thành công!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
-}
+}   

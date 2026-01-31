@@ -34,6 +34,9 @@
   
   <div class="dropdown-content" [class.show]="isUserMenuOpen">
     <a href="profile">Hồ sơ của tôi</a>
+    <a *ngIf="currentUser?.role === 'Admin'" routerLink="/admin/dashboard">
+    <i class="fas fa-user-shield"></i> Trang Quản trị
+  </a>
     <a *ngIf="currentUser?.role === 'User'" routerLink="/owner/register">
     Trở thành chủ sân
     </a>
@@ -61,16 +64,22 @@
     <a routerLink="/" class="sidebar-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidebar()">
       <i class="fas fa-home"></i> Trang chủ
     </a>
+    <a *ngIf="currentUser?.role === 'Admin'" routerLink="/admin/dashboard" class="sidebar-link" (click)="closeSidebar()">
+    <i class="fas fa-user-shield"></i> Trang Quản trị
+  </a>
     <a *ngIf="currentUser?.role === 'OwnerField'" routerLink="/owner/dashboard" class="sidebar-link" (click)="closeSidebar()">
       <i class="fas fa-tasks"></i> Quản lý sân
+    </a>
+    <a routerLink="/my-bookings" class="sidebar-link" (click)="closeSidebar()">
+      <i class="fas fa-history"></i> Lịch sử đặt sân
     </a>
     <a routerLink="/map" class="sidebar-link" routerLinkActive="active" (click)="closeSidebar()">
       <i class="fas fa-map-marked-alt"></i> Bản đồ
     </a>
-    <a href="#" class="sidebar-link" (click)="closeSidebar()">
+    <a routerLink="/news" class="sidebar-link" routerLinkActive="active" (click)="closeSidebar()">
       <i class="fas fa-newspaper"></i> Tin tức
     </a>
-    <a href="#" class="sidebar-link" (click)="closeSidebar()">
+    <a routerLink="/contact" class="sidebar-link" routerLinkActive="active" (click)="closeSidebar()">
       <i class="fas fa-envelope"></i> Liên hệ
     </a>
   </div>

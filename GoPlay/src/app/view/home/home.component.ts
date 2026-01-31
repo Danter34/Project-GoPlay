@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FieldService } from '../../services/field.service';
 import { Field } from '../../models/field.model';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -11,8 +13,8 @@ import { Field } from '../../models/field.model';
 })
 export class HomeComponent implements OnInit {
   fields: Field[] = [];
+  currentUserId: number = 0;
 
-  // --- PHÂN TRANG ---
   currentPage = 1;
   itemsPerPage = 10;
   totalItems = 0;
@@ -25,7 +27,6 @@ export class HomeComponent implements OnInit {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  // --- ĐỊA CHÍNH ---
   vnData: any[] = [];
   cities: any[] = [];
   districts: any[] = [];
@@ -35,65 +36,56 @@ export class HomeComponent implements OnInit {
   searchDistrict = '';
   searchSportId = 0;
 
-  // --- MODAL ---
-  isModalOpen = false;
+  showBookingModal = false;
   selectedField: Field | null = null;
 
   constructor(
     private fieldService: FieldService,
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService, 
+    private router: Router 
   ) {}
 
   ngOnInit(): void {
+    this.currentUserId = this.authService.getCurrentUserId();
     this.loadFields();
     this.loadVietnamData();
   }
 
-  //  LOAD TỪ API PHÂN TRANG
+
   loadFields(page: number = 1) {
-    this.fieldService.getAllPaged(page, this.itemsPerPage)
-      .subscribe({
-        next: res => {
-          this.fields = res.items;
-          this.totalItems = res.totalItems;
-          this.currentPage = res.page;
-        },
-        error: err => console.error('API error', err)
-      });
+    this.fieldService.getAllPaged(page, this.itemsPerPage).subscribe({
+      next: res => {
+        this.fields = res.items;
+        this.totalItems = res.totalItems;
+        this.currentPage = res.page;
+      },
+      error: err => console.error('API error', err)
+    });
   }
 
-  //  SEARCH + PAGING (API làm)
   onSearch(page: number = 1) {
-    this.fieldService
-      .filter(this.searchCity, this.searchDistrict, this.searchSportId, page, this.itemsPerPage)
-      .subscribe({
-        next: res => {
-          this.fields = res.items;
-          this.totalItems = res.totalItems;
-          this.currentPage = res.page;
-        },
-        error: err => console.error('Search error', err)
-      });
+    this.fieldService.filter(this.searchCity, this.searchDistrict, this.searchSportId, page, this.itemsPerPage).subscribe({
+      next: res => {
+        this.fields = res.items;
+        this.totalItems = res.totalItems;
+        this.currentPage = res.page;
+      },
+      error: err => console.error('Search error', err)
+    });
   }
 
   changePage(page: number) {
     if (page < 1 || page > this.totalPages) return;
-
     this.currentPage = page;
     this.onSearch(page);
-
-    document.querySelector('.filter-bar')
-      ?.scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('.filter-bar')?.scrollIntoView({ behavior: 'smooth' });
   }
 
-  // --- ĐỊA CHÍNH ---
   loadVietnamData() {
     const jsonUrl = 'https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json';
     this.http.get<any[]>(jsonUrl).subscribe({
-      next: data => {
-        this.vnData = data;
-        this.cities = data;
-      }
+      next: data => { this.vnData = data; this.cities = data; }
     });
   }
 
@@ -105,23 +97,17 @@ export class HomeComponent implements OnInit {
     this.onSearch(1);
   }
 
-  onDistrictChange() {
-    this.onSearch(1);
-  }
+  onDistrictChange() { this.onSearch(1); }
 
-  // --- MODAL ---
+ 
   openBookingModal(field: Field) {
+  
     this.selectedField = field;
-    this.isModalOpen = true;
+    this.showBookingModal = true;
   }
 
   closeModal() {
-    this.isModalOpen = false;
+    this.showBookingModal = false;
     this.selectedField = null;
-  }
-
-  submitBooking() {
-    alert(`Đã gửi yêu cầu đặt sân: ${this.selectedField?.fieldName}`);
-    this.closeModal();
   }
 }

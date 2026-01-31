@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FieldService } from '../../services/field.service';
 import { Field } from '../../models/field.model';
 import { ChatService } from '../../services/chat.service';
-import { AuthService } from '../../services/auth.service'; // <--- 1. Import AuthService
+import { AuthService } from '../../services/auth.service'; 
 
 @Component({
   selector: 'app-field-detail',
@@ -45,32 +45,35 @@ export class FieldDetailComponent implements OnInit {
   }
 
   contactOwner() {
-    if (!this.field || !this.field.ownerId) {
-      alert('Không tìm thấy thông tin chủ sân!');
-      return;
-    }
-    
-    
-    if (this.currentUserId === 0) {
-        this.router.navigate(['/login']);
-        return;
-    }
+    if (!this.field || !this.field.ownerId) return;
 
     const contactData = {
-      receiverId: this.field.ownerId, 
-      subject: `Liên hệ thuê sân`,
-      initialMessage: 'Xin chào, tôi muốn thuê sân'
+      receiverId: this.field.ownerId,
+      
+      fieldId: this.field.fieldId, 
+      
+     
+      subject: 'Liên hệ thuê sân', 
+      initialMessage: `Xin chào, tôi quan tâm đến sân "${this.field.fieldName}".`
     };
 
-    this.chatService.createContact(contactData.receiverId, contactData.subject, contactData.initialMessage)
-      .subscribe({
+    this.chatService.createContact(contactData).subscribe({
         next: (res) => {
           this.router.navigate(['/chat', res.contactId]);
         },
         error: (err) => {
           console.error(err);
-          alert('Có lỗi khi kết nối với chủ sân.');
+          alert('Không thể kết nối máy chủ.');
         }
       });
+  }
+  showBookingModal = false;
+
+  openBooking() {
+    this.showBookingModal = true;
+  }
+
+  closeBooking() {
+    this.showBookingModal = false;
   }
 }

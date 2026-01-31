@@ -7,7 +7,6 @@ import { OwnerProfile, OwnerProfileUpdateDTO } from '../models/owner-profile.mod
   providedIn: 'root'
 })
 export class OwnerService {
-  // Đổi API URL cho đúng với Controller Owner
   private apiUrl = 'https://apigplay.qzz.io/api/owner-profiles'; 
 
   constructor(private http: HttpClient) { }

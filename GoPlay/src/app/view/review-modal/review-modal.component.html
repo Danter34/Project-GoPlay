@@ -1,0 +1,23 @@
+<div class="modal-overlay" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h3>Đánh giá sân: {{ fieldName }}</h3>
+    
+    <div class="star-rating">
+      <i *ngFor="let s of stars" 
+         class="fa-star" 
+         [ngClass]="s <= rating ? 'fas active' : 'far'" 
+         (click)="setRating(s)">
+      </i>
+    </div>
+    <p class="rating-text">Bạn chấm {{ rating }}/5 sao</p>
+
+    <textarea [(ngModel)]="comment" rows="4" placeholder="Chia sẻ trải nghiệm của bạn về sân này..."></textarea>
+
+    <div class="actions">
+      <button class="btn-cancel" (click)="closeModal()">Đóng</button>
+      <button class="btn-submit" (click)="submitReview()" [disabled]="isLoading">
+        {{ isLoading ? 'Đang gửi...' : 'Gửi đánh giá' }}
+      </button>
+    </div>
+  </div>
+</div>

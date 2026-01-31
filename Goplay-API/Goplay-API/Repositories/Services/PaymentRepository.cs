@@ -1,4 +1,5 @@
 ﻿using Goplay_API.Data;
+using Goplay_API.Helpers;
 using Goplay_API.Model.Domain;
 using Goplay_API.Model.DTO;
 using Goplay_API.Repositories.Interface;
@@ -43,8 +44,9 @@ namespace Goplay_API.Repositories.Services
             var notifyUrl = momoConfig["NotifyUrl"];
 
             // Data request
-            string orderInfo = $"Thanh toan booking #{booking.BookingId}";
-            string amount = booking.TotalPrice.ToString("0");
+            string orderInfo = $"Dat coc 30% cho booking #{booking.BookingId}";
+            decimal depositAmount = booking.TotalPrice * 0.3m;
+            string amount = depositAmount.ToString("0");
             string momoOrderId = DateTime.Now.Ticks.ToString();
             string requestId = momoOrderId;
             string requestType = "captureWallet";
@@ -83,8 +85,8 @@ namespace Goplay_API.Repositories.Services
                 BookingId = booking.BookingId,
                 MomoOrderId = momoOrderId,
                 ExternalOrderId = momoOrderId,
-                Amount = booking.TotalPrice,
-                
+                Amount = depositAmount,
+
                 Method = PaymentMethod.Momo,      
                 Status = PaymentStatus.ChờThanhToán,   
                 
@@ -116,14 +118,21 @@ namespace Goplay_API.Repositories.Services
                 payment.Status = PaymentStatus.ĐãThanhToán; 
                 if (payment.Booking != null)
                 {
-                    payment.Booking.Status = "Đã xác nhận";
+                    payment.Booking.Status = "Pending";
                 }
                 await _context.SaveChangesAsync();
                 return true;
             }
-            else
+            else // Thất bại
             {
-                payment.Status = PaymentStatus.ThấtBại; 
+                payment.Status = PaymentStatus.ThấtBại;
+
+               
+                if (payment.Booking != null)
+                {
+                    payment.Booking.Status = "Cancelled";
+                }
+
                 await _context.SaveChangesAsync();
                 return false;
             }
@@ -150,16 +159,16 @@ namespace Goplay_API.Repositories.Services
             string hashSecret = config["HashSecret"];
             string baseUrl = config["BaseUrl"];
             string returnUrl = config["ReturnUrl"];
-
+            decimal depositAmount = booking.TotalPrice * 0.3m;
             var vnpParams = new SortedDictionary<string, string>
             {
                 {"vnp_Version", "2.1.0"},
                 {"vnp_Command", "pay"},
                 {"vnp_TmnCode", tmnCode},
-                {"vnp_Amount", ((long)(booking.TotalPrice * 100)).ToString()},
+                {"vnp_Amount", ((long)(depositAmount * 100)).ToString()},
                 {"vnp_CurrCode", "VND"},
                 {"vnp_TxnRef", DateTime.Now.Ticks.ToString()},
-                {"vnp_OrderInfo", $"Thanh toan booking #{booking.BookingId}"},
+                {"vnp_OrderInfo", $"Dat coc 30% cho booking #{booking.BookingId}"},
                 {"vnp_OrderType", "other"},
                 {"vnp_Locale", "vn"},
                 {"vnp_ReturnUrl", returnUrl},
@@ -184,8 +193,8 @@ namespace Goplay_API.Repositories.Services
                 BookingId = booking.BookingId,
                 MomoOrderId = vnpParams["vnp_TxnRef"],
                 ExternalOrderId = vnpParams["vnp_TxnRef"],
-                Amount = booking.TotalPrice,
-                
+                Amount = depositAmount,
+
                 Method = PaymentMethod.VnPay,     
                 Status = PaymentStatus.ChờThanhToán,   
                 
@@ -221,14 +230,21 @@ namespace Goplay_API.Repositories.Services
                 payment.Status = PaymentStatus.ChờThanhToán;
                 if (payment.Booking != null)
                 {
-                    payment.Booking.Status = "Đã xác nhận";
+                    payment.Booking.Status = "Pending";
                 }
                 await _context.SaveChangesAsync();
                 return true;
             }
-            else
+            else // Thất bại
             {
                 payment.Status = PaymentStatus.ThấtBại;
+
+               
+                if (payment.Booking != null)
+                {
+                    payment.Booking.Status = "Cancelled";
+                }
+
                 await _context.SaveChangesAsync();
                 return false;
             }

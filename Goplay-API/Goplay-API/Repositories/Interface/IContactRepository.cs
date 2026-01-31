@@ -7,6 +7,8 @@ namespace Goplay_API.Repositories.Interface
     {
         Task<List<object>> GetConversationsAsync(int userId);
         Task<List<ChatMessageDTO>> GetMessagesAsync(int contactId);
-        Task<Contact> CreateContactAsync(int senderId, CreateContactDTO dto);
+
+        // [SỬA] int senderId -> int? senderId
+        Task<Contact> CreateContactAsync(int? senderId, CreateContactDTO dto);
     }
 }

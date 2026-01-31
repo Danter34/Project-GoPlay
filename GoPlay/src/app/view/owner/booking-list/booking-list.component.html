@@ -1,0 +1,160 @@
+<div class="dashboard-container">
+  
+  <div *ngIf="!selectedField">
+    <div class="action-header"><h3>Danh sách sân bóng của bạn</h3></div>
+    <div class="fields-grid-owner" *ngIf="!isLoading; else loading">
+      <div *ngFor="let f of myFields" class="field-card-mini" (click)="onSelectField(f)">
+        <div class="f-img">
+   <img [src]="(f.images && f.images.length > 0) ? f.images[0].imageUrl : 'assets/placeholder.jpg'" alt="Sân">
+</div>
+        <div class="f-info">
+          <h4>{{ f.fieldName }}</h4>
+          <p><i class="fas fa-map-marker-alt"></i> {{ f.district }}</p>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="myFields.length === 0 && !isLoading" class="text-center py-5">
+      <p>Bạn chưa đăng ký sân nào.</p>
+    </div>
+  </div>
+
+  <div *ngIf="selectedField">
+    <div class="action-header">
+      <div class="header-left">
+        <button class="btn-back" (click)="backToFields()"><i class="fas fa-arrow-left"></i> Quay lại</button>
+        <h3>Lịch đặt: <span class="text-primary">{{ selectedField.fieldName }}</span></h3>
+      </div>
+      <button class="btn-refresh" (click)="loadBookings(selectedField.fieldId)"><i class="fas fa-sync-alt"></i></button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table custom-table">
+        <thead>
+          <tr>
+            <th>Mã #</th>
+            <th>Khách hàng</th> <th>Ngày đặt</th> <th>Khung giờ</th> <th>Tổng tiền</th> <th>Trạng thái</th> <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of bookings">
+            <td>#{{ b.bookingId }}</td>
+            <td>
+               <div class="guest-info">
+                 <strong>{{ b.guestName || 'Thành viên' }}</strong>
+                 <div class="small-phone"><i class="fas fa-phone"></i> {{ b.guestPhone }}</div>
+               </div>
+            </td>
+            <td>{{ b.bookingDate | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <div *ngFor="let t of b.timeSlots" class="slot-badge">
+                {{ t.startTime.toString().slice(0,5) }} - {{ t.endTime.toString().slice(0,5) }}
+              </div>
+            </td>
+            <td class="fw-bold">{{ b.totalPrice | number }}đ</td>
+            <td>
+              <span [class]="'badge ' + (b.status === 'Confirmed' ? 'confirmed' : b.status === 'Pending' ? 'pending' : b.status === 'Completed' ? 'completed' : 'cancelled')">
+                {{ b.status === 'Pending' ? 'Chờ duyệt' : b.status === 'Confirmed' ? 'Đã duyệt' : b.status === 'Completed' ? 'Hoàn thành' : 'Đã hủy' }}
+              </span>
+            </td>
+            <td>
+              <div class="btn-group" *ngIf="b.status === 'Pending'">
+                 <button class="btn btn-sm btn-success me-1" (click)="updateStatus(b.bookingId, 'Confirmed')" title="Duyệt"><i class="fas fa-check"></i></button>
+                 <button class="btn btn-sm btn-danger" (click)="updateStatus(b.bookingId, 'Cancelled')" title="Hủy"><i class="fas fa-times"></i></button>
+              </div>
+              <div *ngIf="b.status === 'Confirmed'">
+                 <button class="btn btn-sm btn-info text-white me-1" (click)="updateStatus(b.bookingId, 'Completed')" title="Hoàn tất"><i class="fas fa-check-double"></i></button>
+              </div>
+
+              <button *ngIf="b.status === 'Pending' || b.status === 'Confirmed'" 
+                      class="btn btn-sm btn-warning text-white" 
+                      (click)="openChangeTimeModal(b)" 
+                      title="Đổi khung giờ">
+                <i class="fas fa-clock"></i> Đổi
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <ng-template #loading>
+    <div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+  </ng-template>
+
+</div> 
+
+<div class="modal-overlay" *ngIf="showChangeTimeModal">
+  <div class="modal-content modal-lg">
+    
+    <div class="modal-header">
+      <h3>Đổi lịch (#{{ changeModeData.booking?.bookingId }})</h3>
+      <button class="btn-close" (click)="showChangeTimeModal = false">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="form-group mb-3">
+        <label>Chọn ngày mới:</label>
+        <input type="date" class="form-control" 
+               [value]="changeModeData.newDate" 
+               (change)="onDateChange($event)" 
+               [min]="getCurrentDateString()">
+      </div>
+
+      <label>Chọn khung giờ:</label>
+      
+      <div class="d-flex gap-3 mb-2 small text-muted">
+          <span class="d-flex align-items-center"><span class="dot-sample available"></span> Trống</span>
+          <span class="d-flex align-items-center"><span class="dot-sample selected"></span> Đang chọn</span>
+          <span class="d-flex align-items-center"><span class="dot-sample disabled"></span> Đã đặt / Quá khứ</span>
+      </div>
+
+      <div class="time-slots-grid">
+        <div *ngFor="let slot of changeModeData.slots" 
+             class="slot-item"
+             [class.disabled]="isSlotDisabled(slot)"
+             [class.selected]="changeModeData.selectedNewSlotIds.includes(slot.slotId)"
+             (click)="!isSlotDisabled(slot) && toggleSlot(slot.slotId)">
+          
+          <span class="slot-time">{{ slot.startTime.slice(0,5) }} - {{ slot.endTime.slice(0,5) }}</span>
+          
+          <span *ngIf="isSlotDisabled(slot)" class="slot-status">
+             <i class="fas fa-ban"></i> Đã đặt
+          </span>
+        </div>
+      </div>
+
+      <div class="price-summary mt-3 p-3 bg-light rounded border">
+        
+        <div class="d-flex justify-content-between mb-1">
+          <span>Tổng tiền mới ({{ changeModeData.selectedNewSlotIds.length }} giờ):</span> 
+          <strong>{{ changeModeData.newTotalPrice | number }}đ</strong>
+        </div>
+        
+        <div class="d-flex justify-content-between mb-1 text-secondary">
+          <span>Đã đặt cọc (30% cũ):</span> 
+          <strong>-{{ changeModeData.depositAmount | number }}đ</strong>
+        </div>
+        
+        <hr class="my-2">
+        
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="fw-bold fs-5 text-dark">KHÁCH PHẢI TRẢ TẠI SÂN:</span>
+          <span class="price-diff fs-4 fw-bold" [class.text-danger]="changeModeData.remainingAmount > 0" [class.text-success]="changeModeData.remainingAmount <= 0">
+            {{ changeModeData.remainingAmount | number }}đ
+          </span>
+        </div>
+        
+        <small *ngIf="changeModeData.remainingAmount < 0" class="text-success d-block mt-1">
+            * Khách đang dư {{ -changeModeData.remainingAmount | number }}đ (Do giảm giờ đặt).
+        </small>
+        
+      </div>
+    </div>
+
+    <div class="modal-footer mt-3">
+      <button class="btn btn-secondary me-2" (click)="showChangeTimeModal = false">Hủy</button>
+      <button class="btn btn-primary" (click)="submitChangeTime()">Xác nhận đổi</button>
+    </div>
+  </div>
+</div>

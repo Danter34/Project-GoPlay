@@ -1,0 +1,58 @@
+<div class="card shadow mb-4">
+  <div class="card-header py-3 d-flex justify-content-between align-items-center bg-white">
+    <h5 class="m-0 font-weight-bold text-primary">Quản Lý Môn Thể Thao</h5>
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#sportModal" (click)="prepareCreate()">
+      <i class="fas fa-plus"></i> Thêm Mới
+    </button>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Tên Môn Thể Thao</th>
+            <th style="width: 150px;">Hành Động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of sportTypes">
+            <td>{{ item.sportTypeId }}</td>
+            <td class="fw-bold">{{ item.sportName }}</td>
+            <td>
+              <button class="btn btn-info btn-sm text-white me-2" 
+                      data-bs-toggle="modal" data-bs-target="#sportModal" 
+                      (click)="prepareEdit(item)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="deleteItem(item.sportTypeId)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="sportModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ isEditing ? 'Cập Nhật' : 'Thêm Mới' }} Môn Thể Thao</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label">Tên môn thể thao:</label>
+          <input type="text" class="form-control" [(ngModel)]="formData.sportName" placeholder="Ví dụ: Bóng đá, Cầu lông...">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        <button type="button" class="btn btn-primary" (click)="onSubmit()" data-bs-dismiss="modal">Lưu Lại</button>
+      </div>
+    </div>
+  </div>
+</div>

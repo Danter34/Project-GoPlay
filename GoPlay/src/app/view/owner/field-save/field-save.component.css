@@ -250,3 +250,42 @@ textarea.form-control {
   .form-actions { flex-direction: column-reverse; }
   .btn-save, .btn-cancel { width: 100%; justify-content: center; }
 }
+
+.map-section {
+  margin-top: 25px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.mini-map-container {
+  width: 100%;
+  height: 280px; /* Chiều cao cố định */
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #dfe6e9;
+  position: relative;
+  background-color: #f0f0f0; /* Màu nền khi map đang load */
+}
+
+.map-hint {
+  display: block;
+  margin-top: 8px;
+  color: #7f8c8d;
+  font-size: 0.85rem;
+}
+
+/* Tùy chỉnh màu nút SweetAlert */
+.swal2-confirm {
+  background-color: #27ae60 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3) !important;
+}
+
+.swal2-cancel {
+  background-color: #95a5a6 !important;
+}
+
+.swal2-popup {
+  border-radius: 15px !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}

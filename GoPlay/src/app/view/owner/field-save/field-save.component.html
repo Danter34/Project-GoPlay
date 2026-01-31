@@ -12,7 +12,7 @@
         <div class="form-group">
           <label>Tên sân bãi <span class="req">*</span></label>
           <input type="text" [(ngModel)]="fieldData.fieldName" name="fieldName" required 
-           class="form-control" placeholder="Ví dụ: Sân bóng Thiên Trường">
+            class="form-control" placeholder="Ví dụ: Sân bóng Thiên Trường">
         </div>
 
         <div class="row-group">
@@ -35,64 +35,70 @@
         <div class="form-group">
           <label>Địa chỉ chi tiết <span class="req">*</span></label>
           <input type="text" [(ngModel)]="fieldData.location.address" name="address" required 
-           class="form-control" placeholder="Số nhà, tên đường...">
+            class="form-control" placeholder="Số nhà, tên đường...">
         </div>
 
-       <div class="row-group">
-    <div class="form-group half">
-      <label>Thành phố / Tỉnh <span class="req">*</span></label>
-      <div class="select-wrapper">
-        <select [(ngModel)]="fieldData.location.city" (change)="onCityChange()" name="city" required class="form-control">
-          <option value="" disabled selected>-- Chọn Tỉnh/Thành --</option>
-          <option *ngFor="let city of cities" [value]="city.Name">{{ city.Name }}</option>
-        </select>
-        <i class="fas fa-chevron-down select-icon"></i>
-      </div>
-    </div>
-    
-    <div class="form-group half">
-      <label>Quận / Huyện <span class="req">*</span></label>
-      <div class="select-wrapper">
-        <select [(ngModel)]="fieldData.location.district" name="district" required class="form-control" [disabled]="!districts.length">
-          <option value="" disabled selected>-- Chọn Quận/Huyện --</option>
-          <option *ngFor="let d of districts" [value]="d.Name">{{ d.Name }}</option>
-        </select>
-        <i class="fas fa-chevron-down select-icon"></i>
-      </div>
-    </div>
-  </div>
-
-      <div class="form-group">
-        <div class="label-with-action">
-          <label style="margin-bottom:0">Tọa độ bản đồ (Google Map)</label>
-          <button type="button" class="btn-location" id="btnLocation" (click)="getCurrentLocation()">
-            <i class="fas fa-map-marker-alt"></i> Lấy vị trí hiện tại
-          </button>
-        </div>
-        <div class="row-group" style="margin-top: 10px;">
-          <div class="form-group half" style="margin-bottom: 0;">
-            <input type="number" [(ngModel)]="fieldData.location.latitude" name="latitude" 
-               class="form-control" placeholder="Vĩ độ (Latitude)">
-          </div>
-          <div class="form-group half" style="margin-bottom: 0;">
-            <input type="number" [(ngModel)]="fieldData.location.longitude" name="longitude" 
-               class="form-control" placeholder="Kinh độ (Longitude)">
+        <div class="row-group">
+          <div class="form-group half">
+            <label>Thành phố / Tỉnh <span class="req">*</span></label>
+            <div class="select-wrapper">
+              <select [(ngModel)]="fieldData.location.city" (change)="onCityChange()" name="city" required class="form-control">
+                <option value="" disabled selected>-- Chọn Tỉnh/Thành --</option>
+                <option *ngFor="let city of cities" [value]="city.Name">{{ city.Name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
             </div>
+          </div>
+          
+          <div class="form-group half">
+            <label>Quận / Huyện <span class="req">*</span></label>
+            <div class="select-wrapper">
+              <select [(ngModel)]="fieldData.location.district" name="district" required class="form-control" [disabled]="!districts.length">
+                <option value="" disabled selected>-- Chọn Quận/Huyện --</option>
+                <option *ngFor="let d of districts" [value]="d.Name">{{ d.Name }}</option>
+              </select>
+              <i class="fas fa-chevron-down select-icon"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="label-with-action">
+            <label style="margin-bottom:0">Tọa độ bản đồ</label>
+            <button type="button" class="btn-location" id="btnLocation" (click)="getCurrentLocation()">
+              <i class="fas fa-map-marker-alt"></i> Lấy vị trí hiện tại
+            </button>
+          </div>
+          <div class="row-group" style="margin-top: 10px;">
+            <div class="form-group half" style="margin-bottom: 0;">
+              <input type="number" [(ngModel)]="fieldData.location.latitude" name="latitude" 
+                 class="form-control" placeholder="Vĩ độ (Latitude)">
+            </div>
+            <div class="form-group half" style="margin-bottom: 0;">
+              <input type="number" [(ngModel)]="fieldData.location.longitude" name="longitude" 
+                 class="form-control" placeholder="Kinh độ (Longitude)">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Mô tả sân bãi</label>
+          <textarea [(ngModel)]="fieldData.description" name="description" rows="4" 
+              class="form-control" placeholder="Nhập tiện ích, ghi chú thêm về sân..."></textarea>
         </div>
       </div>
-
-      <div class="form-group">
-        <label>Mô tả sân bãi</label>
-        <textarea [(ngModel)]="fieldData.description" name="description" rows="4" 
-              class="form-control" placeholder="Nhập tiện ích, ghi chú thêm về sân..."></textarea>
-      </div>
-    </div>
 
       <div class="col-right">
         <label class="section-label">Hình ảnh sân</label>
         
-        <div class="upload-area">
+        <div class="upload-area" 
+             (dragover)="onDragOver($event)" 
+             (dragleave)="onDragLeave($event)" 
+             (drop)="onDrop($event)"
+             [class.dragging]="isDragging">
+          
           <input type="file" multiple (change)="onFileSelected($event)" accept="image/*" id="fileInput" class="hidden-input">
+          
           <label for="fileInput" class="upload-placeholder">
             <div class="icon-cloud"><i class="fas fa-cloud-upload-alt"></i></div>
             <span>Kéo thả hoặc click để chọn ảnh</span>
@@ -101,7 +107,6 @@
         </div>
 
         <div class="preview-grid" *ngIf="previewImages.length > 0 || (isEditMode && currentImages.length > 0)">
-          
           <ng-container *ngIf="isEditMode">
             <div class="img-card" *ngFor="let img of currentImages; let i = index">
               <img [src]="img.imageUrl || img">
@@ -119,9 +124,16 @@
             </button>
           </div>
         </div>
-      </div>
 
-    </div> <div class="form-actions">
+        <div class="map-section">
+           <label class="section-label" style="margin-top: 20px;">Ghim vị trí trên bản đồ</label>
+           <div id="mini-map" class="mini-map-container"></div>
+           <small class="map-hint"><i class="fas fa-info-circle"></i> Bạn có thể kéo ghim đỏ để điều chỉnh tọa độ chính xác.</small>
+        </div>
+        </div>
+    </div> 
+    
+    <div class="form-actions">
       <button type="button" class="btn-cancel" routerLink="/owner/dashboard">Hủy bỏ</button>
       <button type="submit" class="btn-save" [disabled]="f.invalid || isLoading">
         <i class="fas fa-save"></i> 

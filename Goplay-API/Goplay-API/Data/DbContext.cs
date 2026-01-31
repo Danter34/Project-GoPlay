@@ -21,6 +21,8 @@ namespace Goplay_API.Data
         public DbSet<BookingTimeSlot> BookingTimeSlots { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<lh> lhs { get; set; }
+        public DbSet<News> News { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -74,16 +76,22 @@ namespace Goplay_API.Data
                 .HasForeignKey(bts => bts.SlotId);
 
             modelBuilder.Entity<Review>()
-            .HasOne(r => r.Field)
-            .WithMany(f => f.Reviews)
-            .HasForeignKey(r => r.FieldId)
-            .OnDelete(DeleteBehavior.Cascade);
+                 .HasOne(r => r.Booking)
+                 .WithMany() // Một booking có nhiều review (thực tế là 1, nhưng cấu hình này ok)
+                 .HasForeignKey(r => r.BookingId)
+                 .OnDelete(DeleteBehavior.NoAction); // [QUAN TRỌNG] Ngắt vòng lặp tại đây
 
             modelBuilder.Entity<Review>()
                 .HasOne(r => r.User)
                 .WithMany()
                 .HasForeignKey(r => r.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction); // Ngắt vòng lặp tại User luôn cho chắc
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Field)
+                .WithMany(f => f.Reviews)
+                .HasForeignKey(r => r.FieldId)
+                .OnDelete(DeleteBehavior.NoAction);
 
 
             base.OnModelCreating(modelBuilder);

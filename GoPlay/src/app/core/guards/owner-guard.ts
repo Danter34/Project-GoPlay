@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { map, take } from 'rxjs/operators';
 
@@ -7,22 +7,22 @@ import { map, take } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class OwnerGuard implements CanActivate {
-  constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate() {
-    return this.authService.user$.pipe(
-      take(1),
-      map(user => {
-        // Kiểm tra Role là 'OwnerField'
-        if (user && user.role === 'OwnerField') {
-          return true;
-        } else {
-          // Không phải chủ sân -> Đá về trang chủ
-          alert('Bạn không có quyền truy cập trang quản lý chủ sân!');
-          this.router.navigate(['/']);
-          return false;
-        }
-      })
-    );
-  }
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+ canActivate() {
+  return this.authService.user$.pipe(
+    take(1),
+    map(user => {
+      if (user?.role === 'OwnerField') {
+        return true;
+      }
+
+      return this.router.createUrlTree(['/']);
+    })
+  );
+}
 }

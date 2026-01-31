@@ -1,14 +1,13 @@
 ﻿using Goplay_API.Data;
 using Goplay_API.Model.Domain;
 using Goplay_API.Model.DTO;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization; // Có thể bỏ nếu muốn mở hoàn toàn
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace Goplay_API.Hubs
 {
-    [Authorize]
+    // [Authorize] <-- BỎ hoặc Comment dòng này để Guest kết nối được
     public class ChatHub : Hub
     {
         private readonly ApplicationDbContext _context;
@@ -18,47 +17,45 @@ namespace Goplay_API.Hubs
             _context = context;
         }
 
-        // 1. Client join vào phòng chat (theo ContactId)
         public async Task JoinChat(int contactId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, contactId.ToString());
         }
 
-        // 2. Client rời phòng
-        public async Task LeaveChat(int contactId)
-        {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, contactId.ToString());
-        }
-
-        // 3. Gửi tin nhắn
         public async Task SendMessage(SendMessageDTO dto)
         {
-            var userId = int.Parse(Context.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            int? userId = null;
 
-            // Lưu vào DB
+            // Cố gắng lấy UserID nếu có Token
+            var userClaim = Context.User?.FindFirst(ClaimTypes.NameIdentifier);
+            if (userClaim != null)
+            {
+                userId = int.Parse(userClaim.Value);
+            }
+
             var contact = await _context.Contacts.FindAsync(dto.ContactId);
             if (contact == null) return;
+
+            // Logic: Nếu là Guest (userId == null) thì Contact phải có SenderId là null
+            // (Tránh trường hợp Guest chat vào phòng của User khác)
+            if (userId == null && contact.SenderId != null) return;
 
             var message = new ContactMessage
             {
                 ContactId = dto.ContactId,
-                UserId = userId,
+                UserId = userId, // Lưu null nếu là Guest
                 Content = dto.Content,
                 CreatedAt = DateTime.UtcNow
             };
 
             _context.ContactMessages.Add(message);
-            
-            // Update thời gian hoạt động của hội thoại để nó nổi lên đầu
             contact.LastActivity = DateTime.UtcNow;
-            
             await _context.SaveChangesAsync();
 
-            // Gửi realtime cho tất cả người đang xem hội thoại này
             var responseDto = new ChatMessageDTO
             {
                 ContactId = dto.ContactId,
-                SenderId = userId,
+                SenderId = userId ?? 0, // Trả về 0 cho Frontend biết là Guest
                 Content = dto.Content,
                 CreatedAt = message.CreatedAt
             };

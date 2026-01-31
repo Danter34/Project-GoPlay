@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Goplay-API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4ac4d56972b2f46b957dc700c0d9ae786bfad11c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a8f88852b18fb2704e8ee651b6a242af203e38e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Goplay-API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Goplay-API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -15,11 +15,10 @@ export class ChatService {
 
   constructor(private http: HttpClient) { }
 
-  // --- API CALLS ---
 
-  // Tạo cuộc hội thoại mới (Dùng khi bấm nút "Liên hệ chủ sân")
-  createContact(receiverId: number, subject: string, initialMessage: string = ''): Observable<any> {
-    return this.http.post(`${this.apiUrl}`, { receiverId, subject, initialMessage });
+ // createContact nhận object data linh động
+  createContact(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}`, data);
   }
 
   // Lấy danh sách hội thoại
@@ -32,7 +31,7 @@ export class ChatService {
     return this.http.get<any[]>(`${this.apiUrl}/${contactId}/messages`);
   }
 
-  // --- SIGNALR ---
+
 
   public async startConnection(): Promise<void> {
   const token = localStorage.getItem('authToken'); 

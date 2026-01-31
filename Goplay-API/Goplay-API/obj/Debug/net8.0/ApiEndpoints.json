@@ -185,16 +185,6 @@
   },
   {
     "ContainingType": "Goplay_API.Controllers.BookingController",
-    "Method": "GetOwnerBookings",
-    "RelativePath": "api/bookings/owner-bookings",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Goplay_API.Controllers.BookingController",
     "Method": "OwnerUpdateStatus",
     "RelativePath": "api/bookings/owner/{id}/status",
     "HttpMethod": "PUT",
@@ -209,6 +199,38 @@
       {
         "Name": "dto",
         "Type": "Goplay_API.Model.DTO.UpdateBookingStatusDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.BookingController",
+    "Method": "GetBookingsByField",
+    "RelativePath": "api/bookings/owner/field/{fieldId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fieldId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.BookingController",
+    "Method": "UpdateBookingTime",
+    "RelativePath": "api/bookings/update-time",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Goplay_API.Model.DTO.UpdateBookingTimeDTO",
         "IsRequired": true
       }
     ],
@@ -254,6 +276,32 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.FieldsController",
+    "Method": "GetFieldsByUserId",
+    "RelativePath": "api/fields/admin/fields/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -678,6 +726,196 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Goplay_API.Controllers.lsController",
+    "Method": "SendContact",
+    "RelativePath": "api/ls",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Goplay_API.Model.DTO.lhdto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.lsController",
+    "Method": "GetContacts",
+    "RelativePath": "api/ls",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "status",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.lsController",
+    "Method": "DeleteContact",
+    "RelativePath": "api/ls/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.lsController",
+    "Method": "UpdateStatus",
+    "RelativePath": "api/ls/{id}/status",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "newStatus",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.NewsController",
+    "Method": "GetPublicNews",
+    "RelativePath": "api/News",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.NewsController",
+    "Method": "Create",
+    "RelativePath": "api/News",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "Goplay_API.Model.DTO.NewsRequestDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.NewsController",
+    "Method": "GetById",
+    "RelativePath": "api/News/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.NewsController",
+    "Method": "Update",
+    "RelativePath": "api/News/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "Goplay_API.Model.DTO.NewsRequestDTO",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.NewsController",
+    "Method": "Delete",
+    "RelativePath": "api/News/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.NewsController",
+    "Method": "GetAllForAdmin",
+    "RelativePath": "api/News/admin",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.NewsImageController",
+    "Method": "Delete",
+    "RelativePath": "api/NewsImage/delete",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "url",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.NewsImageController",
+    "Method": "Upload",
+    "RelativePath": "api/NewsImage/upload",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Goplay_API.Controllers.OwnerProfilesController",
     "Method": "Approve",
     "RelativePath": "api/owner-profiles/{id}/approve",
@@ -703,6 +941,22 @@
     "Parameters": [
       {
         "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.OwnerProfilesController",
+    "Method": "GetProfileByUserId",
+    "RelativePath": "api/owner-profiles/admin/profile/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -885,19 +1139,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "fieldId",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "rating",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "comment",
-        "Type": "System.String",
-        "IsRequired": false
+        "Name": "dto",
+        "Type": "Goplay_API.Model.DTO.CreateReviewDTO",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -977,6 +1221,37 @@
         "Name": "dto",
         "Type": "Goplay_API.Model.DTO.SportTypeDTO",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.StatisticsController",
+    "Method": "GetAdminDashboard",
+    "RelativePath": "api/statistics/admin-dashboard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Goplay_API.Controllers.StatisticsController",
+    "Method": "GetRevenueByUserId",
+    "RelativePath": "api/statistics/admin/revenue/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "year",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []

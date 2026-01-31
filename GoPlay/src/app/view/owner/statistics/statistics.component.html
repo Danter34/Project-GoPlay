@@ -1,0 +1,97 @@
+<div class="stats-container">
+  <h2 class="page-title">Thống Kê Hoạt Động</h2>
+
+  <div class="summary-cards">
+    <div class="card revenue-card">
+      <div class="icon"><i class="fas fa-coins"></i></div>
+      <div class="info">
+        <h3>Tổng Doanh Thu</h3>
+        <p>{{ stats.totalRevenue | number }}đ</p>
+      </div>
+    </div>
+    
+    <div class="card booking-card">
+      <div class="icon"><i class="fas fa-calendar-check"></i></div>
+      <div class="info">
+        <h3>Đơn Hoàn Thành</h3>
+        <p>{{ stats.totalBookings }}</p>
+      </div>
+    </div>
+
+    <div class="card field-card">
+      <div class="icon"><i class="fas fa-futbol"></i></div>
+      <div class="info">
+        <h3>Sân Đang Hoạt Động</h3>
+        <p>{{ stats.totalFields }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="section-header">
+      <h3>Biểu đồ doanh thu theo tháng</h3>
+      <select class="year-select" (change)="onYearChange($event)">
+        <option *ngFor="let y of years" [value]="y" [selected]="y === selectedYear">Năm {{ y }}</option>
+      </select>
+    </div>
+    
+   <div class="chart-wrapper">
+      <canvas baseChart
+        [data]="barChartData"
+        [options]="barChartOptions"
+        [plugins]="barChartPlugins"
+        [type]="'bar'">
+      </canvas>
+    </div>
+  </div>
+
+  <div class="table-section">
+    <div class="section-header">
+      <h3>Hiệu suất từng sân</h3>
+      
+      <div class="filters">
+        <input type="date" [(ngModel)]="filterDateFrom" class="form-control-sm">
+        <span class="separator">-</span>
+        <input type="date" [(ngModel)]="filterDateTo" class="form-control-sm">
+        
+        <button class="btn-filter" (click)="onFilterFieldClick()">
+            <i class="fas fa-filter"></i> Lọc
+        </button>
+
+        <button class="btn-excel" (click)="exportToExcel()" [disabled]="fieldRevenues.length === 0">
+            <i class="fas fa-file-excel"></i> Xuất Báo Cáo
+        </button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Tên Sân</th>
+            <th>Số lượt đặt</th>
+            <th>Doanh thu</th>
+            <th>Hiệu quả</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of fieldRevenues">
+            <td class="fw-bold">{{ item.fieldName }}</td>
+            <td>{{ item.totalBookings }} lượt</td>
+            <td class="text-success fw-bold">{{ item.totalRevenue | number }}đ</td>
+            <td>
+              <div class="progress-bar">
+                <div class="fill" [style.width.%]="(item.totalRevenue / stats.totalRevenue) * 100 || 0"></div>
+              </div>
+              <small>{{ ((item.totalRevenue / stats.totalRevenue) * 100) | number:'1.0-1' }}%</small>
+            </td>
+          </tr>
+          <tr *ngIf="fieldRevenues.length === 0">
+            <td colspan="4" class="text-center text-muted py-4">Không có dữ liệu trong khoảng thời gian này.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

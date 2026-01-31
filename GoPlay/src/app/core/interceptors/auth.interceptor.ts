@@ -22,12 +22,12 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
 
-    // 🔥 SSR không xử lý token
+    // SSR không xử lý token
     if (!isPlatformBrowser(this.platformId)) {
       return next.handle(request);
     }
 
-    // 🔥 CHỈ GẮN TOKEN CHO API CỦA MÌNH
+    // CHỈ GẮN TOKEN CHO API CỦA MÌNH
     if (!request.url.startsWith(this.API_URL)) {
       return next.handle(request);
     }
