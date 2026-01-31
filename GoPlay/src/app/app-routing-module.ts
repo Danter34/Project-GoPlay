@@ -28,6 +28,10 @@ import { DashboardComponent } from './view/admin/dashboard/dashboard.component';
 import { PartnerDetailComponent } from './view/admin/partner-detail/partner-detail.component';
 import { SportTypeManagementComponent } from './view/admin/sport-type-management/sport-type-management.component';
 import { TimeSlotManagementComponent } from './view/admin/time-slot-management/time-slot-management.component';
+import { ContactComponent } from './view/contact/contact.component';
+import { NewsPageComponent } from './view/news-page/news-page.component';
+import { AdminNewsComponent } from './view/admin/admin-news/admin-news.component';
+import { AdminContactComponent } from './view/admin/admin-contact/admin-contact.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'payment-return', component: PaymentReturnComponent },
@@ -37,6 +41,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'owner/register', component: OwnerRegisterComponent },
+  { path: 'contact', component: ContactComponent },
+  { path: 'news', component: NewsPageComponent },
   {
     path: 'owner',
     component: OwnerLayoutComponent,
@@ -59,6 +65,8 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'approve-owners', component: ApproveOwnerComponent },
+      {path: 'news', component: AdminNewsComponent},
+      {path:'contacts', component:AdminContactComponent},
       { 
         path: 'users', 
         component: UserManagementComponent, 
@@ -73,7 +81,6 @@ const routes: Routes = [
       { path: 'sport-types', component: SportTypeManagementComponent },
       { path: 'time-slots', component: TimeSlotManagementComponent },
       
-      // [THÊM] Route chi tiết
       { path: 'partners/:id', component: PartnerDetailComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]

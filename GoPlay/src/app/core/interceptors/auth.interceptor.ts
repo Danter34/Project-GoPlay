@@ -11,7 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  private readonly API_URL = 'http://localhost:5210';
+  private readonly API_URL = 'https://apigplay.qzz.io';
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object

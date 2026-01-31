@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ReviewService } from '../../services/review.service';
 
+
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-review-modal',
   templateUrl: './review-modal.component.html',
@@ -11,7 +14,7 @@ export class ReviewModalComponent {
   @Input() fieldId: number = 0;
   @Input() fieldName: string = '';
   
-  // [QUAN TRỌNG] Thêm dòng này để fix lỗi
+
   @Input() bookingId: number = 0; 
 
   @Output() close = new EventEmitter<void>();
@@ -29,28 +32,50 @@ export class ReviewModalComponent {
   }
 
   submitReview() {
+    // 1. Validate: Kiểm tra nội dung
     if (!this.comment.trim()) {
-      alert('Vui lòng nhập nội dung đánh giá!');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Chưa nhập nội dung',
+        text: 'Vui lòng chia sẻ cảm nhận của bạn về sân này nhé!',
+        confirmButtonText: 'Đã hiểu',
+        confirmButtonColor: '#f39c12' // Màu cam cảnh báo
+      });
       return;
     }
 
     this.isLoading = true;
     const dto = {
       fieldId: this.fieldId,
-      bookingId: this.bookingId, // Gửi bookingId xuống API
+      bookingId: this.bookingId,
       rating: this.rating,
       comment: this.comment
     };
 
     this.reviewService.createReview(dto).subscribe({
       next: () => {
-        alert('Cảm ơn bạn đã đánh giá!');
+        this.isLoading = false;
         this.success.emit();
-        this.close.emit();
+        // 2. Success: Thông báo thành công đẹp mắt
+        Swal.fire({
+          icon: 'success',
+          title: 'Cảm ơn bạn!',
+          text: 'Đánh giá của bạn đã được ghi nhận.',
+          timer: 2000,
+          showConfirmButton: false
+        });
       },
       error: (err) => {
         this.isLoading = false;
-        alert(err.error?.message || 'Lỗi khi gửi đánh giá');
+        
+        // 3. Error: Báo lỗi chi tiết
+        Swal.fire({
+          icon: 'error',
+          title: 'Gửi thất bại',
+          text: err.error?.message || 'Có lỗi xảy ra, vui lòng thử lại sau.',
+          confirmButtonText: 'Đóng',
+          confirmButtonColor: '#e74c3c' // Màu đỏ lỗi
+        });
       }
     });
   }

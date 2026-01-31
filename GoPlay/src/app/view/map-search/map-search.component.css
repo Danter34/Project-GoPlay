@@ -67,28 +67,29 @@
 
 /* --- [FIX 2] MARKER HÌNH GIỌT NƯỚC --- */
 ::ng-deep .custom-marker {
-  width: 30px;
-  height: 42px;
   cursor: pointer;
+}
+::ng-deep .marker-container {
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0 3px 3px rgba(0,0,0,0.3)); /* Bóng đổ */
+  transition: transform 0.2s;
 }
-
 /* Hình giọt nước (xoay 45 độ) */
-::ng-deep .marker-pin {
-  width: 30px;
-  height: 30px;
-  border-radius: 50% 50% 50% 0;
-  background: #27ae60;
-  position: absolute;
-  transform: rotate(-45deg);
-  left: 50%;
-  top: 50%;
-  margin: -15px 0 0 -15px;
-  box-shadow: 0 3px 5px rgba(0,0,0,0.3);
-  border: 2px solid #fff;
-  z-index: 1;
+::ng-deep .marker-pin-icon {
+  /* Màu sắc được set inline style từ TS */
+  text-shadow: 0 0 2px #fff; /* Viền trắng nhẹ */
 }
-
+::ng-deep .marker-center-icon {
+  position: absolute;
+  top: 35%; /* Căn chỉnh vị trí icon thể thao nằm lọt lòng */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  color: white; /* Màu icon thể thao */
+}
 /* Icon (Thẳng đứng, nằm giữa) */
 ::ng-deep .marker-icon {
   position: absolute;
@@ -100,7 +101,10 @@
   z-index: 2;
   pointer-events: none;
 }
-
+::ng-deep .custom-marker:hover .marker-container {
+  transform: scale(1.2) translateY(-5px);
+  z-index: 999;
+}
 /* Hiệu ứng Hover */
 ::ng-deep .custom-marker:hover .marker-pin {
   transform: rotate(-45deg) scale(1.1);

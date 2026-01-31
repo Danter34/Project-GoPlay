@@ -14,6 +14,7 @@ export class PartnerDetailComponent implements OnInit {
   profile: any = null;
   fields: any[] = [];
   isLoading = true;
+  selectedImage: string = '';
 
   // --- [MỚI] BIẾN QUẢN LÝ MODAL ---
   selectedField: any = null;
@@ -74,11 +75,20 @@ export class PartnerDetailComponent implements OnInit {
     });
   }
 
-  openFieldModal(field: any) {
+ openFieldModal(field: any) {
     this.selectedField = field;
     this.showFieldModal = true;
-  }
 
+    if (field.images && field.images.length > 0) {
+     
+      this.selectedImage = field.images[0].imageUrl || field.images[0]; 
+    } else {
+      this.selectedImage = 'assets/placeholder.jpg';
+    }
+  }
+  changeImage(imageUrl: string) {
+    this.selectedImage = imageUrl;
+  }
   closeFieldModal() {
     this.showFieldModal = false;
     this.selectedField = null;

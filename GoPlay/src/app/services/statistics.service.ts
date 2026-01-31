@@ -7,7 +7,7 @@ import { OwnerDashboardStats, RevenueByField, RevenueByTime } from '../models/st
   providedIn: 'root'
 })
 export class StatisticsService {
-  private apiUrl = 'http://localhost:5210/api/statistics'; 
+  private apiUrl = 'https://apigplay.qzz.io/api/statistics'; 
 
   constructor(private http: HttpClient) {}
 

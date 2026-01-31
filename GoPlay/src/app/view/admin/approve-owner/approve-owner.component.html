@@ -9,7 +9,6 @@
           <tr>
             <th>ID</th>
             <th>Tên Doanh Nghiệp</th>
-            <th>Người ĐK</th>
             <th>CCCD</th>
             <th>SĐT</th>
             <th>Ngày ĐK</th>
@@ -20,7 +19,6 @@
           <tr *ngFor="let p of pendingList">
             <td>#{{ p.ownerProfileId }}</td>
             <td class="fw-bold text-primary">{{ p.businessName }}</td>
-            <td>{{ p.user?.fullName }} <br><small>{{ p.user?.email }}</small></td>
             <td>{{ p.identityNumber }}</td>
             <td>{{ p.phone }}</td>
             <td>{{ p.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>

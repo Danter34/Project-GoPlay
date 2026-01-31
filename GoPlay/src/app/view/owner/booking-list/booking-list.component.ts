@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookingService } from '../../../services/booking.service';
+import Swal from 'sweetalert2'; 
 
 @Component({
   selector: 'app-booking-list',
@@ -8,39 +9,35 @@ import { BookingService } from '../../../services/booking.service';
   standalone: false
 })
 export class BookingListComponent implements OnInit {
-  // Dữ liệu chính
+
   myFields: any[] = [];
   bookings: any[] = [];
   selectedField: any = null;
   isLoading = false;
 
-  // --- LOGIC ĐỔI GIỜ ---
   showChangeTimeModal = false;
   changeModeData: any = {
     booking: null,
     newDate: '',
-    slots: [],         // Danh sách tất cả slot hệ thống
-    bookedSlotIds: [], // Các slot bị người khác đặt (để bôi xám)
-    selectedNewSlotIds: [], // Các slot mình đang chọn
-    
-    // Biến tính tiền
-    oldTotalPrice: 0,   // Tổng tiền của đơn cũ
-    newTotalPrice: 0,   // Tổng tiền của đơn mới (Giá sân * số giờ)
-    depositAmount: 0,   // Số tiền khách đã cọc (30% đơn cũ)
-    remainingAmount: 0  // Số tiền khách phải trả tại sân (Mới - Cọc)
+    slots: [],
+    bookedSlotIds: [],
+    selectedNewSlotIds: [],
+    oldTotalPrice: 0,
+    newTotalPrice: 0,
+    depositAmount: 0,
+    remainingAmount: 0
   };
 
   constructor(private bookingService: BookingService) {}
 
   ngOnInit(): void {
     this.loadOwnerFields();
-    // Load danh sách khung giờ hệ thống
     this.bookingService.getAllTimeSlots().subscribe(data => {
       this.changeModeData.slots = data;
     });
   }
 
-  // Helper format ngày
+  
   formatDateLocal(dateInput: string | Date): string {
     const date = new Date(dateInput);
     const year = date.getFullYear();
@@ -53,7 +50,6 @@ export class BookingListComponent implements OnInit {
     return this.formatDateLocal(new Date());
   }
 
-  // --- LOAD DATA ---
   loadOwnerFields() {
     this.isLoading = true;
     this.bookingService.getOwnerFields().subscribe({
@@ -74,32 +70,61 @@ export class BookingListComponent implements OnInit {
 
   backToFields() { this.selectedField = null; this.bookings = []; }
 
+
   updateStatus(id: number, newStatus: string) {
-    if(!confirm('Xác nhận cập nhật trạng thái?')) return;
-    this.bookingService.updateBookingStatus(id, newStatus).subscribe({
-      next: () => { alert('Thành công!'); this.loadBookings(this.selectedField.fieldId); },
-      error: (err: any) => alert('Lỗi: ' + err.error?.message)
+    const statusText = newStatus === 'Confirmed' ? 'DUYỆT' : 
+                       newStatus === 'Cancelled' ? 'HỦY' : 'HOÀN TẤT';
+    
+    const color = newStatus === 'Confirmed' ? '#27ae60' : 
+                  newStatus === 'Cancelled' ? '#c0392b' : '#2980b9';
+
+    Swal.fire({
+      title: `Xác nhận ${statusText} đơn hàng?`,
+      text: `Bạn có chắc chắn muốn chuyển trạng thái đơn #${id}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: color,
+      cancelButtonColor: '#95a5a6',
+      confirmButtonText: `Đồng ý ${statusText}`,
+      cancelButtonText: 'Không'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.isLoading = true; // Show loading nhẹ
+        this.bookingService.updateBookingStatus(id, newStatus).subscribe({
+          next: () => {
+            const booking = this.bookings.find(b => b.bookingId === id);
+            
+            // 2. Nếu tìm thấy, cập nhật trạng thái mới luôn
+            if (booking) {
+              booking.status = newStatus;
+            }
+            this.isLoading = false;
+            Swal.fire({
+              icon: 'success',
+              title: 'Thành công!',
+              text: `Đã cập nhật trạng thái đơn #${id}`,
+              timer: 1500,
+              showConfirmButton: false
+            });
+            this.loadBookings(this.selectedField.fieldId);
+          },
+          error: (err: any) => {
+            this.isLoading = false;
+            Swal.fire('Lỗi', err.error?.message || 'Có lỗi xảy ra', 'error');
+          }
+        });
+      }
     });
   }
 
-  // =========================================================
-  // LOGIC ĐỔI GIỜ (ĐÃ FIX THEO YÊU CẦU)
-  // =========================================================
+
   
-  // 1. Mở Modal
   openChangeTimeModal(booking: any) {
     this.changeModeData.booking = booking;
     this.changeModeData.newDate = this.formatDateLocal(booking.bookingDate);
     this.changeModeData.selectedNewSlotIds = [];
-    
-    // Lưu giá cũ
     this.changeModeData.oldTotalPrice = booking.totalPrice;
-
-    // Tính tiền cọc (30% của đơn cũ)
-    // Lưu ý: Nếu DB có lưu cột Deposit riêng thì lấy cột đó, ở đây mình tính 30%
-    this.changeModeData.depositAmount = booking.totalPrice * 0.3;
-
-    // Reset giá mới
+    this.changeModeData.depositAmount = booking.totalPrice * 0.3; // Hoặc lấy từ DB
     this.changeModeData.newTotalPrice = 0;
     this.changeModeData.remainingAmount = 0;
 
@@ -107,7 +132,7 @@ export class BookingListComponent implements OnInit {
     this.showChangeTimeModal = true;
   }
 
-  // 2. Chọn ngày mới
+ 
   onDateChange(event: any) {
     this.changeModeData.newDate = event.target.value;
     this.changeModeData.selectedNewSlotIds = [];
@@ -115,7 +140,6 @@ export class BookingListComponent implements OnInit {
     this.loadBookedSlotsForDate();
   }
 
-  // 3. Load slot đã bị đặt (để disable)
   loadBookedSlotsForDate() {
     if (!this.selectedField) return;
     this.bookingService.getBookedSlots(this.selectedField.fieldId, this.changeModeData.newDate)
@@ -124,15 +148,8 @@ export class BookingListComponent implements OnInit {
       });
   }
 
-  // 4. Check slot disable (Màu xám)
   isSlotDisabled(slot: any): boolean {
-    // A. Check nếu đã bị người khác đặt
-    // Lưu ý: Nếu đổi sang ngày khác thì check tất cả. 
-    // Nếu vẫn ở ngày cũ, lẽ ra phải trừ các slot của chính booking này ra (để khách có thể chọn lại giờ cũ).
-    // Nhưng để an toàn và đơn giản, mình cứ check theo list bookedIds trả về từ server.
     if (this.changeModeData.bookedSlotIds.includes(slot.slotId)) return true;
-
-    // B. Check quá khứ
     const now = new Date();
     const selectedDateStart = new Date(this.changeModeData.newDate);
     selectedDateStart.setHours(0, 0, 0, 0);
@@ -149,7 +166,6 @@ export class BookingListComponent implements OnInit {
     return false;
   }
 
-  // 5. Chọn slot
   toggleSlot(slotId: number) {
     const index = this.changeModeData.selectedNewSlotIds.indexOf(slotId);
     if (index > -1) this.changeModeData.selectedNewSlotIds.splice(index, 1);
@@ -158,54 +174,74 @@ export class BookingListComponent implements OnInit {
     this.updatePricePreview();
   }
 
-  // 6. Tính toán tiền (Logic cốt lõi)
   updatePricePreview() {
-    const pricePerSlot = this.selectedField.price || 0;
-    
-    // Tổng tiền mới = Số slot * Giá sân
+    const pricePerHour = this.selectedField.price || 0;
+    const pricePerSlot = pricePerHour / 2;
     this.changeModeData.newTotalPrice = this.changeModeData.selectedNewSlotIds.length * pricePerSlot;
-
-    // Số tiền phải thu tại sân = Tổng mới - Cọc đã đóng
     this.changeModeData.remainingAmount = this.changeModeData.newTotalPrice - this.changeModeData.depositAmount;
-
-    // Nếu tính ra âm (vd: đổi từ 2h xuống 1h, tiền mới < tiền cọc), thì coi như không thu thêm (hoặc trả lại tùy chính sách, ở đây set = 0)
-    // Nhưng thường chủ sân sẽ không trả lại cọc, nên hiển thị số âm để biết là mình đang nợ khách hoặc hòa vốn.
-    // Ở đây mình để nguyên số học để bạn dễ xử lý.
   }
 
-  // 7. Submit
+  // [CẬP NHẬT] Hàm Submit đổi giờ dùng SweetAlert2
   submitChangeTime() {
     if (this.changeModeData.selectedNewSlotIds.length === 0) {
-      alert("Vui lòng chọn ít nhất 1 khung giờ mới!");
+      Swal.fire('Chưa chọn giờ', 'Vui lòng chọn ít nhất 1 khung giờ mới!', 'warning');
       return;
     }
 
     const payAtField = this.changeModeData.remainingAmount;
-    let msg = `Xác nhận đổi giờ?\n\n`;
-    msg += `Tổng tiền mới: ${this.changeModeData.newTotalPrice.toLocaleString()}đ\n`;
-    msg += `Đã cọc: ${this.changeModeData.depositAmount.toLocaleString()}đ\n`;
-    
-    if (payAtField > 0) {
-        msg += `KHÁCH CẦN TRẢ THÊM: ${payAtField.toLocaleString()}đ`;
-    } else {
-        msg += `Khách không cần trả thêm (Đã dư cọc)`;
-    }
+    let htmlContent = `
+      <div style="text-align: left; font-size: 1.1em;">
+        <p><strong>Ngày mới:</strong> ${this.formatDateLocal(this.changeModeData.newDate)}</p>
+        <p><strong>Tổng tiền mới:</strong> ${this.changeModeData.newTotalPrice.toLocaleString()}đ</p>
+        <p><strong>Đã cọc (30% cũ):</strong> ${this.changeModeData.depositAmount.toLocaleString()}đ</p>
+        <hr>
+        <p style="color: ${payAtField > 0 ? '#c0392b' : '#27ae60'}; font-weight: bold; font-size: 1.2em;">
+          ${payAtField > 0 ? `KHÁCH CẦN TRẢ THÊM: ${payAtField.toLocaleString()}đ` : `KHÁCH ĐƯỢC HOÀN/DƯ: ${Math.abs(payAtField).toLocaleString()}đ`}
+        </p>
+      </div>
+    `;
 
-    if (!confirm(msg)) return;
+    Swal.fire({
+      title: 'Xác nhận đổi lịch?',
+      html: htmlContent,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Xác nhận đổi',
+      cancelButtonText: 'Hủy',
+      confirmButtonColor: '#27ae60',
+      cancelButtonColor: '#95a5a6'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Show loading khi đang gọi API
+        Swal.fire({
+            title: 'Đang xử lý...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
 
-    const payload = {
-      bookingId: this.changeModeData.booking.bookingId,
-      newDate: this.changeModeData.newDate,
-      newSlotIds: this.changeModeData.selectedNewSlotIds
-    };
+        const payload = {
+          bookingId: this.changeModeData.booking.bookingId,
+          newDate: this.changeModeData.newDate,
+          newSlotIds: this.changeModeData.selectedNewSlotIds
+        };
 
-    this.bookingService.updateBookingTime(payload).subscribe({
-      next: () => {
-        alert("Cập nhật thành công!");
-        this.showChangeTimeModal = false;
-        this.loadBookings(this.selectedField.fieldId);
-      },
-      error: (err: any) => alert("Lỗi: " + (err.error?.message || "Lỗi hệ thống."))
+        this.bookingService.updateBookingTime(payload).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Thành công!',
+              text: 'Đã cập nhật lịch đặt sân mới.',
+              timer: 1500,
+              showConfirmButton: false
+            });
+            this.showChangeTimeModal = false;
+            this.loadBookings(this.selectedField.fieldId);
+          },
+          error: (err: any) => {
+            Swal.fire('Lỗi', err.error?.message || "Lỗi hệ thống.", 'error');
+          }
+        });
+      }
     });
   }
 }

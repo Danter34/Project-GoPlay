@@ -5,8 +5,8 @@
     <div class="fields-grid-owner" *ngIf="!isLoading; else loading">
       <div *ngFor="let f of myFields" class="field-card-mini" (click)="onSelectField(f)">
         <div class="f-img">
-           <img [src]="(f.images && f.images.length > 0) ? f.images[0] : 'assets/placeholder.jpg'" alt="Sân">
-        </div>
+   <img [src]="(f.images && f.images.length > 0) ? f.images[0].imageUrl : 'assets/placeholder.jpg'" alt="Sân">
+</div>
         <div class="f-info">
           <h4>{{ f.fieldName }}</h4>
           <p><i class="fas fa-map-marker-alt"></i> {{ f.district }}</p>

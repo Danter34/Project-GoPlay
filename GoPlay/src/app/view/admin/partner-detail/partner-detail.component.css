@@ -23,13 +23,35 @@ tr:hover td {
   width: 600px;
   max-width: 90%;
   border-radius: 12px;
-  padding: 20px;
+  padding: 0;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   position: relative;
   animation: slideUp 0.3s ease-out;
+
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
 }
 
-/* Nút close giống bootstrap nhưng custom lại chút */
+.modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto; 
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eee;
+  background-color: #f8f9fa; 
+  border-radius: 0 0 12px 12px;
+}
+
+
 .btn-close {
   background: transparent;
   border: none;
@@ -50,4 +72,45 @@ tr:hover td {
 @keyframes slideUp {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+/* --- GALLERY STYLES (Trong Modal) --- */
+.main-image-wrapper {
+  height: 250px;
+  background-color: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Cắt ảnh cho vừa khung */
+}
+
+/* Thumbnails */
+.thumbnail-list {
+  padding-bottom: 5px; /* Để thanh cuộn (nếu có) không dính sát */
+}
+
+.thumbnail-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  opacity: 0.7;
+}
+
+.thumbnail-img:hover {
+  opacity: 1;
+}
+
+.thumbnail-img.active-thumb {
+  border-color: #27ae60; /* Màu xanh chủ đạo */
+  opacity: 1;
+  transform: scale(1.05);
 }

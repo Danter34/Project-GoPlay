@@ -8,8 +8,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class ChatService {
   private hubConnection: signalR.HubConnection | undefined;
-  private apiUrl = 'http://localhost:5210/api/contacts'; 
-  private hubUrl = 'http://localhost:5210/chatHub';
+  private apiUrl = 'https://apigplay.qzz.io/api/contacts'; 
+  private hubUrl = 'https://apigplay.qzz.io/chatHub';
 
   public messageReceived$ = new BehaviorSubject<any>(null);
 

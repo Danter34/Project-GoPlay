@@ -1,12 +1,13 @@
 import { Component, OnInit, AfterViewInit, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common'; // Import quan trọng
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http'; 
 import { OwnerFieldService } from '../../../services/owner-field.service';
 import { Field } from '../../../models/field.model';
 
-// [MỚI] Import Mapbox
+// Import thư viện
 import mapboxgl from 'mapbox-gl';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-field-save',
@@ -20,15 +21,17 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
   isLoading = false;
   isDragging = false;
 
-  // [MỚI] Biến cho Map
+  // Mapbox
   private map!: mapboxgl.Map;
   private marker!: mapboxgl.Marker;
   isBrowser: boolean;
 
+  // Data địa chính
   vnData: any[] = [];
   cities: any[] = [];
   districts: any[] = [];
 
+  // Form Data
   fieldData = {
     fieldName: '',
     description: '',
@@ -43,6 +46,7 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
     }
   };
 
+  // Hình ảnh
   currentImages: any[] = [];
   selectedFiles: File[] = [];
   previewImages: string[] = [];
@@ -70,31 +74,30 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.loadVietnamData();
     const id = this.route.snapshot.paramMap.get('id');
+    
     if (id) {
       this.isEditMode = true;
       this.fieldId = +id;
       this.loadFieldDetail(this.fieldId);
     } else {
-        // Nếu là thêm mới, mặc định tọa độ ở TP.HCM hoặc Hà Nội để map không bị xám
+        // Mặc định tọa độ HCM nếu thêm mới
         this.fieldData.location.latitude = 10.762622;
         this.fieldData.location.longitude = 106.660172;
     }
   }
 
-  // [MỚI] Khởi tạo Map sau khi View đã render
   ngAfterViewInit() {
     if (this.isBrowser) {
         this.initMap();
     }
   }
 
-  // [MỚI] Hàm khởi tạo Mapbox
+  // --- MAPBOX LOGIC ---
   initMap() {
-    // Token Mapbox của bạn
-    (mapboxgl as any).accessToken = 'Your_Key';
+    (mapboxgl as any).accessToken = 'Your_API_KEY';
 
     this.map = new mapboxgl.Map({
-      container: 'mini-map', // ID của div trong HTML
+      container: 'mini-map',
       style: 'mapbox://styles/mapbox/streets-v12',
       center: [this.fieldData.location.longitude || 106.660172, this.fieldData.location.latitude || 10.762622],
       zoom: 13
@@ -102,26 +105,20 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
 
     this.map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
-    // Tạo Marker có thể kéo (Draggable)
     this.marker = new mapboxgl.Marker({
       draggable: true,
-      color: '#e74c3c' // Màu đỏ
+      color: '#e74c3c'
     })
       .setLngLat([this.fieldData.location.longitude || 106.660172, this.fieldData.location.latitude || 10.762622])
       .addTo(this.map);
 
-    // Sự kiện khi kéo Marker xong -> Cập nhật Input
     this.marker.on('dragend', () => {
       const lngLat = this.marker.getLngLat();
       this.fieldData.location.longitude = lngLat.lng;
       this.fieldData.location.latitude = lngLat.lat;
-      
-      // (Tùy chọn) Gọi API lấy địa chỉ mới từ tọa độ mới kéo
-      // this.getAddressFromCoords(lngLat.lat, lngLat.lng, null);
     });
   }
 
-  // [MỚI] Hàm cập nhật vị trí Map & Marker từ code (Khi lấy GPS hoặc Edit)
   updateMapPosition(lat: number, lng: number) {
     if (this.map && this.marker) {
       this.marker.setLngLat([lng, lat]);
@@ -133,6 +130,7 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // --- DATA LOADING ---
   loadVietnamData() {
     const jsonUrl = 'https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json';
     this.http.get<any[]>(jsonUrl).subscribe({
@@ -171,7 +169,6 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
         };
         this.currentImages = res.images || [];
 
-        // [MỚI] Đồng bộ map với dữ liệu tải về
         this.updateMapPosition(this.fieldData.location.latitude, this.fieldData.location.longitude);
 
         if (this.vnData.length > 0) {
@@ -182,7 +179,7 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
       },
       error: (err) => {
         console.error(err);
-        alert('Không thể tải thông tin sân');
+        Swal.fire('Lỗi', 'Không thể tải thông tin sân', 'error');
       }
     });
   }
@@ -197,7 +194,7 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // --- Xử lý kéo thả ảnh ---
+  // --- IMAGE HANDLING ---
   onDragOver(event: DragEvent) {
     event.preventDefault();
     event.stopPropagation();
@@ -225,12 +222,17 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
   }
   processFiles(files: File[]) {
     if (this.selectedFiles.length + files.length > 5) {
-      alert("Chỉ được upload tối đa 5 ảnh mới");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Giới hạn',
+        text: 'Chỉ được upload tối đa 5 ảnh mới!',
+        confirmButtonColor: '#27ae60'
+      });
       return;
     }
     const validFiles = files.filter(file => file.type.startsWith('image/'));
     if (validFiles.length !== files.length) {
-      alert("Chỉ chấp nhận file ảnh (JPG, PNG...)");
+      Swal.fire('Cảnh báo', 'Chỉ chấp nhận file ảnh (JPG, PNG...)', 'warning');
     }
     this.selectedFiles.push(...validFiles);
     validFiles.forEach(file => {
@@ -242,7 +244,7 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
   removeNewImage(index: number) { this.selectedFiles.splice(index, 1); this.previewImages.splice(index, 1); }
   markDeleteOldImage(imgId: number, index: number) { this.deleteImageIds.push(imgId); this.currentImages.splice(index, 1); }
   
-  // --- Lấy vị trí GPS ---
+  // --- GPS & GEOCODING ---
   getCurrentLocation() {
     if (navigator.geolocation) {
       const btn = document.getElementById('btnLocation');
@@ -256,18 +258,16 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
           this.fieldData.location.latitude = lat;
           this.fieldData.location.longitude = lng;
 
-          // [MỚI] Bay map đến vị trí mới
           this.updateMapPosition(lat, lng);
-
           this.getAddressFromCoords(lat, lng, btn);
         },
         () => {
-          alert('Không thể lấy vị trí. Hãy kiểm tra quyền truy cập GPS.');
+          Swal.fire('Lỗi', 'Không thể lấy vị trí. Hãy kiểm tra quyền GPS.', 'error');
           if (btn) btn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Lấy vị trí hiện tại';
         }
       );
     } else {
-      alert('Trình duyệt không hỗ trợ Geolocation.');
+      Swal.fire('Lỗi', 'Trình duyệt không hỗ trợ Geolocation.', 'error');
     }
   }
 
@@ -277,12 +277,16 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
     this.http.get<any>(url).subscribe({
       next: (res) => {
         const addr = res.address;
+        
+        // 1. Tìm Tỉnh/Thành
         let apiCityName = addr.city || addr.state || '';
         const foundCity = this.cities.find(c => this.isMatch(c.Name, apiCityName));
 
         if (foundCity) {
           this.fieldData.location.city = foundCity.Name;
           this.districts = foundCity.Districts;
+          
+          // 2. Tìm Quận/Huyện
           let apiDistrictName = addr.district || addr.suburb || addr.county || addr.town || '';
           const foundDistrict = this.districts.find(d => this.isMatch(d.Name, apiDistrictName));
           if (foundDistrict) {
@@ -290,6 +294,7 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
           }
         }
 
+        // 3. Địa chỉ chi tiết
         let detail = [];
         if (addr.house_number) detail.push(addr.house_number);
         if (addr.road) detail.push(addr.road);
@@ -302,7 +307,7 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
         if (btnElement) btnElement.innerHTML = '<i class="fas fa-check"></i> Đã cập nhật vị trí';
       },
       error: (err) => {
-        console.error('Lỗi Reverse Geocoding:', err);
+        console.error('Lỗi Geocoding:', err);
         if (btnElement) btnElement.innerHTML = '<i class="fas fa-map-marker-alt"></i> Lấy vị trí hiện tại';
       }
     });
@@ -319,25 +324,56 @@ export class FieldSaveComponent implements OnInit, AfterViewInit {
            normalize(apiName).includes(normalize(localName));
   }
 
+  // --- SUBMIT ---
   onSubmit() {
     this.isLoading = true;
+    
+    // Validate
     if (!this.fieldData.fieldName || !this.fieldData.price || !this.fieldData.location.address) {
-        alert("Vui lòng nhập tên, giá và địa chỉ chi tiết!");
+        Swal.fire({
+          icon: 'error',
+          title: 'Thiếu thông tin',
+          text: 'Vui lòng nhập tên sân, giá và địa chỉ chi tiết!',
+          confirmButtonColor: '#e74c3c'
+        });
         this.isLoading = false;
         return;
     }
 
+    const showSuccess = (msg: string) => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Thành công!',
+        text: msg,
+        timer: 2000,
+        showConfirmButton: false
+      }).then(() => {
+        this.router.navigate(['/owner/dashboard']);
+      });
+    };
+
+    const showError = (err: any) => {
+      console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Thất bại',
+        text: 'Có lỗi xảy ra, vui lòng thử lại sau.',
+        confirmButtonColor: '#e74c3c'
+      });
+      this.isLoading = false;
+    };
+
     if (this.isEditMode) {
       this.fieldService.updateField(this.fieldId, this.fieldData, this.selectedFiles, this.deleteImageIds)
         .subscribe({
-          next: () => { alert('Cập nhật thành công!'); this.router.navigate(['/owner/dashboard']); },
-          error: (err) => { console.error(err); alert('Lỗi cập nhật'); this.isLoading = false; }
+          next: () => showSuccess('Cập nhật thông tin sân thành công!'),
+          error: showError
         });
     } else {
       this.fieldService.createField(this.fieldData, this.selectedFiles)
         .subscribe({
-          next: () => { alert('Thêm mới thành công!'); this.router.navigate(['/owner/dashboard']); },
-          error: (err) => { console.error(err); alert('Lỗi thêm mới'); this.isLoading = false; }
+          next: () => showSuccess('Thêm sân mới thành công!'),
+          error: showError
         });
     }
   }

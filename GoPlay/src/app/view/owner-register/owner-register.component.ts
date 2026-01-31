@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core'; // Thêm OnInit
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { OwnerService } from '../../services/owner.service';
-import { AuthService } from '../../services/auth.service'; // 1. Import AuthService
+import { AuthService } from '../../services/auth.service';
+
+// [MỚI] Import SweetAlert2
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-owner-register',
@@ -18,15 +21,13 @@ export class OwnerRegisterComponent implements OnInit {
   };
   isLoading = false;
   
-  // Biến lưu thông tin user hiện tại
   currentUser: any = null;
-  // Biến trạng thái checkbox
   isUsingUserPhone = false;
 
   constructor(
     private ownerService: OwnerService, 
     private router: Router,
-    private authService: AuthService // 2. Inject AuthService
+    private authService: AuthService 
   ) {}
 
   ngOnInit(): void {
@@ -35,14 +36,20 @@ export class OwnerRegisterComponent implements OnInit {
     });
   }
 
-  // 4. Hàm xử lý khi tick vào checkbox
   onUseUserPhoneChange() {
     if (this.isUsingUserPhone) {
       if (this.currentUser && this.currentUser.phone) {
         this.model.phone = this.currentUser.phone;
       } else {
-        alert('Tài khoản của bạn chưa cập nhật số điện thoại.');
-        this.isUsingUserPhone = false; // Bỏ tick nếu không có sđt
+        // [MỚI] Thay alert bằng Swal thông báo nhẹ nhàng
+        Swal.fire({
+          icon: 'info',
+          title: 'Thông tin chưa đầy đủ',
+          text: 'Tài khoản của bạn chưa cập nhật số điện thoại.',
+          confirmButtonText: 'Đã hiểu',
+          confirmButtonColor: '#3498db'
+        });
+        this.isUsingUserPhone = false; 
       }
     } else {
       this.model.phone = '';
@@ -50,15 +57,46 @@ export class OwnerRegisterComponent implements OnInit {
   }
 
   onSubmit() {
+    // 1. Validate Form: Kiểm tra dữ liệu bắt buộc
+    if (!this.model.businessName || !this.model.phone || !this.model.identityNumber) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Thiếu thông tin',
+            text: 'Vui lòng điền đầy đủ Tên doanh nghiệp, SĐT và CMND/CCCD.',
+            confirmButtonColor: '#f39c12'
+        });
+        return;
+    }
+
     this.isLoading = true;
+
+    // 2. Gọi API đăng ký
     this.ownerService.registerOwner(this.model).subscribe({
       next: (res) => {
-        alert('Đăng ký hồ sơ thành công! Đang chuyển về trang chủ...');
-        this.router.navigate(['/']);
+        this.isLoading = false;
+        
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Đăng ký thành công!',
+          text: 'Hồ sơ chủ sân của bạn đã được tạo. Đang chuyển về trang chủ...',
+          timer: 2000,
+          showConfirmButton: false
+        }).then(() => {
+          this.router.navigate(['/']);
+        });
       },
       error: (err) => {
-        alert('Lỗi: ' + (err.error?.message || 'Có lỗi xảy ra.'));
         this.isLoading = false;
+        
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Đăng ký thất bại',
+          text: err.error?.message || 'Có lỗi xảy ra, vui lòng thử lại sau.',
+          confirmButtonText: 'Đóng',
+          confirmButtonColor: '#e74c3c'
+        });
       }
     });
   }

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = 'http://localhost:5210/api/reviews';
+  private apiUrl = 'https://apigplay.qzz.io/api/reviews';
 
   constructor(private http: HttpClient) {}
 

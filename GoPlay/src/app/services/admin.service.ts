@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AdminService {
-  private apiUrl = 'http://localhost:5210/api'; 
+  private apiUrl = 'https://apigplay.qzz.io/api'; 
   constructor(private http: HttpClient) {}
 
 

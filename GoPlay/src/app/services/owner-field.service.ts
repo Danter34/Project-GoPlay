@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class OwnerFieldService {
-  private baseUrl = 'http://localhost:5210/api';
+  private baseUrl = 'https://apigplay.qzz.io/api';
 
   constructor(private http: HttpClient) {}
 

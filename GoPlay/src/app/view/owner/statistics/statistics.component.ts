@@ -4,7 +4,7 @@ import { OwnerDashboardStats, RevenueByField } from '../../../models/statistics.
 import { ChartConfiguration, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts'; // Import để lấy chart
 
-// [MỚI] Import ExcelJS & FileSaver
+
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 
@@ -16,7 +16,7 @@ import { saveAs } from 'file-saver';
 })
 export class StatisticsComponent implements OnInit {
   
-  // [QUAN TRỌNG] Lấy tham chiếu đến biểu đồ trên HTML
+
   @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   stats: OwnerDashboardStats = { totalRevenue: 0, totalBookings: 0, totalFields: 0 };
@@ -67,7 +67,7 @@ export class StatisticsComponent implements OnInit {
         ]
       };
       
-      // Update chart sau khi có dữ liệu mới
+
       this.chart?.update();
     });
   }
@@ -87,7 +87,7 @@ export class StatisticsComponent implements OnInit {
     this.loadFieldData();
   }
 
-  // [MỚI] HÀM XUẤT EXCEL KÈM BIỂU ĐỒ
+
   async exportToExcel() {
     // 1. Tạo Workbook mới
     const workbook = new ExcelJS.Workbook();
@@ -133,7 +133,7 @@ export class StatisticsComponent implements OnInit {
       });
     });
 
-    // 5. [QUAN TRỌNG] CHÈN ẢNH BIỂU ĐỒ
+
     if (this.chart && this.chart.chart) {
       // Chụp ảnh chart hiện tại ra Base64
       const chartImageBase64 = this.chart.chart.toBase64Image();
@@ -144,12 +144,12 @@ export class StatisticsComponent implements OnInit {
         extension: 'png',
       });
 
-      // Tính vị trí chèn ảnh: Cách dòng cuối cùng của bảng 2 dòng
+
       const lastRow = this.fieldRevenues.length + 5; 
 
       worksheet.addImage(imageId, {
-        tl: { col: 0, row: lastRow }, // Bắt đầu từ cột A, dòng LastRow
-        ext: { width: 600, height: 350 } // Kích thước ảnh
+        tl: { col: 0, row: lastRow }, 
+        ext: { width: 600, height: 350 } 
       });
     }
 

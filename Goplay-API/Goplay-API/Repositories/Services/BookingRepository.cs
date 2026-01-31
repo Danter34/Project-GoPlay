@@ -97,7 +97,7 @@ namespace Goplay_API.Repositories.Services
             // 3. Check field
             var field = await _context.Fields.FindAsync(dto.FieldId)
              ?? throw new Exception("Không tìm thấy sân.");
-
+            decimal pricePerSlot = field.Price / 2;
             // 4. Tạo booking
             var booking = new Booking
             {
@@ -106,7 +106,7 @@ namespace Goplay_API.Repositories.Services
                 GuestPhone = userId == null ? dto.GuestPhone : null,
                 FieldId = dto.FieldId,
                 BookingDate = dto.BookingDate,
-                TotalPrice = field.Price * dto.SlotIds.Count,
+                TotalPrice = pricePerSlot * dto.SlotIds.Count,
                 Status = "AwaitingPayment",
                 CreatedAt = DateTime.UtcNow
             };
@@ -140,6 +140,22 @@ namespace Goplay_API.Repositories.Services
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<bool> CancelByUserAsync(int userId, int bookingId)
+        {
+            var booking = await _context.Bookings
+                .FirstOrDefaultAsync(b => b.BookingId == bookingId && b.UserId == userId);
+
+            if (booking == null)
+                return false;
+
+            if (booking.Status != "Pending")
+                throw new Exception("Không thể hủy đơn ở trạng thái hiện tại.");
+
+            booking.Status = "Cancelled";
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
 
         public async Task<IEnumerable<Booking>> GetByFieldAndOwnerAsync(int fieldId, int ownerUserId)
         {
@@ -232,8 +248,8 @@ namespace Goplay_API.Repositories.Services
                 _context.BookingTimeSlots.Add(new BookingTimeSlot { BookingId = bookingId, SlotId = slotId });
             }
 
-           
-            decimal newPrice = booking.Field.Price * newSlotIds.Count;
+
+            decimal newPrice = (booking.Field.Price / 2) * newSlotIds.Count;
 
             // Cập nhật giá mới vào DB luôn để thống kê doanh thu đúng
             booking.TotalPrice = newPrice;

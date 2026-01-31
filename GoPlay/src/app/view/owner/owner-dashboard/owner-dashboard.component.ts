@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { OwnerFieldService } from '../../../services/owner-field.service';
 
+// [MỚI] Import SweetAlert2
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-owner-dashboard',
   templateUrl: './owner-dashboard.component.html',
@@ -35,15 +38,51 @@ export class OwnerDashboardComponent implements OnInit {
     });
   }
 
+
   onDelete(id: number) {
-    if (confirm('Bạn có chắc muốn xóa sân này không?')) {
-      this.fieldService.deleteField(id).subscribe({
-        next: () => {
-          alert('Xóa thành công');
-          this.loadFields();
-        },
-        error: () => alert('Xóa thất bại')
-      });
-    }
+    Swal.fire({
+      title: 'Bạn có chắc chắn?',
+      text: "Hành động này sẽ xóa sân vĩnh viễn và không thể khôi phục!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#e74c3c', 
+      cancelButtonColor: '#95a5a6', 
+      confirmButtonText: 'Vâng, xóa nó!',
+      cancelButtonText: 'Hủy bỏ'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Đang xử lý...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        this.fieldService.deleteField(id).subscribe({
+          next: () => {
+
+            Swal.fire({
+              icon: 'success',
+              title: 'Đã xóa!',
+              text: 'Sân bóng đã được xóa thành công.',
+              timer: 1500,
+              showConfirmButton: false
+            });
+            this.loadFields(); // Tải lại danh sách
+          },
+          error: (err) => {
+            console.error(err);
+            // Xóa thất bại
+            Swal.fire({
+              icon: 'error',
+              title: 'Lỗi!',
+              text: 'Không thể xóa sân này. Vui lòng thử lại sau.',
+              confirmButtonColor: '#e74c3c'
+            });
+          }
+        });
+      }
+    });
   }
 }

@@ -100,12 +100,21 @@
       <button type="button" class="btn-close" (click)="closeFieldModal()"></button>
     </div>
 
-    <div class="modal-body" *ngIf="selectedField">
-      <div class="field-image mb-3">
-        <img [src]="selectedField.imageUrl || 'assets/placeholder.jpg'" 
-             alt="Sân bóng" class="img-fluid rounded shadow-sm w-100" 
-             style="height: 200px; object-fit: cover;">
-      </div>
+   <div class="modal-body" *ngIf="selectedField">
+  
+  <div class="gallery-section mb-4">
+    <div class="main-image-wrapper mb-2">
+      <img [src]="selectedImage" alt="Sân bóng" class="img-fluid rounded shadow-sm w-100 main-img">
+    </div>
+
+    <div class="thumbnail-list d-flex gap-2 overflow-auto" *ngIf="selectedField.images?.length > 1">
+      <img *ngFor="let img of selectedField.images" 
+           [src]="img.imageUrl || img" 
+           class="thumbnail-img rounded"
+           [class.active-thumb]="(img.imageUrl || img) === selectedImage"
+           (click)="changeImage(img.imageUrl || img)">
+    </div>
+  </div>
 
       <div class="row g-3">
         <div class="col-md-6">

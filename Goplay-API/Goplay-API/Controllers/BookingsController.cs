@@ -36,13 +36,13 @@ namespace Goplay_API.Controllers
         {
             try
             {
-                // 1. Lấy ID chủ sân từ Token
+                
                 int ownerUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-                // 2. Gọi Repo lấy list booking của sân đó
+                
                 var bookings = await _bookingRepository.GetByFieldAndOwnerAsync(fieldId, ownerUserId);
 
-                // 3. Map dữ liệu trả về
+                
                 var response = bookings.Select(b => new BookingResponseDTO
                 {
                     BookingId = b.BookingId,
@@ -51,7 +51,7 @@ namespace Goplay_API.Controllers
                     TotalPrice = b.TotalPrice,
                     FieldId = b.FieldId,
 
-                    // [MỚI] Trả về thông tin khách (Ưu tiên Guest, nếu ko có thì lấy User)
+                    
                     GuestName = !string.IsNullOrEmpty(b.GuestName) ? b.GuestName : b.User?.FullName,
                     GuestPhone = !string.IsNullOrEmpty(b.GuestPhone) ? b.GuestPhone : b.User?.Phone,
 
@@ -98,8 +98,7 @@ namespace Goplay_API.Controllers
         {
             try
             {
-                // [FIX LỖI CỦA BẠN Ở ĐÂY] 
-                // Truyền đủ 3 tham số: ID, Ngày mới, List Slot mới
+                
                 await _bookingRepository.UpdateBookingTimeAsync(dto.BookingId, dto.NewDate, dto.NewSlotIds);
 
                 return Ok(new { message = "Cập nhật khung giờ thành công!" });
@@ -146,7 +145,7 @@ namespace Goplay_API.Controllers
         }
 
         [HttpPost("create")]
-        [AllowAnonymous] // <--- QUAN TRỌNG: Cho phép cả khách chưa đăng nhập gọi
+        [AllowAnonymous] 
         public async Task<IActionResult> Create([FromBody] BookingCreateDTO dto)
         {
             try
@@ -194,8 +193,20 @@ namespace Goplay_API.Controllers
         {
             int userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-            var success = await _bookingRepository.CancelAsync(userId, id);
-            return success ? Ok(new { message = "Booking cancelled" }) : NotFound();
+            try
+            {
+                var success = await _bookingRepository.CancelByUserAsync(userId, id);
+
+                if (!success)
+                    return NotFound(new { message = "Không tìm thấy booking hoặc không có quyền." });
+
+                return Ok(new { message = "Hủy đơn thành công." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
+
     }
 }

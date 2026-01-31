@@ -45,8 +45,7 @@ namespace Goplay_API.Model.Domain
         [ForeignKey("ContactId")]
         public Contact Contact { get; set; }
 
-        // [QUAN TRỌNG] Cho phép Null. 
-        // Nếu UserId == null => Tin nhắn này do Guest gửi.
+    
         public int? UserId { get; set; }
 
         public string Content { get; set; }

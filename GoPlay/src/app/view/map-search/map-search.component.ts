@@ -50,8 +50,8 @@ export class MapSearchComponent implements OnInit, AfterViewInit {
   }
 
   private initMap(): void {
-    // Token Mapbox (Dùng token của bạn)
-    (mapboxgl as any).accessToken = 'Your_Key_API';
+
+    (mapboxgl as any).accessToken = 'Yuor_API_KEY';
 
     this.map = new mapboxgl.Map({
       container: 'map',
@@ -102,7 +102,7 @@ export class MapSearchComponent implements OnInit, AfterViewInit {
     });
   }
   
-  // [FIX 2]: Tạo HTML cho Marker hình giọt nước
+
   private createCustomMarkerElement(sportName: string) {
     const filter = this.sportFilters.find(s => 
       sportName?.toLowerCase().includes(s.name.toLowerCase())
@@ -111,10 +111,12 @@ export class MapSearchComponent implements OnInit, AfterViewInit {
     const el = document.createElement('div');
     el.className = 'custom-marker'; 
     
-    // Cấu trúc chuẩn để CSS xoay được
+
     el.innerHTML = `
-      <div class="marker-pin" style="background-color: ${filter.color}"></div>
-      <i class="fas ${filter.icon} marker-icon"></i>
+      <div class="marker-container" style="color: ${filter.color}">
+        <i class="fas fa-map-marker-alt fa-3x marker-pin-icon"></i>
+        <i class="fas ${filter.icon} marker-center-icon"></i>
+      </div>
     `;
     return el;
   }
@@ -139,7 +141,7 @@ export class MapSearchComponent implements OnInit, AfterViewInit {
       // Offset 35 để popup nằm trên đỉnh giọt nước
       const popup = new mapboxgl.Popup({ offset: 35 }).setHTML(popupHTML);
 
-      const marker = new mapboxgl.Marker(el)
+      const marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' }) 
         .setLngLat([field.longitude!, field.latitude!])
         .setPopup(popup)
         .addTo(this.map);
@@ -147,25 +149,47 @@ export class MapSearchComponent implements OnInit, AfterViewInit {
       this.markers.push(marker);
     });
   }
-
   filterSport(sportId: number) {
     this.sportFilters.forEach(s => s.active = (s.id === sportId));
+    
     if (sportId === 0) {
       this.displayFields = [...this.allFields];
     } else {
       const selectedSport = this.sportFilters.find(s => s.id === sportId);
-      this.displayFields = this.allFields.filter(f => 
-        (f.sportName || '').toLowerCase() === selectedSport?.name.toLowerCase()
-      );
+      
+      if (selectedSport) {
+        this.displayFields = this.allFields.filter(f => 
+          (f.sportName || '').toLowerCase().includes(selectedSport.name.toLowerCase())
+        );
+      }
     }
+    
     this.updateMarkers(this.displayFields);
     
-    if (this.displayFields.length > 0) {
-      this.map.flyTo({
-        center: [this.displayFields[0].longitude!, this.displayFields[0].latitude!],
-        zoom: 13,
-        essential: true
-      });
+   if (sportId === 0) {
+        // Nếu chọn "Tất cả": Zoom out ra toàn Việt Nam
+        this.map.flyTo({
+            center: [108.2062, 16.0474], // Tâm Việt Nam (Đà Nẵng)
+            zoom: 5.5, // Zoom level nhìn thấy cả nước
+            essential: true
+        });
+    } else {
+        // Nếu chọn môn cụ thể: Zoom vào sân gần nhất (hoặc sân đầu tiên)
+        if (this.displayFields.length > 0) {
+            
+           
+            const bounds = new mapboxgl.LngLatBounds();
+            this.displayFields.forEach(f => {
+                if (f.longitude && f.latitude) {
+                    bounds.extend([f.longitude, f.latitude]);
+                }
+            });
+            
+            this.map.fitBounds(bounds, {
+                padding: 100, // Khoảng cách đệm
+                maxZoom: 14   // Zoom tối đa
+            });
+        }
     }
   }
 

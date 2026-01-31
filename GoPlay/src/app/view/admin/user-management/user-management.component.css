@@ -1,0 +1,84 @@
+/* Tăng hiệu ứng mượt mà khi di chuột */
+.transition {
+  transition: all 0.2s ease-in-out;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.002);
+}
+
+/* Tùy chỉnh ô tìm kiếm */
+.search-box {
+  width: 100%;
+  max-width: 300px;
+}
+
+.search-box .input-group-text, 
+.search-box .form-control {
+  border-color: #eee;
+}
+
+/* Badge màu dịu (Soft Badges) */
+.bg-soft-success {
+  background-color: #e8fadf;
+  color: #28a745 !important;
+}
+
+.bg-soft-warning {
+  background-color: #fff4e5;
+  color: #ffc107 !important;
+}
+
+.bg-soft-secondary {
+  background-color: #f0f2f5;
+  color: #6c757d !important;
+}
+
+/* Button Detail hiện đại */
+.btn-light-info {
+  background-color: #e0f7fa;
+  border: none;
+}
+
+.btn-light-info:hover {
+  background-color: #00bcd4;
+  color: white !important;
+}
+
+/* Loại bỏ viền thô của bảng */
+.table thead th {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  border-top: none;
+}
+/* Giữ nguyên các class cũ của bạn và thêm/sửa: */
+
+.table thead th {
+  font-size: 0.8rem;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+/* Icon trong bảng */
+.far.fa-envelope, .fas.fa-phone-alt {
+  width: 16px;
+  color: #adb5bd;
+}
+
+/* Hiệu ứng chuyển động cho hàng */
+.transition {
+  transition: background-color 0.2s;
+}
+
+/* Tùy chỉnh đổ bóng nhẹ cho Select */
+.form-select-sm {
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* Badge màu mềm mại */
+.bg-soft-success { background-color: #e7f6ed; color: #28a745 !important; }
+.bg-soft-warning { background-color: #fff9e6; color: #ffc107 !important; }
+.bg-soft-secondary { background-color: #f8f9fa; color: #6c757d !important; }

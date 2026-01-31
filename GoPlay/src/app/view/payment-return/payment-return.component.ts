@@ -19,14 +19,14 @@ export class PaymentReturnComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Lấy tất cả query params từ URL
+
     this.route.queryParams.subscribe(params => {
       
-      // 1. Check nếu là VNPay (có vnp_ResponseCode)
+
       if (params['vnp_ResponseCode']) {
         this.handleVnPay(params);
       } 
-      // 2. Check nếu là MoMo (có resultCode)
+
       else if (params['resultCode']) {
         this.handleMomo(params);
       } 
@@ -38,7 +38,7 @@ export class PaymentReturnComponent implements OnInit {
   }
 
   handleVnPay(params: any) {
-    // VNPay: 00 là thành công
+
     if (params['vnp_ResponseCode'] === '00') {
       this.callBackendConfirm(() => this.paymentService.checkVnPayReturn(params));
     } else {
@@ -48,7 +48,7 @@ export class PaymentReturnComponent implements OnInit {
   }
 
   handleMomo(params: any) {
-    // MoMo: 0 là thành công
+
     if (params['resultCode'] === '0') {
       this.callBackendConfirm(() => this.paymentService.checkMomoReturn(params));
     } else {
@@ -57,7 +57,7 @@ export class PaymentReturnComponent implements OnInit {
     }
   }
 
-  // Gọi Backend để update DB
+
   callBackendConfirm(apiCall: () => any) {
     apiCall().subscribe({
       next: (res: any) => {

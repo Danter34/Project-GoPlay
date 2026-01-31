@@ -55,14 +55,13 @@
       <div class="summary-section">
         <div class="summary-row">
           <span>Số giờ chọn:</span>
-          <strong>{{ selectedSlotIds.length }} giờ</strong>
+          <strong>{{ selectedSlotIds.length / 2 }} giờ</strong>
         </div>
         <div class="summary-row total">
           <span>Tổng cộng:</span>
           <span class="total-price">{{ totalPrice | number }}đ</span>
         </div>
       </div>
-
     </div>
 
     <div class="payment-method-section">
@@ -70,8 +69,8 @@
         <div class="payment-options">
           
           <div class="payment-option" 
-               [class.active]="selectedPaymentMethod === 'VNPay'"
-               (click)="selectedPaymentMethod = 'VNPay'">
+              [class.active]="selectedPaymentMethod === 'VNPay'"
+              (click)="selectedPaymentMethod = 'VNPay'">
             <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPay" class="payment-logo"> <span>VNPay QR</span>
             <i class="fas fa-check-circle check-icon" *ngIf="selectedPaymentMethod === 'VNPay'"></i>
           </div>

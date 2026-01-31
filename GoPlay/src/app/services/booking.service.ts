@@ -7,7 +7,7 @@ import { TimeSlot, BookingCreateDTO, Booking } from '../models/booking.model';
   providedIn: 'root'
 })
 export class BookingService {
-  private apiUrl = 'http://localhost:5210/api'; 
+  private apiUrl = 'https://apigplay.qzz.io/api'; 
 
   constructor(private http: HttpClient) {}
 

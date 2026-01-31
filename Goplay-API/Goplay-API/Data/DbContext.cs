@@ -21,6 +21,8 @@ namespace Goplay_API.Data
         public DbSet<BookingTimeSlot> BookingTimeSlots { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<ContactMessage> ContactMessages { get; set; }
+        public DbSet<lh> lhs { get; set; }
+        public DbSet<News> News { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()

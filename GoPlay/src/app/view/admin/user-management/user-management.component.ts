@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'; // [MỚI] Import ActivatedRoute
+import { ActivatedRoute } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
+
+// [MỚI] Import SweetAlert2
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-management',
@@ -14,26 +17,23 @@ export class UserManagementComponent implements OnInit {
   searchText = '';
   isLoading = false;
   
-  // Biến xác định trang hiện tại ('user' hoặc 'owner')
   pageType: 'user' | 'owner' = 'user'; 
   pageTitle = 'Danh Sách Khách Hàng';
 
   constructor(
     private adminService: AdminService,
-    private route: ActivatedRoute // [MỚI] Inject Route
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    // Lắng nghe sự thay đổi của URL (để khi click chuyển menu nó reload lại data)
     this.route.data.subscribe(data => {
-      this.pageType = data['type']; // Lấy 'user' hoặc 'owner' từ router
+      this.pageType = data['type']; 
       
-      // Set tiêu đề tương ứng
       this.pageTitle = this.pageType === 'user' 
         ? 'Danh Sách Khách Hàng & Admin' 
         : 'Danh Sách Đối Tác (Chủ Sân)';
         
-      this.loadUsers(); // Load lại dữ liệu
+      this.loadUsers();
     });
   }
 
@@ -52,14 +52,12 @@ export class UserManagementComponent implements OnInit {
   filterData() {
     let temp = [];
 
-    // Lọc theo Page Type (Thay vì Tab)
     if (this.pageType === 'user') {
       temp = this.allUsers.filter(u => u.role === 'User' || u.role === 'Admin');
     } else {
       temp = this.allUsers.filter(u => u.role === 'OwnerField');
     }
 
-    // Lọc theo Search Text
     const term = this.searchText.toLowerCase();
     this.displayedUsers = temp.filter(u => 
       u.fullName?.toLowerCase().includes(term) || 
@@ -68,25 +66,69 @@ export class UserManagementComponent implements OnInit {
     );
   }
 
+  // [CẬP NHẬT] Hàm đổi quyền dùng SweetAlert2
   changeRole(user: any, newRole: string) {
+    // Nếu chọn lại quyền cũ thì không làm gì
     if (user.role === newRole) return;
     
+    // 1. Cấu hình nội dung cảnh báo tùy theo tình huống
+    let title = 'Xác nhận đổi quyền?';
+    let text = `Bạn muốn đổi quyền của tài khoản "${user.email}" thành [${newRole}]?`;
+    let icon: any = 'question';
+    let confirmColor = '#3498db'; // Màu xanh mặc định
+
+    // Cảnh báo ĐỎ nếu hạ quyền Chủ Sân (Nguy hiểm)
     if (user.role === 'OwnerField' && newRole !== 'OwnerField') {
-       if (!confirm(`Cảnh báo: Hạ quyền Chủ Sân xuống ${newRole}? Họ sẽ mất quyền quản lý sân.`)) {
-         this.loadUsers(); return;
-       }
-    } else if (!confirm(`Đổi quyền của ${user.email} thành ${newRole}?`)) {
-        this.loadUsers(); return;
+       title = 'CẢNH BÁO QUAN TRỌNG!';
+       text = `Bạn đang hạ quyền Chủ Sân xuống ${newRole}. Họ sẽ MẤT QUYỀN quản lý sân bãi và doanh thu hiện tại. Bạn có chắc chắn không?`;
+       icon = 'warning';
+       confirmColor = '#e74c3c'; // Màu đỏ
     }
 
-    this.adminService.setUserRole(user.userId, newRole).subscribe({
-      next: () => {
-        alert('Cập nhật thành công!');
-        // Sau khi đổi quyền, user đó sẽ biến mất khỏi danh sách hiện tại (đúng logic)
-        this.loadUsers(); 
-      },
-      error: (err) => {
-        alert('Lỗi: ' + err.error?.message);
+    // 2. Hiện Popup xác nhận
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      showCancelButton: true,
+      confirmButtonColor: confirmColor,
+      cancelButtonColor: '#95a5a6',
+      confirmButtonText: 'Đồng ý cập nhật',
+      cancelButtonText: 'Hủy bỏ'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        
+        // 3. Hiện Loading khi gọi API
+        Swal.fire({
+            title: 'Đang cập nhật...',
+            allowOutsideClick: false,
+            didOpen: () => Swal.showLoading()
+        });
+
+        this.adminService.setUserRole(user.userId, newRole).subscribe({
+          next: () => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Thành công!',
+              text: `Đã cập nhật vai trò người dùng thành ${newRole}.`,
+              timer: 1500,
+              showConfirmButton: false
+            });
+            // Load lại data để user đó chuyển sang danh sách đúng (hoặc biến mất khỏi list hiện tại)
+            this.loadUsers(); 
+          },
+          error: (err) => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Lỗi',
+              text: err.error?.message || 'Không thể cập nhật quyền hạn.',
+              confirmButtonColor: '#e74c3c'
+            });
+            this.loadUsers(); // Reset lại UI (dropdown) về giá trị cũ
+          }
+        });
+      } else {
+        // Nếu bấm Hủy -> Load lại để reset dropdown về giá trị cũ
         this.loadUsers();
       }
     });

@@ -10,6 +10,7 @@ namespace Goplay_API.Repositories.Interface
         Task<Booking?> GetByIdAsync(int id);
         Task<Booking> CreateAsync(int? userId, BookingCreateDTO dto);
         Task<bool> CancelAsync(int userId, int bookingId);
+        Task<bool> CancelByUserAsync(int userId, int bookingId);
         Task<List<BookingResponseDTO>> GetMyBookingsAsync(int userId);
         Task<IEnumerable<Booking>> GetByFieldAndOwnerAsync(int fieldId, int ownerUserId);
 

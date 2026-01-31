@@ -10,7 +10,7 @@ import { ChangePasswordDTO } from '../models/user-profile.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5210/api/auth';
+  private apiUrl = 'https://apigplay.qzz.io/api/auth';
   private userSubject = new BehaviorSubject<any>(null);
   public user$ = this.userSubject.asObservable();
 

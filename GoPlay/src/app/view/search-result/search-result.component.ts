@@ -48,7 +48,9 @@ export class SearchResultComponent implements OnInit {
         this.fields = res.items;
         this.totalItems = res.totalItems;
         this.currentPage = res.page;
-
+        if (this.fields.length > 0) {
+        console.log('Dữ liệu ảnh trả về:', this.fields[0].images);
+        }
         if (this.sortPrice === 'asc') {
            this.fields.sort((a, b) => a.price - b.price);
         } else if (this.sortPrice === 'desc') {

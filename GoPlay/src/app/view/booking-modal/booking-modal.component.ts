@@ -1,9 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core'; // Thêm OnChanges
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { BookingService } from '../../services/booking.service';
 import { TimeSlot } from '../../models/booking.model';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { PaymentService } from '../../services/payment.service';
+
+// Import SweetAlert2
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-booking-modal',
@@ -12,7 +15,7 @@ import { PaymentService } from '../../services/payment.service';
   standalone: false,
   providers: [DatePipe]
 })
-export class BookingModalComponent implements OnInit, OnChanges { // Implement OnChanges
+export class BookingModalComponent implements OnInit, OnChanges {
   @Input() field: any;
   @Output() close = new EventEmitter<void>();
 
@@ -44,10 +47,8 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
     this.loadTimeSlots();
   }
 
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['field'] && this.field) {
-      // Nếu đã có slot rồi thì chỉ cần check lại trạng thái booking
       if (this.timeSlots.length > 0) {
         this.checkAvailability();
       }
@@ -58,7 +59,7 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
     this.isLoading = true;
     this.bookingService.getAllTimeSlots().subscribe(data => {
       this.timeSlots = data;
-      this.checkAvailability(); // Load xong slot thì check ngay lập tức
+      this.checkAvailability(); 
       this.isLoading = false;
     });
   }
@@ -72,7 +73,6 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
   checkAvailability() {
     if (!this.field || !this.selectedDate) return;
 
-    // Không cần set isLoading=true ở đây để tránh nháy giao diện liên tục khi đổi ngày
     this.bookingService.getBookingsByFieldAndDate(this.field.fieldId, this.selectedDate)
       .subscribe(bookings => {
         this.bookedSlotIds = [];
@@ -90,44 +90,30 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
       });
   }
 
-
   isSlotPast(slot: TimeSlot): boolean {
     const now = new Date();
     const selectedDate = new Date(this.selectedDate);
-    
-    // So sánh ngày (chỉ lấy phần ngày/tháng/năm)
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     selectedDate.setHours(0, 0, 0, 0);
 
-    // 1. Nếu chọn ngày quá khứ (Hôm qua...) -> Disable hết
     if (selectedDate < today) return true;
-
-    // 2. Nếu chọn ngày tương lai -> Không disable
     if (selectedDate > today) return false;
 
-    // 3. Nếu chọn HÔM NAY -> Check giờ
     if (selectedDate.getTime() === today.getTime()) {
-      
       const parts = slot.startTime.toString().split(':');
       const slotHour = parseInt(parts[0], 10);
-      const slotMinute = parseInt(parts[1], 10);
-
+      const slotMinute = parseInt(parts[1], 10); // Logic này đã đúng cho 30 phút
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
 
-      // Nếu giờ slot nhỏ hơn giờ hiện tại -> Quá khứ
       if (slotHour < currentHour) return true;
-      
-      // Nếu cùng giờ nhưng phút slot nhỏ hơn -> Quá khứ
       if (slotHour === currentHour && slotMinute < currentMinute) return true;
     }
-
     return false;
   }
 
   getSlotClass(slot: any): string {
- 
     if (this.bookedSlotIds.includes(slot.slotId)) {
       const status = this.slotStatuses[slot.slotId];
       if (status === 'Completed') return 'completed';
@@ -136,24 +122,14 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
       if (status === 'AwaitingPayment') return 'awaiting'; 
       return 'booked';
     }
-
-
     if (this.selectedSlotIds.includes(slot.slotId)) return 'selected';
-
-
     if (this.isSlotPast(slot)) return 'past-slot'; 
-
-  
     return 'available';
   }
 
   toggleSlot(slot: any) {
     const id = Number(slot.slotId);
-
-    // Chặn click nếu đã đặt
     if (this.bookedSlotIds.includes(id)) return;
-
-   
     if (this.isSlotPast(slot)) return;
 
     const index = this.selectedSlotIds.indexOf(id);
@@ -165,23 +141,85 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
     this.calculateTotal();
   }
 
-
   calculateTotal() {
-    this.totalPrice = this.selectedSlotIds.length * (this.field?.price || 0);
+    // [LOGIC MỚI]
+    // Giá sân (this.field.price) là giá theo GIỜ.
+    // Hệ thống mới: 1 slot = 30 phút.
+    // => Giá 1 slot = Giá sân / 2
+    const pricePerSlot = (this.field?.price || 0) / 2;
+    
+    this.totalPrice = this.selectedSlotIds.length * pricePerSlot;
   }
 
-  submitBooking() {
+ submitBooking() {
+    // 1. Validate: Chưa chọn giờ
     if (this.selectedSlotIds.length === 0) {
-      alert('Vui lòng chọn ít nhất 1 khung giờ!');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Chưa chọn giờ',
+        text: 'Vui lòng chọn ít nhất 1 khung giờ bạn muốn đặt!',
+        confirmButtonColor: '#f39c12'
+      });
       return;
     }
+
+    // 2. Validate: Khách vãng lai thiếu info
     if (this.currentUserId === 0) {
       if (!this.guestName.trim() || !this.guestPhone.trim()) {
-        alert('Vui lòng nhập Họ tên và Số điện thoại để chúng tôi liên hệ!');
+        Swal.fire({
+          icon: 'info',
+          title: 'Thiếu thông tin liên hệ',
+          text: 'Vui lòng nhập Họ tên và Số điện thoại để chúng tôi giữ sân cho bạn.',
+          confirmButtonColor: '#3498db'
+        });
         return;
       }
     }
-    if (!confirm(`Xác nhận đặt sân? Bạn sẽ thanh toán cọc 30% qua ${this.selectedPaymentMethod}.`)) return;
+
+    // 3. Confirm: Xác nhận thanh toán
+    const depositAmount = this.totalPrice * 0.3;
+    const paymentName = this.selectedPaymentMethod === 'VNPay' ? 'VNPAY' : 'MoMo';
+    
+
+    const totalHours = this.selectedSlotIds.length / 2;
+
+    Swal.fire({
+      title: 'Xác nhận đặt sân?',
+      html: `
+        <div style="text-align: left; font-size: 1.1em;">
+          <p><strong>Ngày đá:</strong> ${this.datePipe.transform(this.selectedDate, 'dd/MM/yyyy')}</p>
+          <p><strong>Thời gian:</strong> ${totalHours} giờ (${this.selectedSlotIds.length} slot)</p>
+          <p><strong>Tổng tiền:</strong> ${this.totalPrice.toLocaleString()}đ</p>
+          <hr>
+          <p style="color: #c0392b; font-weight: bold;">
+            CỌC TRƯỚC (30%): ${depositAmount.toLocaleString()}đ
+          </p>
+          <p style="font-size: 0.9em; color: #7f8c8d;">
+            (Thanh toán qua cổng ${paymentName})
+          </p>
+        </div>
+      `,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Thanh toán ngay',
+      cancelButtonText: 'Hủy',
+      confirmButtonColor: '#27ae60',
+      cancelButtonColor: '#95a5a6'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.processBooking();
+      }
+    });
+  }
+
+  processBooking() {
+    // 4. Loading Popup
+    Swal.fire({
+        title: 'Đang xử lý...',
+        text: 'Đang tạo đơn hàng và chuyển hướng thanh toán',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+    });
 
     const dto: any = {
       fieldId: this.field.fieldId,
@@ -201,7 +239,12 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
       },
       error: (err) => {
         this.isLoading = false;
-        alert(err.error?.message || 'Lỗi đặt sân');
+        Swal.fire({
+            icon: 'error',
+            title: 'Đặt sân thất bại',
+            text: err.error?.message || 'Có lỗi xảy ra, vui lòng thử lại.',
+            confirmButtonColor: '#e74c3c'
+        });
       }
     });
   }
@@ -213,11 +256,17 @@ export class BookingModalComponent implements OnInit, OnChanges { // Implement O
     };
     this.paymentService.createPayment(paymentReq).subscribe({
       next: (res: any) => {
-        if (res.payUrl) window.location.href = res.payUrl;
+        if (res.payUrl) {
+            // Chuyển hướng thanh toán
+            window.location.href = res.payUrl;
+        } else {
+            Swal.fire('Lỗi', 'Không nhận được link thanh toán', 'error');
+            this.isLoading = false;
+        }
       },
       error: () => {
         this.isLoading = false;
-        alert('Lỗi tạo cổng thanh toán.');
+        Swal.fire('Lỗi', 'Không thể kết nối cổng thanh toán.', 'error');
       }
     });
   }

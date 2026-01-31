@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import { HashLocationStrategy, LocationStrategy } from '@angular/common'; // ✅ ADD
+import { HashLocationStrategy, LocationStrategy } from '@angular/common'; 
 
 import { AppRoutingModule } from './app-routing-module';
 
@@ -46,6 +46,10 @@ import { TimeSlotManagementComponent } from './view/admin/time-slot-management/t
 
 import { BaseChartDirective } from 'ng2-charts';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { ContactComponent } from './view/contact/contact.component';
+import { AdminContactComponent } from './view/admin/admin-contact/admin-contact.component';
+import { AdminNewsComponent } from './view/admin/admin-news/admin-news.component';
+import { NewsPageComponent } from './view/news-page/news-page.component';
 
 @NgModule({
   declarations: [
@@ -81,6 +85,10 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
     PartnerDetailComponent,
     SportTypeManagementComponent,
     TimeSlotManagementComponent,
+    ContactComponent,
+    AdminContactComponent,
+    AdminNewsComponent,
+    NewsPageComponent,
   ],
   imports: [
     BrowserModule,

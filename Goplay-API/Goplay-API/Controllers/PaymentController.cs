@@ -68,7 +68,7 @@ namespace Goplay_API.Controllers
                 .ToDictionary(k => k.Key, v => v.Value.ToString());
 
             var success = await _repo.HandleVnPayReturnAsync(queryParams);
-            // [SỬA] Trả về JSON object
+         
             return success
                 ? Ok(new { message = "Payment success" })
                 : BadRequest(new { message = "Payment failed" });

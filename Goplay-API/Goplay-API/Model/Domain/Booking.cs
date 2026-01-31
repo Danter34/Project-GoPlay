@@ -7,11 +7,11 @@
         public string Status { get; set; } = "Pending";
         public decimal TotalPrice { get; set; }
 
-        // --- SỬA: Cho phép null để khách vãng lai đặt ---
+    
         public int? UserId { get; set; }
         public User? User { get; set; }
 
-        // --- THÊM: Thông tin khách vãng lai ---
+     
         public string? GuestName { get; set; }
         public string? GuestPhone { get; set; }
 

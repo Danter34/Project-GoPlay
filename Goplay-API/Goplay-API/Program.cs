@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using System.Text;
-
+using Goplay_API.BackgroundServices;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<AppSettings>(
     builder.Configuration.GetSection("AppSettings"));
@@ -136,7 +136,9 @@ builder.Services.AddScoped<IOwnerProfileRepository, OwnerProfileRepository>();
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IStatisticsRepository, StatisticsRepository>();
-
+builder.Services.AddScoped<INewsImageRepository, NewsImageRepository>();
+builder.Services.AddScoped<INewsRepository, NewsRepository>();
+builder.Services.AddHostedService<BookingCleanupService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -16,7 +16,7 @@ public class ContactsController : ControllerBase
         _contactRepository = contactRepository;
     }
 
-    // Inbox
+
     [HttpGet("conversations")]
     public async Task<IActionResult> GetConversations()
     {
@@ -25,7 +25,7 @@ public class ContactsController : ControllerBase
         return Ok(list);
     }
 
-    // Chi tiết tin nhắn
+  
     [HttpGet("{id}/messages")]
     [AllowAnonymous]
     public async Task<IActionResult> GetMessages(int id)

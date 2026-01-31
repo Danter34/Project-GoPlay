@@ -35,22 +35,28 @@ namespace Goplay_API.Repositories.Services
 
         public async Task<IEnumerable<RevenueByTimeDTO>> GetRevenueByMonthAsync(int ownerId, int year)
         {
-            var owner = await _context.OwnerProfiles.FirstAsync(o => o.UserId == ownerId);
+            var owner = await _context.OwnerProfiles
+                .FirstAsync(o => o.UserId == ownerId);
 
-            return await _context.Bookings
-                .Include(b => b.Field)
+            var data = await _context.Bookings
                 .Where(b =>
                     b.Field.OwnerProfileId == owner.OwnerProfileId &&
                     b.Status == "Completed" &&
                     b.BookingDate.Year == year)
                 .GroupBy(b => b.BookingDate.Month)
-                .Select(g => new RevenueByTimeDTO
+                .Select(g => new
                 {
-                    Label = $"Tháng {g.Key}",
+                    Month = g.Key,
                     TotalRevenue = g.Sum(x => x.TotalPrice)
                 })
-                .OrderBy(x => x.Label)
+                .OrderBy(x => x.Month)
                 .ToListAsync();
+
+            return data.Select(x => new RevenueByTimeDTO
+            {
+                Label = $"Tháng {x.Month}",
+                TotalRevenue = x.TotalRevenue
+            });
         }
 
         public async Task<IEnumerable<RevenueByFieldDTO>> GetRevenueByFieldAsync(

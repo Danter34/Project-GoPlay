@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:5210/api/payments';
+  private apiUrl = 'https://apigplay.qzz.io/api/payments';
 
   constructor(private http: HttpClient) {}
 

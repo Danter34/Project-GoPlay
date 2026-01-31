@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Goplay-API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d996661e37e09f953ad4ae59e4f78f5bb30a85d9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4a8f88852b18fb2704e8ee651b6a242af203e38e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Goplay-API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Goplay-API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

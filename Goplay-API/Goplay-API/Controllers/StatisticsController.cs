@@ -19,19 +19,23 @@ namespace Goplay_API.Controllers
 
         private int UserId => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
+        [Authorize]
         [HttpGet("dashboard")]
         public async Task<IActionResult> Dashboard()
-            => Ok(await _service.GetOwnerDashboardAsync(UserId));
+    => Ok(await _service.GetOwnerDashboardAsync(UserId));
 
+        [Authorize]
         [HttpGet("revenue-by-month")]
         public async Task<IActionResult> RevenueByMonth([FromQuery] int year)
             => Ok(await _service.GetRevenueByMonthAsync(UserId, year));
 
+        [Authorize]
         [HttpGet("revenue-by-field")]
         public async Task<IActionResult> RevenueByField(
             [FromQuery] DateTime? from,
             [FromQuery] DateTime? to)
             => Ok(await _service.GetRevenueByFieldAsync(UserId, from, to));
+
 
         [Authorize(Roles = "Admin")] // Chỉ Admin mới được gọi
         [HttpGet("admin-dashboard")]
