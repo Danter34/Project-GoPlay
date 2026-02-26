@@ -60,7 +60,7 @@ Hệ thống cung cấp giải pháp quản trị doanh thu trực quan cho ch�
 # 🛠️ Công Nghệ Sử Dụng
 
 ## 🎨 Frontend
-- Framework: **Angular 14+**
+- Framework: **Angular 17+**
 - Map: **Mapbox GL JS**
 - Charts: **Chart.js + ng2-charts**
 - UI/UX: **Bootstrap 5**
