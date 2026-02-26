@@ -5,8 +5,6 @@ Hệ thống cung cấp giải pháp quản trị doanh thu trực quan cho ch�
 
 ---
 
-## 🚀 Demo Previe
-
 # 🌟 Tính Năng Nổi Bật
 
 ## 1️⃣ Trải Nghiệm Người Dùng (User)
